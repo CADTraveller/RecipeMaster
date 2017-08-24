@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Template10.Mvvm;
 //using SourdoughMaster.Annotations;
 using Windows.UI.Xaml;
 namespace RecipeMaster.Models
@@ -195,13 +196,13 @@ namespace RecipeMaster.Models
         }
 
 
-        private RelayCommand addChildIngredientCommand;
-        public RelayCommand AddChildIngredientCommand => addChildIngredientCommand ??
-            (addChildIngredientCommand = new RelayCommand(() => AddIngredient()));
+        private DelegateCommand addChildIngredientCommand;
+        public DelegateCommand AddChildIngredientCommand => addChildIngredientCommand ??
+            (addChildIngredientCommand = new DelegateCommand(() => AddIngredient()));
 
-        private RelayCommand deleteMeCommand;
-        public RelayCommand DeleteMeCommand => deleteMeCommand ??
-            (new RelayCommand(() => Parent.DeleteChild(this)));
+        private DelegateCommand deleteMeCommand;
+        public DelegateCommand DeleteMeCommand => deleteMeCommand ??
+            (new DelegateCommand(() => Parent.DeleteChild(this)));
 
         private ObservableCollection<Ingredient> ingredients;
         public ObservableCollection<Ingredient> Ingredients
