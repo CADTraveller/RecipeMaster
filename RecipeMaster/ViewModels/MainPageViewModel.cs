@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using RecipeMaster.Models;
+using System.Collections.ObjectModel;
+using Windows.Storage.AccessCache;
 
 namespace RecipeMaster.ViewModels
 {
@@ -15,12 +18,50 @@ namespace RecipeMaster.ViewModels
 			if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
 				Value = "Designtime value";
+				return;
 			}
+
+			else
+			{
+				var mru = StorageApplicationPermissions.MostRecentlyUsedList;
+
+				foreach (AccessListEntry item in mru.Entries)
+				{
+					RecentAccessEntries.Add(item);
+				}
+			}
+
+
 		}
+
+
+		#region Properties
+		Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
 		string _Value = "Gas";
 		public string Value { get { return _Value; } set { Set(ref _Value, value); } }
 
+		private RecipeBox selectedRecipeBox;
+		public RecipeBox SelectedRecipeBox
+		{
+			get { return selectedRecipeBox; }
+			set { Set(ref selectedRecipeBox, value); }
+		}
+
+		private ObservableCollection<AccessListEntry> recentAccessEntries;
+		public ObservableCollection<AccessListEntry> RecentAccessEntries
+		{
+			get { return recentAccessEntries; }
+			set { Set(ref recentAccessEntries, value); }
+		}
+
+
+
+
+		#endregion
+
+
+		#region Events
 		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
 		{
 			if (suspensionState.Any())
@@ -44,7 +85,9 @@ namespace RecipeMaster.ViewModels
 			args.Cancel = false;
 			await Task.CompletedTask;
 		}
+		#endregion
 
+		#region Methods
 		public void GotoDetailsPage() =>
 			NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
@@ -56,6 +99,23 @@ namespace RecipeMaster.ViewModels
 
 		public void GotoAbout() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+
+		public void OpenFile()
+		{
+
+		}
+
+		public void SaveFile()
+		{
+
+		}
+
+		public void NewRecipeBox()
+		{
+
+		}
+
+		#endregion
 
 	}
 }

@@ -14,5 +14,10 @@ namespace RecipeMaster.Views
 			InitializeComponent();
 			NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 		}
+
+		private void AppBarButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }
