@@ -20,13 +20,13 @@ namespace RecipeMaster.ViewModels
 {
     public class RecipesViewModel : Template10.Mvvm.ViewModelBase
 	{
-        public NavigationService NavigationService
-        {
-            get
-            {
-                return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationService>();
-            }
-        }
+        //public NavigationService NavigationService
+        //{
+        //    get
+        //    {
+        //        return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationService>();
+        //    }
+        //}
 
         const string NarrowStateName = "NarrowState";
         const string WideStateName = "WideState";

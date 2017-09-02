@@ -9,7 +9,7 @@ using Template10.Mvvm;
 
 namespace RecipeMaster.ViewModels
 {
-    public class ActiveRecipesViewModel : ViewModelBase
+    public class ActiveRecipesViewModel : Mvvm.ViewModelBase
 	{
         public ActiveRecipesViewModel()
         {

@@ -1,4 +1,4 @@
-﻿using Template10.Mvvm;
+﻿using RecipeMaster.Mvvm;
 using System.Collections.Generic;
 using System;
 using System.Linq;
