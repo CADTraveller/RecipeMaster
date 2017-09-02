@@ -24,7 +24,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!--  TODO: change properties for narrow view  -->
-                        <Setter Target="stateTextBox.Text" Value="Narrow Visual State" />
+                        <!--<Setter Target="stateTextBox.Text" Value="Narrow Visual State" />-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VisualStateNormal">
@@ -33,7 +33,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!--  TODO: change properties for normal view  -->
-                        <Setter Target="stateTextBox.Text" Value="Normal Visual State" />
+                        <!--<Setter Target="stateTextBox.Text" Value="Normal Visual State" />-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="VisualStateWide">
@@ -42,7 +42,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!--  TODO: change properties for wide view  -->
-                        <Setter Target="stateTextBox.Text" Value="Wide Visual State" />
+                        <!--<Setter Target="stateTextBox.Text" Value="Wide Visual State" />-->
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -52,6 +52,11 @@
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
+			<controls:PageHeader.PrimaryCommands >
+				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.SaveFile}" Label="Open File"/>
+				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFile}" Label="Save Current"/>
+				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
+			</controls:PageHeader.PrimaryCommands>
             <!--  secondary commands  -->
             <controls:PageHeader.SecondaryCommands>
                 <AppBarButton Click="{x:Bind ViewModel.GotoSettings}" Label="Settings" />
@@ -61,7 +66,7 @@
 
         </controls:PageHeader>
 
-        <controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
+        <!--<controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="pageHeader">
 
@@ -70,11 +75,11 @@
                      Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      TextWrapping="Wrap">
                 <Interactivity:Interaction.Behaviors>
-                    <!--  enable submit on enter key  -->
+                    --><!--  enable submit on enter key  --><!--
                     <Behaviors:KeyBehavior Key="Enter">
                         <Core:CallMethodAction MethodName="GotoDetailsPage" TargetObject="{Binding}" />
                     </Behaviors:KeyBehavior>
-                    <!--  focus on textbox when page loads  -->
+                    --><!--  focus on textbox when page loads  --><!--
                     <Core:EventTriggerBehavior>
                         <Behaviors:FocusAction />
                     </Core:EventTriggerBehavior>
@@ -91,7 +96,7 @@
         <TextBlock x:Name="stateTextBox" Margin="16,16,0,0"
                    RelativePanel.AlignLeftWith="parameterResizer"
                    RelativePanel.Below="parameterResizer"
-                   Text="Current Visual State" />
+                   Text="Current Visual State" />-->
 
     </RelativePanel>
 </Page>
