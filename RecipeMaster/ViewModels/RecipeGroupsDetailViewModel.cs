@@ -8,21 +8,21 @@ using RecipeMaster.Models;
 using RecipeMaster.Services;
 
 using Windows.UI.Xaml;
-using Template10.Mvvm;
-using Template10.Services.NavigationService;
+using RecipeMaster.Mvvm;
+//using Template10.Services.NavigationService;
 
 namespace RecipeMaster.ViewModels
 {
-    public class RecipeGroupsDetailViewModel : Template10.Mvvm.ViewModelBase
+    public class RecipeGroupsDetailViewModel : ViewModelBase
 	{
 
-		public NavigationService NavigationService
-		{
-			get
-			{
-				return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationService>();
-			}
-		}
+		//public NavigationService NavigationService
+		//{
+		//	get
+		//	{
+		//		return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationService>();
+		//	}
+		//}
 		const string NarrowStateName = "NarrowState";
         const string WideStateName = "WideState";
 
@@ -37,7 +37,7 @@ namespace RecipeMaster.ViewModels
 
         public RecipeGroupsDetailViewModel()
         {
-            StateChangedCommand = new DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
+            StateChangedCommand = new Template10.Mvvm.DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
         }
         
         private void OnStateChanged(VisualStateChangedEventArgs args)

@@ -5,14 +5,15 @@ using GalaSoft.MvvmLight.Command;
 
 using RecipeMaster.Models;
 using RecipeMaster.Services;
+using Template10.Mvvm;
 
 using Windows.UI.Xaml;
-using Template10.Mvvm;
+using RecipeMaster.Mvvm;
 using Template10.Services.NavigationService;
 
 namespace RecipeMaster.ViewModels
 {
-    public class RecipesDetailViewModel : ViewModelBase
+    public class RecipesDetailViewModel : Mvvm.ViewModelBase
     {
 
         //public NavigationService NavigationService

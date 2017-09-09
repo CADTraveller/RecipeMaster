@@ -6,6 +6,9 @@ using System.Linq;
 using Template10.Mvvm;
 //using SourdoughMaster.Annotations;
 using Windows.UI.Xaml;
+using Template10.Common;
+
+
 namespace RecipeMaster.Models
 {
     public enum IngredientType
