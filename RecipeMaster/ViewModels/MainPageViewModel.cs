@@ -23,12 +23,7 @@ namespace RecipeMaster.ViewModels
 
 			else
 			{
-				var mru = StorageApplicationPermissions.MostRecentlyUsedList;
-
-				foreach (AccessListEntry item in mru.Entries)
-				{
-					RecentAccessEntries.Add(item);
-				}
+				
 			}
 
 
@@ -48,13 +43,6 @@ namespace RecipeMaster.ViewModels
 			set { Set(ref selectedRecipeBox, value); }
 		}
 
-		private ObservableCollection<AccessListEntry> recentAccessEntries;
-		public ObservableCollection<AccessListEntry> RecentAccessEntries
-		{
-			get { return recentAccessEntries; }
-			set { Set(ref recentAccessEntries, value); }
-		}
-
 
 
 
@@ -69,6 +57,20 @@ namespace RecipeMaster.ViewModels
 				Value = suspensionState[nameof(Value)]?.ToString();
 			}
 			await Task.CompletedTask;
+
+			if (localSettings.Values.ContainsKey("recentRecipeBoxes"))
+			{
+				recentRecipeBoxes = localSettings.Values["recentRecipeBoxes"] as List<RecentRecipeBox>;
+			}
+
+		}
+
+		private List<RecentRecipeBox> recentRecipeBoxes;
+
+		public List<RecentRecipeBox> RecentRecipeBoxes
+		{
+			get { return recentRecipeBoxes; }
+			set { Set(ref recentRecipeBoxes, value); }
 		}
 
 		public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
@@ -100,9 +102,15 @@ namespace RecipeMaster.ViewModels
 		public void GotoAbout() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 2);
 
-		public void OpenFile()
+		public async void OpenFile()
 		{
+			SelectedRecipeBox = await Services.FileIOService.OpenRecipeBoxFromFileAsync();
 
+			//__make a record of this file for future executions
+			if (localSettings.Values.ContainsKey("recentRecipeBoxes"))
+			{
+				recentRecipeBoxes = localSettings.Values["recentRecipeBoxes"] as List<RecentRecipeBox>;
+			}
 		}
 
 		public void SaveFile()

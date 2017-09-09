@@ -49,16 +49,20 @@ namespace RecipeMaster.Services
 
         }
 
+
         private static void AddToRecentsLists(StorageFile file)
         {
-            var mru = Windows.Storage.AccessCache.StorageApplicationPermissions.MostRecentlyUsedList;
-            mru.Add(file, file.Path);
+			//var mru = Windows.Storage.AccessCache.StorageApplicationPermissions.MostRecentlyUsedList;
+			//mru.Add(file, file.Path);
 
-            var accessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
-            accessList.Add(file, file.Path);
-        }
+			//var accessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
+			//accessList.Add(file, file.Path);
 
-        public static async Task<RecipeBox> CreateNewRecipeBoxAsync()
+			ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+		}
+
+		public static async Task<RecipeBox> CreateNewRecipeBoxAsync()
         {
             var savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
