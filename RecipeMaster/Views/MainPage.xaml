@@ -53,9 +53,7 @@
                              RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
 			<controls:PageHeader.PrimaryCommands >
-				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile     
-					
-					}" Label="Open File"/>
+				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile}" Label="Open File"/>
 				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFile}" Label="Save Current"/>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
 			</controls:PageHeader.PrimaryCommands>
@@ -67,8 +65,18 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-
-        <!--<controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
+		<GridView ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes}" 
+				  SelectedItem="{x:Bind ViewModel.SelectedRecipeBox}"
+				  RelativePanel.Below="pageHeader"
+				  Visibility="{x:Bind ViewModel.ShowHistory}"></GridView>
+		<TextBlock RelativePanel.Below="pageHeader"
+				   Text="--No Recent Files--"
+				   Visibility="{x:Bind ViewModel.ShowNoHistory}"
+				   FontSize="30"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center"
+				   />
+		<!--<controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="pageHeader">
 

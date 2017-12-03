@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using RecipeMaster.Models;
+using RecipeMaster.Services;
 using System.Collections.ObjectModel;
 using Windows.Storage.AccessCache;
+using Windows.Storage;
 
 namespace RecipeMaster.ViewModels
 {
@@ -20,13 +22,65 @@ namespace RecipeMaster.ViewModels
 				Value = "Designtime value";
 				return;
 			}
-
 			else
 			{
-				
+				if (localSettings.Values.ContainsKey("recentRecipeBoxes"))
+				{
+					recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+					validateAndConvert(localSettings.Values["recentRecipeBoxes"]);
+				}
+			}
+		}
+
+		private bool showRecentFiles;
+
+		public bool ShowRecentFiles
+		{
+			get { return showRecentFiles; }
+			set { Set(ref showRecentFiles, value); }
+		}
+
+		private bool showNoHistory;
+
+		public bool ShowNoHistory
+		{
+			get
+			{
+				if (recentRecipeBoxes == null) return true;
+				return recentRecipeBoxes.Count == 0;
+			}
+			//set { showNoHistory = value; }
+		}
+
+		public bool ShowHistory
+		{
+			get
+			{
+				if (recentRecipeBoxes == null) return false;
+				return recentRecipeBoxes.Count > 0;
+			}
+		}
+
+		private void validateAndConvert(object v)
+		{
+			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+			List<RecentRecipeBox> storedList = v as List<RecentRecipeBox>;
+
+			foreach (RecentRecipeBox entry in storedList)
+			{
+				String path = entry.Path;
+				bool fileExists = System.IO.File.Exists(path);
+				if (fileExists)
+				{
+					RecentRecipeBoxes.Add(entry);
+				}
 			}
 
+			//__order validated list
+			RecentRecipeBoxes.OrderBy(r => r.LastOpened);
 
+			//__store validated list
+			LocalSettings.Values["recentRecipeBoxes"] = recentRecipeBoxes;
 		}
 
 
@@ -43,7 +97,13 @@ namespace RecipeMaster.ViewModels
 			set { Set(ref selectedRecipeBox, value); }
 		}
 
+		private ObservableCollection<RecentRecipeBox> recentRecipeBoxes;
 
+		public ObservableCollection<RecentRecipeBox> RecentRecipeBoxes
+		{
+			get { return recentRecipeBoxes; }
+			set { Set(ref recentRecipeBoxes, value); }
+		}
 
 
 		#endregion
@@ -58,20 +118,16 @@ namespace RecipeMaster.ViewModels
 			}
 			await Task.CompletedTask;
 
-			if (localSettings.Values.ContainsKey("recentRecipeBoxes"))
+			if (LocalSettings.Values.ContainsKey("recentRecipeBoxes"))
 			{
-				recentRecipeBoxes = localSettings.Values["recentRecipeBoxes"] as List<RecentRecipeBox>;
+				recentRecipeBoxes = LocalSettings.Values["recentRecipeBoxes"] as ObservableCollection<RecentRecipeBox>;
 			}
 
 		}
 
-		private List<RecentRecipeBox> recentRecipeBoxes;
 
-		public List<RecentRecipeBox> RecentRecipeBoxes
-		{
-			get { return recentRecipeBoxes; }
-			set { Set(ref recentRecipeBoxes, value); }
-		}
+
+		public ApplicationDataContainer LocalSettings { get => localSettings; set => localSettings = value; }
 
 		public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
 		{
@@ -104,13 +160,21 @@ namespace RecipeMaster.ViewModels
 
 		public async void OpenFile()
 		{
-			SelectedRecipeBox = await Services.FileIOService.OpenRecipeBoxFromFileAsync();
+			SelectedRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
 
 			//__make a record of this file for future executions
-			if (localSettings.Values.ContainsKey("recentRecipeBoxes"))
+			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+			RecentRecipeBox recordBoxJustOpened = new RecentRecipeBox()
 			{
-				recentRecipeBoxes = localSettings.Values["recentRecipeBoxes"] as List<RecentRecipeBox>;
-			}
+				Path = SelectedRecipeBox.LastPath,
+				Name = SelectedRecipeBox.Name,
+				LastOpened = DateTime.Now,
+				Description = SelectedRecipeBox.Description
+			};
+
+			recentRecipeBoxes.Add(recordBoxJustOpened);
+			LocalSettings.Values["recentRecipeBoxes"] = recentRecipeBoxes;
+
 		}
 
 		public void SaveFile()
@@ -118,9 +182,13 @@ namespace RecipeMaster.ViewModels
 
 		}
 
-		public void NewRecipeBox()
+		public async void NewRecipeBox()
 		{
+			RecipeBox newRecipeBox = await FileIOService.CreateNewRecipeBoxAsync();
 
+			//__record this file or move it to top of recents list
+
+			//__set as selected, go to details page
 		}
 
 		#endregion
