@@ -63,8 +63,18 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-
-        <!--<controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
+		<GridView ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes}" 
+				  SelectedItem="{x:Bind ViewModel.SelectedRecipeBox}"
+				  RelativePanel.Below="pageHeader"
+				  Visibility="{x:Bind ViewModel.ShowHistory}"></GridView>
+		<TextBlock RelativePanel.Below="pageHeader"
+				   Text="--No Recent Files--"
+				   Visibility="{x:Bind ViewModel.ShowNoHistory}"
+				   FontSize="30"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center"
+				   />
+		<!--<controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="pageHeader">
 

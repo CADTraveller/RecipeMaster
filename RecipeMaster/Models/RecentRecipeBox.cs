@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using System;
 
 namespace RecipeMaster.Models
 {
@@ -33,7 +34,15 @@ namespace RecipeMaster.Models
             set { Set(ref path, value); }
         }
 
-        
+		private DateTime lastOpened;
+		public DateTime LastOpened
+		{
+			get { return lastOpened; }
+			set
+			{
+				Set(ref lastOpened, value);
+			}
+		}
 
     }
 }
