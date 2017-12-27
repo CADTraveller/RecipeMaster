@@ -1,0 +1,73 @@
+<Page
+    x:Class="RecipeMaster.Views.ActiveRecipesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:RecipeMaster.Models"
+    xmlns:tk="using:WinRTXamlToolkit.Controls"
+    xmlns:t="using:RecipeMaster.DataTemplates"
+    xmlns:data="using:WinRTXamlToolkit.Controls.Data"
+    DataContext="{Binding ActiveRecipesViewModel, Source={StaticResource Locator}}"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="TitleRow" Height="48"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Name="TitlePage"
+            x:Uid="ActiveRecipes_Pivot"
+            Text="Navigation Item 1"
+            Style="{StaticResource PageTitleStyle}"
+            Margin="12,0,12,7"/>
+
+        <Pivot Grid.Row="1"
+               ItemsSource="{Binding ViewModel.ActiveRecipes}"
+               SelectedItem="{Binding ViewModel.SelectedRecipe}">
+            <Pivot.HeaderTemplate>
+
+                <DataTemplate x:DataType="model:Recipe">
+                    <Grid>
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource ResourceKey=ListTitleStyle}"/>
+                    </Grid>
+
+                </DataTemplate>
+            </Pivot.HeaderTemplate>
+
+            <Pivot.ItemTemplate>
+                <DataTemplate x:DataType="model:Recipe">
+                    <Grid>
+                        <tk:TreeView>
+                            <tk:TreeView.ItemTemplate>
+
+                                <DataTemplate x:DataType="model:Ingredient">
+                                    <data:DataTemplateExtensions.Hierarchy>
+                                        <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}"/>
+                                    </data:DataTemplateExtensions.Hierarchy>
+                                    <Border BorderBrush="#FF3A5F49">
+                                        <t:IngredientView/>
+                                    </Border>
+                                </DataTemplate>
+
+                            </tk:TreeView.ItemTemplate>
+                        </tk:TreeView>
+                    </Grid>
+
+                </DataTemplate>
+            </Pivot.ItemTemplate>
+        </Pivot>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="144" Content="Add Ingredient"/>
+            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="144" Content="Add Step"/>
+            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="96" Content="Save"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <ComboBox Name="Servings"/>
+            <TextBox Name="TotalWeight"/>
+        </StackPanel>
+    </Grid>
+</Page>

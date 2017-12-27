@@ -48,14 +48,10 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True"
-                             RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Main Page">
+        <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
 			<controls:PageHeader.PrimaryCommands >
-				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile     
-					
-					}" Label="Open File"/>
+				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile}" Label="Open File"/>
 				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFile}" Label="Save Current"/>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
 			</controls:PageHeader.PrimaryCommands>
