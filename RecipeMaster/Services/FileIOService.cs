@@ -34,9 +34,9 @@ namespace RecipeMaster.Services
                 RecipeBox rb = JsonConvert.DeserializeObject<RecipeBox>(contents);
                 if (rb != null)
                 {
-                    rb.LastPath = file.Path;
-					AddToRecentsLists(file);
+                    //AddToRecentsLists(file);
 
+                    rb.LastPath = file.Path;
                     return rb;
                 }
                 return null;
@@ -123,5 +123,7 @@ namespace RecipeMaster.Services
 
             }
         }
-    }
+
+		
+	}
 }
