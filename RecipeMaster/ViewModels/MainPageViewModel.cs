@@ -9,6 +9,7 @@ using RecipeMaster.Models;
 using RecipeMaster.Services;
 using System.Collections.ObjectModel;
 using Windows.Storage.AccessCache;
+using Windows.UI.Notifications;
 using Windows.Storage;
 
 namespace RecipeMaster.ViewModels
@@ -64,6 +65,7 @@ namespace RecipeMaster.ViewModels
 		private void validateAndConvert(object v)
 		{
 			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+
 			List<RecentRecipeBox> storedList = v as List<RecentRecipeBox>;
 
 			foreach (RecentRecipeBox entry in storedList)
@@ -120,7 +122,24 @@ namespace RecipeMaster.ViewModels
 
 			if (LocalSettings.Values.ContainsKey("recentRecipeBoxes"))
 			{
-				recentRecipeBoxes = LocalSettings.Values["recentRecipeBoxes"] as ObservableCollection<RecentRecipeBox>;
+
+				try
+				{
+					string storedBoxesJson = LocalSettings.Values["recentRecipeBoxes"] as string;
+					List<RecentRecipeBox> storedBoxes = Newtonsoft.Json.JsonConvert.DeserializeObject(storedBoxesJson) as List<RecentRecipeBox>;
+					recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedBoxes);
+				}
+				catch (Exception)
+				{
+					var toastTemplate = ToastTemplateType.ToastText01;
+					var toastTemplateXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+					var textNodes = toastTemplateXml.GetElementsByTagName("text");
+					textNodes[0].AppendChild(toastTemplateXml.CreateTextNode("Could not unpack history"));
+
+					var toast = new ToastNotification(toastTemplateXml);
+					ToastNotificationManager.CreateToastNotifier().Show(toast);
+				}
+				
 			}
 
 		}
@@ -173,7 +192,8 @@ namespace RecipeMaster.ViewModels
 			};
 
 			recentRecipeBoxes.Add(recordBoxJustOpened);
-			LocalSettings.Values["recentRecipeBoxes"] = recentRecipeBoxes;
+			string RecipeBoxesJson = Newtonsoft.Json.JsonConvert.SerializeObject(recentRecipeBoxes);
+			LocalSettings.Values["recentRecipeBoxes"] = RecipeBoxesJson;
 
 		}
 
