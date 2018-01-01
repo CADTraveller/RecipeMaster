@@ -24,7 +24,7 @@ namespace RecipeMaster.Models
             set { Set(ref lastPath, value); }
         }
 
-
+		// todo: Add ID Guid
 
         private string name;
         public string Name

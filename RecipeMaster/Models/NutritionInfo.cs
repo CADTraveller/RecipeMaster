@@ -21,7 +21,10 @@ namespace RecipeMaster.Models
         public int UnsaturatedFat { get; set; }
         public int SaturatedFat { get; set; }
 
-        public static NutritionInfo GetNutritionInfo(ObservableCollection<Ingredient> ingredients)
+		// todo: Add ID and coordinate with Nutrient data
+
+
+		public static NutritionInfo GetNutritionInfo(ObservableCollection<Ingredient> ingredients)
         {
             NutritionInfo nutritionInfoResult = new NutritionInfo();
 

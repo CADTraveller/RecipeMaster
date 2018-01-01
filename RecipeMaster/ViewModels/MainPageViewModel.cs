@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using Windows.Storage.AccessCache;
 using Windows.UI.Notifications;
 using Windows.Storage;
+using Newtonsoft.Json;
 
 namespace RecipeMaster.ViewModels
 {
@@ -25,12 +26,29 @@ namespace RecipeMaster.ViewModels
 			}
 			else
 			{
-				if (localSettings.Values.ContainsKey("recentRecipeBoxes"))
+				if (localSettings.Values.Count > 0)
 				{
-					recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
-					validateAndConvert(localSettings.Values["recentRecipeBoxes"]);
+					populateRecentRecipeBoxList();
 				}
 			}
+		}
+
+		private void populateRecentRecipeBoxList()
+		{
+			if (!localSettings.Values.ContainsKey(storedRecentsKey)) return;
+
+			string storedRecentsJson = localSettings.Values[storedRecentsKey].ToString();
+			if (string.IsNullOrEmpty(storedRecentsJson)) return;
+
+			try
+			{
+				List<RecentRecipeBox> storedRecents = JsonConvert.DeserializeObject<List<RecentRecipeBox>>(storedRecentsJson);
+			}
+			catch (Exception)//__entry is corrupt or wrong format
+			{
+				localSettings.Values.Remove(storedRecentsKey);
+			}
+
 		}
 
 		private bool showRecentFiles;
@@ -62,28 +80,7 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		private void validateAndConvert(object v)
-		{
-			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 
-			List<RecentRecipeBox> storedList = v as List<RecentRecipeBox>;
-
-			foreach (RecentRecipeBox entry in storedList)
-			{
-				String path = entry.Path;
-				bool fileExists = System.IO.File.Exists(path);
-				if (fileExists)
-				{
-					RecentRecipeBoxes.Add(entry);
-				}
-			}
-
-			//__order validated list
-			RecentRecipeBoxes.OrderBy(r => r.LastOpened);
-
-			//__store validated list
-			LocalSettings.Values["recentRecipeBoxes"] = recentRecipeBoxes;
-		}
 
 
 		#region Properties
@@ -107,6 +104,7 @@ namespace RecipeMaster.ViewModels
 			set { Set(ref recentRecipeBoxes, value); }
 		}
 
+		private const string storedRecentsKey = "RecentRecipeBoxesList";
 
 		#endregion
 
@@ -120,27 +118,27 @@ namespace RecipeMaster.ViewModels
 			}
 			await Task.CompletedTask;
 
-			if (LocalSettings.Values.ContainsKey("recentRecipeBoxes"))
-			{
+			//if (LocalSettings.Values.ContainsKey(settingsKey))
+			//{
 
-				try
-				{
-					string storedBoxesJson = LocalSettings.Values["recentRecipeBoxes"] as string;
-					List<RecentRecipeBox> storedBoxes = Newtonsoft.Json.JsonConvert.DeserializeObject(storedBoxesJson) as List<RecentRecipeBox>;
-					recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedBoxes);
-				}
-				catch (Exception)
-				{
-					var toastTemplate = ToastTemplateType.ToastText01;
-					var toastTemplateXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
-					var textNodes = toastTemplateXml.GetElementsByTagName("text");
-					textNodes[0].AppendChild(toastTemplateXml.CreateTextNode("Could not unpack history"));
+			//	try
+			//	{
+			//		string storedBoxesJson = LocalSettings.Values[settingsKey] as string;
+			//		List<RecentRecipeBox> storedBoxes = Newtonsoft.Json.JsonConvert.DeserializeObject(storedBoxesJson) as List<RecentRecipeBox>;
+			//		recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedBoxes);
+			//	}
+			//	catch (Exception)
+			//	{
+			//		var toastTemplate = ToastTemplateType.ToastText01;
+			//		var toastTemplateXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+			//		var textNodes = toastTemplateXml.GetElementsByTagName("text");
+			//		textNodes[0].AppendChild(toastTemplateXml.CreateTextNode("Could not unpack history"));
 
-					var toast = new ToastNotification(toastTemplateXml);
-					ToastNotificationManager.CreateToastNotifier().Show(toast);
-				}
-				
-			}
+			//		var toast = new ToastNotification(toastTemplateXml);
+			//		ToastNotificationManager.CreateToastNotifier().Show(toast);
+			//	}
+
+			//}
 
 		}
 
@@ -181,22 +179,36 @@ namespace RecipeMaster.ViewModels
 		{
 			SelectedRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
 
-			//__make a record of this file for future executions
-			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
-			RecentRecipeBox recordBoxJustOpened = new RecentRecipeBox()
-			{
-				Path = SelectedRecipeBox.LastPath,
-				Name = SelectedRecipeBox.Name,
-				LastOpened = DateTime.Now,
-				Description = SelectedRecipeBox.Description
-			};
-
-			recentRecipeBoxes.Add(recordBoxJustOpened);
-			string RecipeBoxesJson = Newtonsoft.Json.JsonConvert.SerializeObject(recentRecipeBoxes);
-			LocalSettings.Values["recentRecipeBoxes"] = RecipeBoxesJson;
-
+			//__make a record of this file for future executions	
+			recordSelectedRecipeBox();
 		}
 
+		private void recordSelectedRecipeBox()
+		{
+			RecentRecipeBox boxJustOpened = new RecentRecipeBox()
+			{
+				Path = selectedRecipeBox.LastPath,
+				Name = selectedRecipeBox.Name,
+				LastOpened = DateTime.Now,
+				Description = selectedRecipeBox.Description
+			};
+
+			//__add this to the displayed list of recents
+			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+
+			//__remove any existing reference
+			if (RecentRecipeBoxes.Any(r => r.Name == boxJustOpened.Name))
+			{
+				var cleanedList = RecentRecipeBoxes.Where(r => r.Name != boxJustOpened.Name);
+				RecentRecipeBoxes = cleanedList as ObservableCollection<RecentRecipeBox>;
+			}
+			RecentRecipeBoxes.Insert(0, boxJustOpened);
+
+			//__record updated list
+			List<RecentRecipeBox> recentsList = recentRecipeBoxes.ToList();
+			string recentsJson = JsonConvert.SerializeObject(recentsList);
+			localSettings.Values[storedRecentsKey] = recentsJson;
+		}
 		public void SaveFile()
 		{
 

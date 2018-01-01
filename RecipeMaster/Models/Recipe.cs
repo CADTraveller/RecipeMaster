@@ -24,6 +24,8 @@ namespace RecipeMaster.Models
             }
         }
 
+		// todo: Add ID Guid
+
         private string description;
         public string Description
         {

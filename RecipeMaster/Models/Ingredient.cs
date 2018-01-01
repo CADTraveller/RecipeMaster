@@ -19,6 +19,7 @@ namespace RecipeMaster.Models
         Sweet,
         Spice,
         Salt,
+		Active,
         Complex
     };
 
