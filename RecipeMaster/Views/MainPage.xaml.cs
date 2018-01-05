@@ -19,5 +19,10 @@ namespace RecipeMaster.Views
 		{
 
 		}
+
+		private void GoToDetails()
+		{
+			ViewModel.GotoDetailsPage();
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using RecipeMaster.Mvvm;
+﻿//using RecipeMaster.Mvvm;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -12,6 +12,7 @@ using Windows.Storage.AccessCache;
 using Windows.UI.Notifications;
 using Windows.Storage;
 using Newtonsoft.Json;
+using Template10.Mvvm;
 
 namespace RecipeMaster.ViewModels
 {
@@ -33,23 +34,6 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		private void populateRecentRecipeBoxList()
-		{
-			if (!localSettings.Values.ContainsKey(storedRecentsKey)) return;
-
-			string storedRecentsJson = localSettings.Values[storedRecentsKey].ToString();
-			if (string.IsNullOrEmpty(storedRecentsJson)) return;
-
-			try
-			{
-				List<RecentRecipeBox> storedRecents = JsonConvert.DeserializeObject<List<RecentRecipeBox>>(storedRecentsJson);
-			}
-			catch (Exception)//__entry is corrupt or wrong format
-			{
-				localSettings.Values.Remove(storedRecentsKey);
-			}
-
-		}
 
 		private bool showRecentFiles;
 
@@ -89,11 +73,15 @@ namespace RecipeMaster.ViewModels
 		string _Value = "Gas";
 		public string Value { get { return _Value; } set { Set(ref _Value, value); } }
 
-		private RecipeBox selectedRecipeBox;
-		public RecipeBox SelectedRecipeBox
+		private RecentRecipeBox selectedRecentRecipeBox;
+		public RecentRecipeBox SelectedRecentRecipeBox
 		{
-			get { return selectedRecipeBox; }
-			set { Set(ref selectedRecipeBox, value); }
+			get { return selectedRecentRecipeBox; }
+			set
+			{
+				Set(ref selectedRecentRecipeBox, value);
+				GotoDetailsPage();
+			}
 		}
 
 		private ObservableCollection<RecentRecipeBox> recentRecipeBoxes;
@@ -162,9 +150,18 @@ namespace RecipeMaster.ViewModels
 		}
 		#endregion
 
+		#region Commands
+		private DelegateCommand viewRecipeBoxDetailsCommand;
+		public DelegateCommand ViewRecipeBoxDetailsCommand => viewRecipeBoxDetailsCommand ?? (viewRecipeBoxDetailsCommand = new DelegateCommand(() => GotoDetailsPage()));
+
+		#endregion
+
 		#region Methods
+		//public void GotoDetailsPage() =>
+		//	NavigationService.Navigate(typeof(Views.DetailPage), Value);
+
 		public void GotoDetailsPage() =>
-			NavigationService.Navigate(typeof(Views.DetailPage), Value);
+			 NavigationService.Navigate(typeof(Views.DetailPage), SelectedRecipeBox);
 
 		public void GotoSettings() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 0);
@@ -209,6 +206,34 @@ namespace RecipeMaster.ViewModels
 			string recentsJson = JsonConvert.SerializeObject(recentsList);
 			localSettings.Values[storedRecentsKey] = recentsJson;
 		}
+
+		private void populateRecentRecipeBoxList()
+		{
+			if (!localSettings.Values.ContainsKey(storedRecentsKey))
+			{
+				RaisePropertyChanged("ShowNoHistory");
+				return;
+			}
+
+			string storedRecentsJson = localSettings.Values[storedRecentsKey].ToString();
+			if (string.IsNullOrEmpty(storedRecentsJson)) return;
+
+			try
+			{
+				List<RecentRecipeBox> storedRecents = JsonConvert.DeserializeObject<List<RecentRecipeBox>>(storedRecentsJson);
+				if (recentRecipeBoxes != null) RecentRecipeBoxes.Clear();
+
+				RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedRecents);
+				RaisePropertyChanged("ShowHistory");
+			}
+			catch (Exception)//__entry is corrupt or wrong format
+			{
+				localSettings.Values.Remove(storedRecentsKey);
+			}
+
+		}
+
+
 		public void SaveFile()
 		{
 

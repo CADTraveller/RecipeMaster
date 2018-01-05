@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Controls;
 using RecipeMaster.Helpers;
 using RecipeMaster.Views;
 using Template10.Mvvm;
+using Windows.UI.Xaml.Navigation;
+using System.Collections.Generic;
 
 namespace RecipeMaster.ViewModels
 {
@@ -177,44 +179,53 @@ namespace RecipeMaster.ViewModels
             Messenger.Default.Send(message);
         }
 
-        #endregion
+		#endregion
 
-        #region Sample Code
+		#region Sample Code
 
-        //public async Task LoadDataAsync(VisualState currentState)
-        //{
-        //    _currentState = currentState;
-        //    SampleItems.Clear();
+		//public async Task LoadDataAsync(VisualState currentState)
+		//{
+		//    _currentState = currentState;
+		//    SampleItems.Clear();
 
-        //    var data = await SampleDataService.GetSampleModelDataAsync();
+		//    var data = await SampleDataService.GetSampleModelDataAsync();
 
-        //    foreach (var item in data)
-        //    {
-        //        SampleItems.Add(item);
-        //    }
-        //    Selected = SampleItems.First();
-        //}
+		//    foreach (var item in data)
+		//    {
+		//        SampleItems.Add(item);
+		//    }
+		//    Selected = SampleItems.First();
+		//}
 
-        //private void OnStateChanged(VisualStateChangedEventArgs args)
-        //{
-        //    _currentState = args.NewState;
-        //}
+		//private void OnStateChanged(VisualStateChangedEventArgs args)
+		//{
+		//    _currentState = args.NewState;
+		//}
 
-        //private void OnItemClick(ItemClickEventArgs args)
-        //{
-        //    Order item = args?.ClickedItem as Order;
-        //    if (item != null)
-        //    {
-        //        if (_currentState.Name == NarrowStateName)
-        //        {
-        //            NavigationService.Navigate(typeof(RecipeGroupsDetailViewModel).FullName, item);
-        //        }
-        //        else
-        //        {
-        //            Selected = item;
-        //        }
-        //    }
-        //}
-        #endregion
-    }
+		//private void OnItemClick(ItemClickEventArgs args)
+		//{
+		//    Order item = args?.ClickedItem as Order;
+		//    if (item != null)
+		//    {
+		//        if (_currentState.Name == NarrowStateName)
+		//        {
+		//            NavigationService.Navigate(typeof(RecipeGroupsDetailViewModel).FullName, item);
+		//        }
+		//        else
+		//        {
+		//            Selected = item;
+		//        }
+		//    }
+		//}
+
+		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
+		{
+			//Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
+
+			activeRecipeBox = parameter as RecipeBox;
+			CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
+			await Task.CompletedTask;
+		}
+		#endregion
+	}
 }

@@ -7,13 +7,24 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:RecipeMaster.Views"
+	  xmlns:model="using:RecipeMaster.Models"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:RecipeMaster.ViewModels" x:Name="ThisPage"
       mc:Ignorable="d">
 
     <Page.DataContext>
-        <vm:DetailPageViewModel x:Name="ViewModel" />
+        <vm:DetailPageViewModel x:Name="vm" />
     </Page.DataContext>
+
+	<Page.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/Styles/Buttons.xaml"/>
+				<!--<ResourceDictionary Source="RecipeMaster/Styles/Custom.xaml"/>
+				<ResourceDictionary Source="RecipeMaster/Styles/TextBlock.xaml"/>-->
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -53,7 +64,7 @@
                              RelativePanel.AlignTopWithPanel="True" Text="Detail Page" />
 
         <!--  content  -->
-        <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
+        <!--<ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
@@ -62,7 +73,25 @@
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You passed:" />
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Value, Mode=OneWay, FallbackValue=DesigntimeValue}" />
             </StackPanel>
-        </ScrollViewer>
+        </ScrollViewer>-->
+
+		<Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
+                      RelativePanel.AlignLeftWithPanel="True"
+                      RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.Below="pageHeader">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="2*"/>
+			</Grid.ColumnDefinitions>
+
+			<ListView>
+				<ListView.ItemTemplate>
+					<DataTemplate x:DataType="model:RecipeGroup">
+						<Button Content="{x:Bind Name}" Style="{StaticResource RecipeGroupButtonStyle}"/>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</Grid>
 
     </RelativePanel>
 </Page>

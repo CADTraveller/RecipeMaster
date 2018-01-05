@@ -4,37 +4,37 @@
     xmlns:local="using:RecipeMaster.Styles">
 
 
-    <ResourceDictionary.MergedDictionaries>
+    <!--<ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Styles/_Colors.xaml"/>
         <ResourceDictionary Source="/Styles/_FontSizes.xaml"/>
         <ResourceDictionary Source="/Styles/_Thickness.xaml"/>
-    </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary.MergedDictionaries>-->
 
     <!--Common texts-->
     <Style x:Key="HomeButtonStyle" TargetType="Button">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontWeight" Value="SemiLight"/>
-        <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
+        <!--<Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>-->
         <Setter Property="Width" Value="144"/>
-        <Setter Property="Margin" Value="{StaticResource PageTitleMargin}"/>
+        <!--<Setter Property="Margin" Value="{StaticResource PageTitleMargin}"/>-->
     </Style>
     <Style x:Key="RecipeBoxStyle" TargetType="Button">
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="FontWeight" Value="SemiLight"/>
-        <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
-        <Setter Property="Width" Value="244"/>
-        <Setter Property="Height" Value="244"/>
-        <Setter Property="Margin" Value="{StaticResource PageTitleMargin}"/>
-        <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+		<Setter Property="FontWeight" Value="SemiLight"/>
+		<!--<Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>-->
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="200"/>
+        <!--<Setter Property="Margin" Value="{StaticResource PageTitleMargin}"/>-->
+        <!--<Setter Property="Background" Value="{StaticResource ButtonBackground}"/>-->
     </Style>
     <Style x:Key="RecipeGroupButtonStyle" TargetType="Button">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+        <!--<Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>-->
         <Setter Property="Width" Value="96"/>
         <Setter Property="Height" Value="44"/>
         <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+        <!--<Setter Property="Background" Value="{StaticResource ButtonBackground}"/>-->
     </Style>
 
 </ResourceDictionary>

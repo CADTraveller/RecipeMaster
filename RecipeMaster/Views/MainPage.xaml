@@ -8,11 +8,22 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:RecipeMaster.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:model="using:RecipeMaster.Models"
       xmlns:vm="using:RecipeMaster.ViewModels" mc:Ignorable="d">
 
     <Page.DataContext>
         <vm:MainPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
+	<Page.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/Styles/Buttons.xaml"/>
+				<!--<ResourceDictionary Source="RecipeMaster/Styles/Custom.xaml"/>
+				<ResourceDictionary Source="RecipeMaster/Styles/TextBlock.xaml"/>-->
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -66,7 +77,20 @@
 		<GridView ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes}" 
 				  SelectedItem="{x:Bind ViewModel.SelectedRecipeBox}"
 				  RelativePanel.Below="pageHeader"
-				  Visibility="{x:Bind ViewModel.ShowHistory}"></GridView>
+				  Visibility="{x:Bind ViewModel.ShowHistory}">
+			<GridView.ItemTemplate>
+				<DataTemplate x:DataType="model:RecentRecipeBox">
+					<Grid>
+						<Button Style="{StaticResource RecipeBoxStyle}">
+							<Grid>
+								<Image Source="/Assets/RecipeBoxReal.png" Stretch="UniformToFill" />
+								<TextBlock Text="{Binding Name}"/>
+							</Grid>							
+						</Button>
+					</Grid>
+				</DataTemplate>
+			</GridView.ItemTemplate>
+		</GridView>
 		<TextBlock RelativePanel.Below="pageHeader"
 				   Text="--No Recent Files--"
 				   Visibility="{x:Bind ViewModel.ShowNoHistory}"
