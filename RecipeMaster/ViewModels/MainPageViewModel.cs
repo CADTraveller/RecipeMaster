@@ -35,6 +35,17 @@ namespace RecipeMaster.ViewModels
 		}
 
 
+
+
+
+
+		#region Properties
+		Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+		string _Value = "Gas";
+		public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+
+
 		private bool showRecentFiles;
 
 		public bool ShowRecentFiles
@@ -64,14 +75,14 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
+		private RecipeBox currentRecipeBox;
 
-
-
-		#region Properties
-		Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-		string _Value = "Gas";
-		public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+		private string statusMessage = "Nothing Selected";
+		public string StatusMessage
+		{
+			get { return statusMessage; }
+			set { Set(ref statusMessage, value); }
+		}
 
 		private RecentRecipeBox selectedRecentRecipeBox;
 		public RecentRecipeBox SelectedRecentRecipeBox
@@ -80,7 +91,7 @@ namespace RecipeMaster.ViewModels
 			set
 			{
 				Set(ref selectedRecentRecipeBox, value);
-				GotoDetailsPage();
+				StatusMessage = selectedRecentRecipeBox.Description;
 			}
 		}
 
@@ -161,7 +172,7 @@ namespace RecipeMaster.ViewModels
 		//	NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
 		public void GotoDetailsPage() =>
-			 NavigationService.Navigate(typeof(Views.DetailPage), SelectedRecipeBox);
+			 NavigationService.Navigate(typeof(Views.DetailPage), SelectedRecentRecipeBox);
 
 		public void GotoSettings() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 0);
@@ -174,32 +185,39 @@ namespace RecipeMaster.ViewModels
 
 		public async void OpenFile()
 		{
-			SelectedRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
+			currentRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
+			SelectedRecentRecipeBox = CreateRecentRecipeBox(currentRecipeBox);
 
 			//__make a record of this file for future executions	
 			recordSelectedRecipeBox();
 		}
 
+		private RecentRecipeBox CreateRecentRecipeBox(RecipeBox recipeBox)
+		{
+			RecentRecipeBox rrb = new RecentRecipeBox()
+			{
+				Path = recipeBox.LastPath,
+				Name = recipeBox.Name,
+				LastOpened = DateTime.Now,
+				Description = recipeBox.Description
+			};
+			return rrb;
+		}
+
 		private void recordSelectedRecipeBox()
 		{
-			RecentRecipeBox boxJustOpened = new RecentRecipeBox()
-			{
-				Path = selectedRecipeBox.LastPath,
-				Name = selectedRecipeBox.Name,
-				LastOpened = DateTime.Now,
-				Description = selectedRecipeBox.Description
-			};
+			if (currentRecipeBox == null) return;
 
 			//__add this to the displayed list of recents
 			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 
 			//__remove any existing reference
-			if (RecentRecipeBoxes.Any(r => r.Name == boxJustOpened.Name))
+			if (RecentRecipeBoxes.Any(r => r.Name == selectedRecentRecipeBox.Name))
 			{
-				var cleanedList = RecentRecipeBoxes.Where(r => r.Name != boxJustOpened.Name);
+				var cleanedList = RecentRecipeBoxes.Where(r => r.Name != selectedRecentRecipeBox.Name);
 				RecentRecipeBoxes = cleanedList as ObservableCollection<RecentRecipeBox>;
 			}
-			RecentRecipeBoxes.Insert(0, boxJustOpened);
+			RecentRecipeBoxes.Insert(0, selectedRecentRecipeBox);
 
 			//__record updated list
 			List<RecentRecipeBox> recentsList = recentRecipeBoxes.ToList();

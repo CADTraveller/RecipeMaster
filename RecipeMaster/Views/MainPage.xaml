@@ -62,6 +62,7 @@
         <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
 			<controls:PageHeader.PrimaryCommands >
+				<AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoDetailsPage, Mode=OneWay}" Label="View Recipe Box"/>
 				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile}" Label="Open File"/>
 				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFile}" Label="Save Current"/>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
@@ -74,9 +75,12 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
+
+		<TextBlock x:Name="statusReport" Text="{x:Bind ViewModel.StatusMessage}"
+				   RelativePanel.Below="pageHeader"/>
 		<GridView ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes}" 
-				  SelectedItem="{x:Bind ViewModel.SelectedRecipeBox}"
-				  RelativePanel.Below="pageHeader"
+				  SelectedItem="{x:Bind ViewModel.SelectedRecentRecipeBox}"
+				  RelativePanel.Below="statusReport"
 				  Visibility="{x:Bind ViewModel.ShowHistory}">
 			<GridView.ItemTemplate>
 				<DataTemplate x:DataType="model:RecentRecipeBox">
