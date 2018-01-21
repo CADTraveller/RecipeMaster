@@ -61,8 +61,15 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Detail Page" />
-
+                             RelativePanel.AlignTopWithPanel="True" Text="Recipe Groups">
+	    <controls:PageHeader.PrimaryCommands >
+		    <AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoDetailsPage, Mode=OneWay}" Label="View Recipe Box"/>
+		    <AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile}" Label="Open File"/>
+		    <AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFile}" Label="Save Current"/>
+		    <AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
+	    </controls:PageHeader.PrimaryCommands>
+			
+			</controls:PageHeader>
         <!--  content  -->
         <!--<ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
@@ -84,7 +91,7 @@
 				<ColumnDefinition Width="2*"/>
 			</Grid.ColumnDefinitions>
 
-			<ListView>
+			<ListView ItemsSource="{x:Bind vm.RecipeBox.RecipeGroups}">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="model:RecipeGroup">
 						<Button Content="{x:Bind Name}" Style="{StaticResource RecipeGroupButtonStyle}"/>

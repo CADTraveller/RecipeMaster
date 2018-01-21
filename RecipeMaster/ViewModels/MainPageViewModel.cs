@@ -43,7 +43,8 @@ namespace RecipeMaster.ViewModels
 		Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
 		string _Value = "Gas";
-		public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+		public string Value { get { return _Value; } set => Set(ref _Value, value);
+		}
 
 
 		private bool showRecentFiles;

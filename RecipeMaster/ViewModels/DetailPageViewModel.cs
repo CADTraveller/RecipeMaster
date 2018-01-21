@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,9 @@ using Template10.Common;
 using RecipeMaster.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using Newtonsoft.Json;
+using RecipeMaster.Helpers;
+using RecipeMaster.Models;
 
 namespace RecipeMaster.ViewModels
 {
@@ -20,13 +24,39 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
+		private RecipeBox recipeBox;
+
+		public RecipeBox RecipeBox
+		{
+			get => recipeBox;
+			set => Set(ref recipeBox, value);
+		}
+
+		private RecipeGroup selectedRecipeGroup;
+
+		public RecipeGroup SelectedRecipeGroup
+		{
+			get => selectedRecipeGroup;
+			set => Set(ref selectedRecipeGroup, value);
+		}
+
 		private string _Value = "Default";
 		public string Value { get { return _Value; } set { Set(ref _Value, value); } }
 
+		private void OpenRecipeBox(RecentRecipeBox rrb)
+		{
+			string path = rrb.Path;
+			string json = File.ReadAllText(path);
+			RecipeBox = JsonConvert.DeserializeObject<RecipeBox>(json);
+		}
+
 		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
 		{
-			Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
-			await Task.CompletedTask;
+			//Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
+			//await Task.CompletedTask;
+			RecentRecipeBox rrb = parameter as RecentRecipeBox;
+			OpenRecipeBox(rrb);
+			
 		}
 
 		public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
