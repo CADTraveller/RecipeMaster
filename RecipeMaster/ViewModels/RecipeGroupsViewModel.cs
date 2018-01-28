@@ -21,163 +21,175 @@ using System.Collections.Generic;
 
 namespace RecipeMaster.ViewModels
 {
-    public class RecipeGroupsViewModel : Template10.Mvvm.ViewModelBase
+	public class RecipeGroupsViewModel : Template10.Mvvm.ViewModelBase
 	{
-        public RecipeGroupsViewModel()
-        {
-            //ItemClickCommand = new DelegateCommand<ItemClickEventArgs>(OnItemClick);
-            //StateChangedCommand = new DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
-            //RecipeGroupSelectedCommand = new DelegateCommand(OnRecipeGroupSelected);
-            NewRecipeGroupCommand = new DelegateCommand(NewRecipeGroup);
+		public RecipeGroupsViewModel()
+		{
+			//ItemClickCommand = new DelegateCommand<ItemClickEventArgs>(OnItemClick);
+			//StateChangedCommand = new DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
+			//RecipeGroupSelectedCommand = new DelegateCommand(OnRecipeGroupSelected);
+			//NewRecipeGroupCommand = new DelegateCommand(NewRecipeGroup);
 
-            Messenger.Default.Register<RecipeBoxSelectedMessage>(this, (message) => ReceiveMessage(message));
-        }
+			Messenger.Default.Register<RecipeBoxSelectedMessage>(this, (message) => ReceiveMessage(message));
+		}
 
-        #region Properties
-        //public NavigationServiceEx NavigationService
-        //{
-        //    get
-        //    {
-        //        return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationServiceEx>();
-        //    }
-        //}
+		#region Properties
+		//public NavigationServiceEx NavigationService
+		//{
+		//    get
+		//    {
+		//        return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationServiceEx>();
+		//    }
+		//}
 
-        const string NarrowStateName = "NarrowState";
-        const string WideStateName = "WideState";
+		const string NarrowStateName = "NarrowState";
+		const string WideStateName = "WideState";
 
-        private VisualState _currentState;
-        private RecipeBox activeRecipeBox;
+		private VisualState _currentState;
+		private RecipeBox activeRecipeBox;
 
-        private bool recipeBoxOpen;
-        public bool RecipeBoxOpen
-        {
-            get { return recipeBoxOpen; }
-            set { Set(ref recipeBoxOpen, value); }
-        }
+		private bool recipeBoxOpen;
+		public bool RecipeBoxOpen
+		{
+			get { return recipeBoxOpen; }
+			set { Set(ref recipeBoxOpen, value); }
+		}
 
-        private bool recipeGroupIsSelected;
-        public bool RecipeGroupIsSelected
-        {
-            get { return recipeGroupIsSelected; }
-            set { Set(ref recipeGroupIsSelected, value); }
-        }
+		private bool recipeGroupIsSelected;
+		public bool RecipeGroupIsSelected
+		{
+			get { return recipeGroupIsSelected; }
+			set { Set(ref recipeGroupIsSelected, value); }
+		}
 
-        private ObservableCollection<RecipeGroup> currentRecipeGroups;
-        public ObservableCollection<RecipeGroup> CurrentRecipeGroups
-        {
-            get
-            {
-                if (activeRecipeBox == null) return null;
-                return currentRecipeGroups;
+		private ObservableCollection<RecipeGroup> currentRecipeGroups;
+		public ObservableCollection<RecipeGroup> CurrentRecipeGroups
+		{
+			get
+			{
+				if (activeRecipeBox == null) return null;
+				return currentRecipeGroups;
 
-            }
-            set
-            {
-                Set(ref currentRecipeGroups, value);
-                RecipeGroupIsSelected = true;
-            }
-        }
+			}
+			set
+			{
+				Set(ref currentRecipeGroups, value);
+				RecipeGroupIsSelected = true;
+			}
+		}
 
-        private RecipeGroup selectedRecipeGroup;
-        public RecipeGroup SelectedRecipeGroup
-        {
-            get { return selectedRecipeGroup; }
-            set
-            {
-                Set(ref selectedRecipeGroup, value);
-                RaisePropertyChanged("CurrentRecipes");
-            }
-        }
+		private RecipeGroup selectedRecipeGroup;
+		public RecipeGroup SelectedRecipeGroup
+		{
+			get { return selectedRecipeGroup; }
+			set
+			{
+				Set(ref selectedRecipeGroup, value);
+				RaisePropertyChanged("CurrentRecipes");
+			}
+		}
 
-        private Recipe selectedRecipe;
-        public Recipe SelectedRecipe
-        {
-            get { return selectedRecipe; }
-            set { Set(ref selectedRecipe, value); }
-        }
+		private Recipe selectedRecipe;
+		public Recipe SelectedRecipe
+		{
+			get { return selectedRecipe; }
+			set { Set(ref selectedRecipe, value); }
+		}
 
-        //private ObservableCollection<Recipe> currentRecipes;
-        //public ObservableCollection<Recipe> CurrentRecipes
-        //{
-        //    get
-        //    {
+		private ObservableCollection<Recipe> currentRecipes;
+		public ObservableCollection<Recipe> CurrentRecipes
+		{
+			get
+			{
 
-        //        return currentRecipes;
-        //    }
-        //    set
-        //    {
-        //        Set(ref currentRecipes, value);
-        //        RaisePropertyChanged("CurrentRecipeGroups");
-        //    }
-        //}
-
-
-
-        #endregion
-
-        #region Commands
-        private Order _selected;
-        public Order Selected
-        {
-            get { return _selected; }
-            set { Set(ref _selected, value); }
-        }
-
-        public ICommand ItemClickCommand { get; private set; }
-        public ICommand StateChangedCommand { get; private set; }
-        public ICommand RecipeGroupSelectedCommand { get; private set; }
-        public ICommand NewRecipeGroupCommand { get; private set; }
-        public ICommand RecipeSelectedCommand { get; private set; }
-
-
-        public ObservableCollection<Order> SampleItems { get; private set; } = new ObservableCollection<Order>();
+				return currentRecipes;
+			}
+			set
+			{
+				Set(ref currentRecipes, value);
+				RaisePropertyChanged("CurrentRecipeGroups");
+			}
+		}
 
 
 
+		#endregion
 
-        private object ReceiveMessage(RecipeBoxSelectedMessage item)
-        {
-            activeRecipeBox = item.SelectedRecipeBox;
-            if (currentRecipeGroups == null) currentRecipeGroups = new ObservableCollection<RecipeGroup>();
-            // if (currentRecipes == null) currentRecipes = new ObservableCollection<Recipe>();
-            CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
-            RecipeBoxOpen = true;
-            return null;
-        }
+		#region Commands
 
-        private void NewRecipeGroup()
-        {
-            NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Group Name");
-            var result = dialog.ShowAsync();
 
-            RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
-            CurrentRecipeGroups.Add(newGroup);
-        }
+		//public ICommand ItemClickCommand { get; private set; }
+		//public ICommand StateChangedCommand { get; private set; }
+		//public ICommand RecipeGroupSelectedCommand { get; private set; }
+		//public ICommand NewRecipeGroupCommand { get; private set; }
+		//public ICommand RecipeSelectedCommand { get; private set; }
 
-        private DelegateCommand newRecipeCommand;
-        public DelegateCommand NewRecipeCommand =>
-            newRecipeCommand ?? (newRecipeCommand = new DelegateCommand(async () => await CreateNewRecipeAsync()));
-        public async Task CreateNewRecipeAsync()
-        {
-            NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
-            var result = await dialog.ShowAsync();
-            if (dialog.WasCancelled) return;
-            Recipe newRecipe = new Recipe(dialog.TextEntry);
-            SelectedRecipeGroup.Recipes.Add(newRecipe);
 
-        }
+			private object ReceiveMessage(RecipeBoxSelectedMessage item)
+		{
+			activeRecipeBox = item.SelectedRecipeBox;
+			if (currentRecipeGroups == null) currentRecipeGroups = new ObservableCollection<RecipeGroup>();
+			// if (currentRecipes == null) currentRecipes = new ObservableCollection<Recipe>();
+			CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
+			RecipeBoxOpen = true;
+			return null;
+		}
 
-        private DelegateCommand activateRecipeCommand;
-        public DelegateCommand ActivateRecipeCommand =>
-            activateRecipeCommand ??
-            (activateRecipeCommand = new DelegateCommand(async () => await ActivateRecipe()));
+		public async Task NewRecipeGroupAsync()
+		{
+			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Group Name");
+			var result = await dialog.ShowAsync();
 
-        public async Task ActivateRecipe()
-        {
-            if (selectedRecipe == null) return;
-            RecipeSelectedMessage message = new RecipeSelectedMessage() { SelectedRecipe = selectedRecipe };
-            Messenger.Default.Send(message);
-        }
+			RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
+			CurrentRecipeGroups.Add(newGroup);
+		}
+
+		public void GoToRecipeDetail()
+		{
+			if (SelectedRecipe == null) return;
+			NavigationService.Navigate(typeof(RecipeView), SelectedRecipe);
+		}
+
+		public async Task NewRecipeAsync()
+		{
+			if (SelectedRecipeGroup == null) return;
+			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
+			var result = await dialog.ShowAsync();
+			Recipe newRecipe = new Recipe(dialog.TextEntry);
+			SelectedRecipeGroup.Recipes.Add(newRecipe);
+			SelectedRecipe = newRecipe;
+			await SaveRecipeBoxAsync();
+			GoToRecipeDetail();
+		}
+
+		public async Task SaveRecipeBoxAsync()
+		{
+			await FileIOService.SaveRecipeBoxAsync(activeRecipeBox);
+		}
+		//private DelegateCommand newRecipeCommand;
+		//public DelegateCommand NewRecipeCommand =>
+		//	newRecipeCommand ?? (newRecipeCommand = new DelegateCommand(async () => await CreateNewRecipeAsync()));
+		//public async Task CreateNewRecipeAsync()
+		//{
+		//	NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
+		//	var result = await dialog.ShowAsync();
+		//	if (dialog.WasCancelled) return;
+		//	Recipe newRecipe = new Recipe(dialog.TextEntry);
+		//	SelectedRecipeGroup.Recipes.Add(newRecipe);
+
+		//}
+
+		//private DelegateCommand activateRecipeCommand;
+		//public DelegateCommand ActivateRecipeCommand =>
+		//	activateRecipeCommand ??
+		//	(activateRecipeCommand = new DelegateCommand(async () => await ActivateRecipe()));
+
+		//public async Task ActivateRecipe()
+		//{
+		//	if (selectedRecipe == null) return;
+		//	RecipeSelectedMessage message = new RecipeSelectedMessage() { SelectedRecipe = selectedRecipe };
+		//	Messenger.Default.Send(message);
+		//}
 
 		#endregion
 
@@ -221,9 +233,18 @@ namespace RecipeMaster.ViewModels
 		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
 		{
 			//Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
+			
+			try
+			{				
+				activeRecipeBox = parameter as RecipeBox;
+				CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
+			}
+			catch (Exception e)
+			{
 
-			activeRecipeBox = parameter as RecipeBox;
-			CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
+				throw e;
+			}
+
 			await Task.CompletedTask;
 		}
 		#endregion

@@ -13,15 +13,16 @@
       mc:Ignorable="d">
 
     <Page.DataContext>
-        <vm:DetailPageViewModel x:Name="vm" />
+        <vm:RecipeGroupsViewModel x:Name="vm" />
     </Page.DataContext>
 
 	<Page.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="/Styles/Buttons.xaml"/>
-				<!--<ResourceDictionary Source="RecipeMaster/Styles/Custom.xaml"/>
-				<ResourceDictionary Source="RecipeMaster/Styles/TextBlock.xaml"/>-->
+				<ResourceDictionary Source="/Styles/Custom.xaml"/>
+				<ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+				<ResourceDictionary Source="/Styles/TextBox.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Page.Resources>
@@ -58,10 +59,17 @@
         </VisualStateManager.VisualStateGroups>
 
         <!--  header  -->
-        <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
+		<controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Detail Page" />
+                             RelativePanel.AlignTopWithPanel="True" Text="Detail Page">
+			<controls:PageHeader.PrimaryCommands >
+				<AppBarButton Icon="View" Click="{x:Bind vm.GoToRecipeDetail, Mode=OneWay}" Label="View Recipe"/>
+				<AppBarButton Icon="Add" Click="{x:Bind vm.NewRecipeAsync}" Label="New Recipe"/>
+				<AppBarButton Icon="Save" Click="{x:Bind vm.SaveRecipeBoxAsync}" Label="Save Recipe Box"/>
+				<AppBarButton Icon="NewFolder" Click="{x:Bind vm.NewRecipeGroupAsync}" Label="New Recipe Group"/>
+			</controls:PageHeader.PrimaryCommands>
+		</controls:PageHeader>
 
         <!--  content  -->
         <!--<ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
@@ -84,13 +92,40 @@
 				<ColumnDefinition Width="2*"/>
 			</Grid.ColumnDefinitions>
 
-			<ListView>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="36"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<ListView ItemsSource="{x:Bind vm.CurrentRecipeGroups, Mode=TwoWay}"
+					  SelectedItem="{x:Bind vm.SelectedRecipeGroup, Mode=TwoWay}"
+					  Name="RecipeGroupsList"
+					  Grid.Row="1">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="model:RecipeGroup">
-						<Button Content="{x:Bind Name}" Style="{StaticResource RecipeGroupButtonStyle}"/>
+						<TextBox Text="{x:Bind Name, Mode=TwoWay}" Style="{StaticResource ListTitleStyle}"/>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
+
+			<ListView ItemsSource="{x:Bind vm.SelectedRecipeGroup.Recipes, Mode=TwoWay}"
+					  SelectedItem="{x:Bind vm.SelectedRecipe, Mode=TwoWay}"
+					  
+					  Grid.Column="1" Grid.Row="1">
+				<ListView.ItemTemplate>
+					<DataTemplate x:DataType="model:Recipe">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="{x:Bind Name, Mode=TwoWay}"
+									   Style="{StaticResource ListSubTitleStyle}"/>
+							<TextBlock Text=":  "
+									   Style="{StaticResource ListSubTitleStyle}"/>
+							<TextBlock Text="{x:Bind Description, Mode=TwoWay}"
+									   Style="{StaticResource ListSubTitleStyle}"/>
+						</StackPanel>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+					  
 		</Grid>
 
     </RelativePanel>

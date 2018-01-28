@@ -15,14 +15,5 @@ namespace RecipeMaster.Views
 			NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 		}
 
-		private void AppBarButton_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void GoToDetails()
-		{
-			ViewModel.GotoDetailsPage();
-		}
 	}
 }

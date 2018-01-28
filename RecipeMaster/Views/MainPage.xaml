@@ -9,7 +9,8 @@
       xmlns:local="using:RecipeMaster.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	  xmlns:model="using:RecipeMaster.Models"
-      xmlns:vm="using:RecipeMaster.ViewModels" mc:Ignorable="d">
+      xmlns:vm="using:RecipeMaster.ViewModels" 
+	  mc:Ignorable="d">
 
     <Page.DataContext>
         <vm:MainPageViewModel x:Name="ViewModel" />
@@ -63,8 +64,8 @@
 
 			<controls:PageHeader.PrimaryCommands >
 				<AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoDetailsPage, Mode=OneWay}" Label="View Recipe Box"/>
-				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFile}" Label="Open File"/>
-				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFile}" Label="Save Current"/>
+				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFileAsync}" Label="Import File"/>
+				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFileAsync}" Label="Save Current"/>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
 			</controls:PageHeader.PrimaryCommands>
             <!--  secondary commands  -->
@@ -76,27 +77,25 @@
 
         </controls:PageHeader>
 
-		<TextBlock x:Name="statusReport" Text="{x:Bind ViewModel.StatusMessage}"
+		<TextBlock x:Name="statusReport" Text="{x:Bind ViewModel.StatusMessage, Mode=TwoWay}"
 				   RelativePanel.Below="pageHeader"/>
-		<GridView ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes}" 
-				  SelectedItem="{x:Bind ViewModel.SelectedRecentRecipeBox}"
+		<GridView  
+				  SelectedItem="{x:Bind ViewModel.SelectedRecentRecipeBox, Mode=TwoWay}"
+				  SelectionMode="Single"
+				ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes, Mode=TwoWay}"
 				  RelativePanel.Below="statusReport"
 				  Visibility="{x:Bind ViewModel.ShowHistory}">
 			<GridView.ItemTemplate>
 				<DataTemplate x:DataType="model:RecentRecipeBox">
-					<Grid>
-						<Button Style="{StaticResource RecipeBoxStyle}">
-							<Grid>
+					<Grid MaxWidth="100" MaxHeight="100">
 								<Image Source="/Assets/RecipeBoxReal.png" Stretch="UniformToFill" />
-								<TextBlock Text="{Binding Name}"/>
-							</Grid>							
-						</Button>
+								<TextBlock Text="{x:Bind Name}"/>					
 					</Grid>
 				</DataTemplate>
 			</GridView.ItemTemplate>
 		</GridView>
 		<TextBlock RelativePanel.Below="pageHeader"
-				   Text="--No Recent Files--"
+				   Text="-No Recent Files-"
 				   Visibility="{x:Bind ViewModel.ShowNoHistory}"
 				   FontSize="30"
 				   VerticalAlignment="Center"

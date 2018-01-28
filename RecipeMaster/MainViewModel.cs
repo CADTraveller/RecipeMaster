@@ -133,7 +133,7 @@ namespace RecipeMaster.ViewModels
             (saveRecipeBoxCommand = new DelegateCommand(async () => await SaveCurrentRecipeBoxAsync()));
         public async Task SaveCurrentRecipeBoxAsync()
         {
-            await FileIOService.SaveRecipeBox(SelectedRecipeBox);
+            await FileIOService.SaveRecipeBoxAsync(SelectedRecipeBox);
         }
 
         #endregion

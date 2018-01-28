@@ -13,7 +13,7 @@ using Template10.Services.NavigationService;
 
 namespace RecipeMaster.ViewModels
 {
-    public class RecipesDetailViewModel : Mvvm.ViewModelBase
+    public class RecipeDetailViewModel : Mvvm.ViewModelBase
     {
 
         //public NavigationService NavigationService
@@ -35,7 +35,7 @@ namespace RecipeMaster.ViewModels
             set { Set(ref _item, value); }
         }
 
-        public RecipesDetailViewModel()
+        public RecipeDetailViewModel()
         {
             StateChangedCommand = new DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
         }

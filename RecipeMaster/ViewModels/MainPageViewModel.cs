@@ -171,8 +171,12 @@ namespace RecipeMaster.ViewModels
 		//public void GotoDetailsPage() =>
 		//	NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
-		public void GotoDetailsPage() =>
-			 NavigationService.Navigate(typeof(Views.DetailPage), SelectedRecentRecipeBox);
+		public async Task GotoDetailsPage()
+		{
+			if (SelectedRecentRecipeBox == null) return;
+			currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(SelectedRecentRecipeBox);
+			NavigationService.Navigate(typeof(Views.DetailPage), currentRecipeBox);
+		}
 
 		public void GotoSettings() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 0);
@@ -183,13 +187,18 @@ namespace RecipeMaster.ViewModels
 		public void GotoAbout() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 2);
 
-		public async void OpenFile()
+		public async void OpenFileAsync()
 		{
-			currentRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
-			SelectedRecentRecipeBox = CreateRecentRecipeBox(currentRecipeBox);
 
-			//__make a record of this file for future executions	
-			recordSelectedRecipeBox();
+			RecentRecipeBox rrb  = await FileIOService.ImportRecipeBoxAsync();
+			//SelectedRecentRecipeBox = CreateRecentRecipeBox(currentRecipeBox);
+			//RecentRecipeBoxes.Add(SelectedRecentRecipeBox);
+			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+			RecentRecipeBoxes.Insert(0, rrb);
+
+			currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(rrb);
+			SelectedRecentRecipeBox = rrb;
+			GotoDetailsPage();
 		}
 
 		private RecentRecipeBox CreateRecentRecipeBox(RecipeBox recipeBox)
@@ -204,57 +213,70 @@ namespace RecipeMaster.ViewModels
 			return rrb;
 		}
 
-		private void recordSelectedRecipeBox()
+		//private void recordSelectedRecipeBox()
+		//{
+		//	if (currentRecipeBox == null) return;
+
+		//	//__add this to the displayed list of recents
+		//	if (recentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
+
+		//	//__remove any existing reference
+		//	if (RecentRecipeBoxes.Any(r => r.Name == selectedRecentRecipeBox.Name))
+		//	{
+		//		var cleanedList = RecentRecipeBoxes.Where(r => r.Name != selectedRecentRecipeBox.Name);
+		//		RecentRecipeBoxes = cleanedList as ObservableCollection<RecentRecipeBox>;
+		//	}
+		//	RecentRecipeBoxes.Insert(0, selectedRecentRecipeBox);
+
+		//	//__record updated list
+		//	List<RecentRecipeBox> recentsList = recentRecipeBoxes.ToList();
+		//	string recentsJson = JsonConvert.SerializeObject(recentsList);
+		//	localSettings.Values[storedRecentsKey] = recentsJson;
+		//}
+
+		private async Task populateRecentRecipeBoxList()
+		{
+			//if (!localSettings.Values.ContainsKey(storedRecentsKey))
+			//{
+			//	RaisePropertyChanged("ShowNoHistory");
+			//	return;
+			//}
+
+			//string storedRecentsJson = localSettings.Values[storedRecentsKey].ToString();
+			//if (string.IsNullOrEmpty(storedRecentsJson)) return;
+
+			//try
+			//{
+			//	List<RecentRecipeBox> storedRecents = JsonConvert.DeserializeObject<List<RecentRecipeBox>>(storedRecentsJson);
+			//	if (recentRecipeBoxes != null) RecentRecipeBoxes.Clear();
+
+			//	RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedRecents);
+			//	RaisePropertyChanged("ShowHistory");
+			//}
+			//catch (Exception)//__entry is corrupt or wrong format
+			//{
+			//	localSettings.Values.Remove(storedRecentsKey);
+			//}
+
+			List<RecentRecipeBox> boxesOnFile = await FileIOService.ListKnownRecipeBoxes();
+			if (RecentRecipeBoxes != null)
+			{
+				RecentRecipeBoxes.Clear();
+				foreach (RecentRecipeBox rrb in boxesOnFile)
+				{
+					RecentRecipeBoxes.Add(rrb);
+				}
+			}
+			else RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(boxesOnFile);
+
+		}
+
+
+		public async Task SaveFileAsync()
 		{
 			if (currentRecipeBox == null) return;
 
-			//__add this to the displayed list of recents
-			if (recentRecipeBoxes == null) recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
-
-			//__remove any existing reference
-			if (RecentRecipeBoxes.Any(r => r.Name == selectedRecentRecipeBox.Name))
-			{
-				var cleanedList = RecentRecipeBoxes.Where(r => r.Name != selectedRecentRecipeBox.Name);
-				RecentRecipeBoxes = cleanedList as ObservableCollection<RecentRecipeBox>;
-			}
-			RecentRecipeBoxes.Insert(0, selectedRecentRecipeBox);
-
-			//__record updated list
-			List<RecentRecipeBox> recentsList = recentRecipeBoxes.ToList();
-			string recentsJson = JsonConvert.SerializeObject(recentsList);
-			localSettings.Values[storedRecentsKey] = recentsJson;
-		}
-
-		private void populateRecentRecipeBoxList()
-		{
-			if (!localSettings.Values.ContainsKey(storedRecentsKey))
-			{
-				RaisePropertyChanged("ShowNoHistory");
-				return;
-			}
-
-			string storedRecentsJson = localSettings.Values[storedRecentsKey].ToString();
-			if (string.IsNullOrEmpty(storedRecentsJson)) return;
-
-			try
-			{
-				List<RecentRecipeBox> storedRecents = JsonConvert.DeserializeObject<List<RecentRecipeBox>>(storedRecentsJson);
-				if (recentRecipeBoxes != null) RecentRecipeBoxes.Clear();
-
-				RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedRecents);
-				RaisePropertyChanged("ShowHistory");
-			}
-			catch (Exception)//__entry is corrupt or wrong format
-			{
-				localSettings.Values.Remove(storedRecentsKey);
-			}
-
-		}
-
-
-		public void SaveFile()
-		{
-
+			await FileIOService.SaveRecipeBoxAsync(currentRecipeBox);
 		}
 
 		public async void NewRecipeBox()
