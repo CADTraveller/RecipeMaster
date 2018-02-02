@@ -5,6 +5,9 @@
     xmlns:local="using:RecipeMaster.Views"
 	xmlns:controls="using:Template10.Controls"
 	xmlns:viewModels="using:RecipeMaster.ViewModels"
+	xmlns:data="using:WinRTXamlToolkit.Controls.Data"
+    xmlns:xamlTK="using:WinRTXamlToolkit.Controls"
+	xmlns:model="using:RecipeMaster.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -18,8 +21,16 @@
 				<ResourceDictionary Source="/Styles/Buttons.xaml"/>
 				<ResourceDictionary Source="/Styles/Custom.xaml"/>
 				<ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+				<ResourceDictionary Source="/Styles/TextBox.xaml"/>
+				
+					<ResourceDictionary
+                    Source="ms-appx:///WinRTXamlToolkit/Controls/TreeView/TreeViewTouch.xaml" />
+					<ResourceDictionary
+                    Source="ms-appx:///WinRTXamlToolkit/Controls/TreeView/TreeViewMouse.xaml" />
+				
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
+		
 	</Page.Resources>
 
 	<RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -59,8 +70,9 @@
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="Detail Page">
 				<controls:PageHeader.PrimaryCommands >
-				
-				</controls:PageHeader.PrimaryCommands>
+				<AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
+
+			</controls:PageHeader.PrimaryCommands>
 			</controls:PageHeader>
 
 			<!--  content  -->
@@ -75,15 +87,45 @@
             </StackPanel>
         </ScrollViewer>-->
 
-			<Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
+		<Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-					<ColumnDefinition Width="2*"/>
-				</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="32"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
+							 x:Name="IngredientsTreeView"
+							 SelectedItem="{Binding vm.SelectedIngredient, Mode=OneWay}"
+							Grid.Row="1">
+				<xamlTK:TreeView.ItemTemplate >
+				<!--<DataTemplate x:DataType="model:Ingredient">
+						<StackPanel Orientation="Horizontal">
+							<TextBox Text="{x:Bind Name}"/>
+							<TextBox Text=" - "/>
+							<TextBox Text="{x:Bind Percent}"/>
+							<TextBox Text="% "/>
 
+							<TextBox Text="{x:Bind Weight}"/>
+							<TextBox Text=" gm "/>
+
+						</StackPanel>
+					</DataTemplate>-->
+					<DataTemplate x:DataType="model:Ingredient">
+					
+					<data:DataTemplateExtensions.Hierarchy >
+						<data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}" />
+					</data:DataTemplateExtensions.Hierarchy>
+						
+					<StackPanel Orientation="Horizontal">
+						<TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
+
+					</StackPanel>
+				</DataTemplate>
+				</xamlTK:TreeView.ItemTemplate>
+
+			</xamlTK:TreeView>
 				
 			</Grid>
 

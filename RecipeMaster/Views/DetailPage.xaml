@@ -103,7 +103,7 @@
 					  Grid.Row="1">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="model:RecipeGroup">
-						<TextBox Text="{x:Bind Name, Mode=TwoWay}" Style="{StaticResource ListTitleStyle}"/>
+						<TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
