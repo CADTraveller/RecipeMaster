@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeMaster", "RecipeMaster\RecipeMaster.csproj", "{B722AA83-6069-4EC1-9BE6-CFC7E0130FEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeView", "XamlTreeView\cs\TreeView.csproj", "{646E8745-5342-55B2-A99D-01F4201D1DFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +35,29 @@ Global
 		{B722AA83-6069-4EC1-9BE6-CFC7E0130FEC}.Release|x86.ActiveCfg = Release|x86
 		{B722AA83-6069-4EC1-9BE6-CFC7E0130FEC}.Release|x86.Build.0 = Release|x86
 		{B722AA83-6069-4EC1-9BE6-CFC7E0130FEC}.Release|x86.Deploy.0 = Release|x86
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|ARM.Build.0 = Debug|ARM
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|ARM.Deploy.0 = Debug|ARM
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|x64.ActiveCfg = Debug|x64
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|x64.Build.0 = Debug|x64
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|x64.Deploy.0 = Debug|x64
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|x86.ActiveCfg = Debug|x86
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|x86.Build.0 = Debug|x86
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Debug|x86.Deploy.0 = Debug|x86
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|ARM.ActiveCfg = Release|ARM
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|ARM.Build.0 = Release|ARM
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|ARM.Deploy.0 = Release|ARM
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|x64.ActiveCfg = Release|x64
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|x64.Build.0 = Release|x64
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|x64.Deploy.0 = Release|x64
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|x86.ActiveCfg = Release|x86
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|x86.Build.0 = Release|x86
+		{646E8745-5342-55B2-A99D-01F4201D1DFA}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4257DE3-B8E2-405E-B483-A11BE69820D6}
 	EndGlobalSection
 EndGlobal
