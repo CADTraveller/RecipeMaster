@@ -97,7 +97,7 @@
 			</Grid.RowDefinitions>
 			<xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
 							 x:Name="IngredientsTreeView"
-							 SelectedItem="{Binding vm.SelectedIngredient, Mode=OneWay}"
+							 
 							Grid.Row="1">
 				<xamlTK:TreeView.ItemTemplate >
 				<!--<DataTemplate x:DataType="model:Ingredient">

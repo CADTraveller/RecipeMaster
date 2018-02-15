@@ -105,7 +105,7 @@ namespace RecipeMaster.ViewModels
 			var dialog = new NewNamedItemDialog();
 			var result = await dialog.ShowAsync();
 
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, SelectedIn)
+			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, SelectedIngredient);
 		}
 
 		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
