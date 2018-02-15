@@ -4,7 +4,7 @@
 
 namespace RecipeMaster.Views
 {
-    public sealed partial class NewNamedItemDialog : ContentDialog
+    public sealed partial class NewNamedItemDialog
     {
         public NewNamedItemDialog(string title = "Enter Name")
         {

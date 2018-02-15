@@ -2,6 +2,7 @@
 using RecipeMaster.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -168,15 +169,17 @@ namespace RecipeMaster.Services
 
 		public static async Task SaveRecipeBoxAsync(RecipeBox recipeBox)
 		{
-			//string path = recipeBox.LastPath;
-			StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+			string path = recipeBox.LastPath;
+			//StorageFolder storageFolder = new StorageFolder();
+            // todo Check that this path exists, prompt user to browse if not
 			string recipeBoxName = recipeBox.Name;
 
 			try
 			{
 				string recipeBoxJson = JsonConvert.SerializeObject(recipeBox);
-				StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
-				await FileIO.WriteTextAsync(file, recipeBoxJson);
+				//StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
+                File.WriteAllText(path, recipeBoxJson);
+				//await FileIO.WriteTextAsync(file, recipeBoxJson);
 				return;
 			}
 			catch (Exception e)

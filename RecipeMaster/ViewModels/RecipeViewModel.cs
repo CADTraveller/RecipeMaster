@@ -102,7 +102,7 @@ namespace RecipeMaster.ViewModels
 
 		public async Task NewIngredientAsync()
 		{
-			var dialog = new NewNamedItemDialog();
+			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 			var result = await dialog.ShowAsync();
 
 			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, SelectedIngredient);

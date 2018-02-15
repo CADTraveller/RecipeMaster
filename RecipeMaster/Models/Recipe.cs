@@ -84,21 +84,13 @@ namespace RecipeMaster.Models
         public Recipe(string name = "New Recipe")
         {
             this.name = name;
-            description = "Description of the recipe here";
+            description = "Please enter description";
             totalWeight = 1000;
             //__build default Lists
             steps = new ObservableCollection<Step>();
             ingredients = new ObservableCollection<Ingredient>();
         }
-        public Recipe()
-        {
-            // name = "New Recipe";
-            //description = "Description of the recipe here";
-            //totalWeight = 1000;
-            //__build default Lists
-            steps = new ObservableCollection<Step>();
-            ingredients = new ObservableCollection<Ingredient>();
-        }
+
         public void CalculateHydration()
         {
 

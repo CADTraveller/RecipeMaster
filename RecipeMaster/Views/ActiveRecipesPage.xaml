@@ -6,7 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:RecipeMaster.Models"
     xmlns:tk="using:WinRTXamlToolkit.Controls"
-    xmlns:t="using:RecipeMaster.DataTemplates"
     xmlns:data="using:WinRTXamlToolkit.Controls.Data"
     DataContext="{Binding ActiveRecipesViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
@@ -22,7 +21,6 @@
             x:Name="TitlePage"
             x:Uid="ActiveRecipes_Pivot"
             Text="Navigation Item 1"
-            Style="{StaticResource PageTitleStyle}"
             Margin="12,0,12,7"/>
 
         <Pivot Grid.Row="1"
@@ -49,7 +47,7 @@
                                         <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}"/>
                                     </data:DataTemplateExtensions.Hierarchy>
                                     <Border BorderBrush="#FF3A5F49">
-                                        <t:IngredientView/>
+                                        
                                     </Border>
                                 </DataTemplate>
 

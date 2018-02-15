@@ -164,7 +164,7 @@ namespace RecipeMaster.ViewModels
 
 		#region Commands
 		private DelegateCommand viewRecipeBoxDetailsCommand;
-		public DelegateCommand ViewRecipeBoxDetailsCommand => viewRecipeBoxDetailsCommand ?? (viewRecipeBoxDetailsCommand = new DelegateCommand(() => GotoDetailsPage()));
+		public DelegateCommand ViewRecipeBoxDetailsCommand => viewRecipeBoxDetailsCommand ?? (viewRecipeBoxDetailsCommand = new DelegateCommand(() => GotoRecipeGroupsView()));
 
 		#endregion
 
@@ -172,11 +172,11 @@ namespace RecipeMaster.ViewModels
 		//public void GotoDetailsPage() =>
 		//	NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
-		public async Task GotoDetailsPage()
+		public async Task GotoRecipeGroupsView()
 		{
 			if (SelectedRecentRecipeBox == null) return;
 			currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(SelectedRecentRecipeBox);
-			NavigationService.Navigate(typeof(Views.DetailPage), currentRecipeBox);
+			NavigationService.Navigate(typeof(Views.RecipeGroupsView), currentRecipeBox);
 		}
 
 		public void GotoSettings() =>
@@ -199,7 +199,7 @@ namespace RecipeMaster.ViewModels
 
 			currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(rrb);
 			SelectedRecentRecipeBox = rrb;
-			GotoDetailsPage();
+			await GotoRecipeGroupsView();
 		}
 
 		private RecentRecipeBox CreateRecentRecipeBox(RecipeBox recipeBox)

@@ -63,7 +63,7 @@
         <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
 			<controls:PageHeader.PrimaryCommands >
-				<AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoDetailsPage, Mode=OneWay}" Label="View Recipe Box"/>
+				<AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoRecipeGroupsView, Mode=OneWay}" Label="View Recipe Box"/>
 				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFileAsync}" Label="Import File"/>
 				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFileAsync}" Label="Save Current"/>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>

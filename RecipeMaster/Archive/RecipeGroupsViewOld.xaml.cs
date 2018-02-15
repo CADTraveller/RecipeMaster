@@ -7,14 +7,14 @@ using Windows.UI.Xaml.Input;
 
 namespace RecipeMaster.Views
 {
-    public sealed partial class RecipeGroupsPage : Page
+    public sealed partial class RecipeGroupsViewOld
     {
         private RecipeGroupsViewModel ViewModel
         {
             get { return DataContext as RecipeGroupsViewModel; }
         }
 
-        public RecipeGroupsPage()
+        public RecipeGroupsViewOld()
         {
             InitializeComponent();
             Loaded += OnLoaded;
@@ -22,7 +22,7 @@ namespace RecipeMaster.Views
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            await ViewModel.LoadDataAsync(WindowStates.CurrentState);
+            //await ViewModel.LoadDataAsync(WindowStates.CurrentState);
         }
 
         public  void RecipeGroup_RightTapped(object sender, RightTappedRoutedEventArgs e)
