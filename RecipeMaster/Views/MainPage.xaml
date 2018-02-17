@@ -64,7 +64,7 @@
 
 			<controls:PageHeader.PrimaryCommands >
 				<AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoRecipeGroupsView, Mode=OneWay}" Label="View Recipe Box"/>
-				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.OpenFileAsync}" Label="Import File"/>
+				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.ImportFileAsync}" Label="Import File"/>
 				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFileAsync}" Label="Save Current"/>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box"/>
 			</controls:PageHeader.PrimaryCommands>
@@ -77,30 +77,30 @@
 
         </controls:PageHeader>
 
-		<TextBlock x:Name="statusReport" Text="{x:Bind ViewModel.StatusMessage, Mode=TwoWay}"
-				   RelativePanel.Below="pageHeader"/>
+		<!--<TextBlock x:Name="statusReport" Text="{x:Bind ViewModel.StatusMessage, Mode=TwoWay}"
+				   RelativePanel.Below="pageHeader"/>-->
 		<GridView  
 				  SelectedItem="{x:Bind ViewModel.SelectedRecentRecipeBox, Mode=TwoWay}"
 				  SelectionMode="Single"
-				ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes, Mode=TwoWay}"
-				  RelativePanel.Below="statusReport"
-				  Visibility="{x:Bind ViewModel.ShowHistory}">
+				ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes, Mode=OneWay}"
+				  RelativePanel.Below="pageHeader"
+				  Visibility="{x:Bind ViewModel.ShowHistory, Mode=OneWay}">
 			<GridView.ItemTemplate>
 				<DataTemplate x:DataType="model:RecentRecipeBox">
-					<Grid MaxWidth="100" MaxHeight="100">
+					<Grid Width="100" Height="100">
 								<Image Source="/Assets/RecipeBoxReal.png" Stretch="UniformToFill" />
 								<TextBlock Text="{x:Bind Name}"/>					
 					</Grid>
 				</DataTemplate>
 			</GridView.ItemTemplate>
 		</GridView>
-		<TextBlock RelativePanel.Below="pageHeader"
+		<!--<TextBlock RelativePanel.Below="pageHeader"
 				   Text="-No Recent Files-"
-				   Visibility="{x:Bind ViewModel.ShowNoHistory}"
+				   Visibility="{x:Bind ViewModel.ShowNoHistory, Mode=OneWay}"
 				   FontSize="30"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center"
-				   />
+				   />-->
 		<!--<controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
                           RelativePanel.AlignLeftWithPanel="True"
                           RelativePanel.Below="pageHeader">

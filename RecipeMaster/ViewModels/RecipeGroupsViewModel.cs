@@ -95,12 +95,13 @@ namespace RecipeMaster.ViewModels
             get
             {
 
-                return currentRecipes;
+                return SelectedRecipeGroup.Recipes;
             }
             set
             {
                 Set(ref currentRecipes, value);
-                RaisePropertyChanged("CurrentRecipeGroups");
+				SelectedRecipeGroup.Recipes = currentRecipes;
+                RaisePropertyChanged();
             }
         }
 

@@ -11,6 +11,7 @@ namespace RecipeMaster.Models
         public RecentRecipeBox(string name = "Name")
         {
             this.name = name;
+			LastOpened = new DateTime();
         }
         private string recipeBoxImagePath = "/Assets/RecipeBoxReal.jpg";
 		[JsonProperty]

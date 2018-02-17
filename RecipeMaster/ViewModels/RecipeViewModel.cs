@@ -31,6 +31,7 @@ namespace RecipeMaster.ViewModels
         public RecipeViewModel()
         {
 			ingredients = new ObservableCollection<Ingredient>();
+			//CurrentRecipe = new Recipe();//__put a dummy in place to prevent errors
         }
 
 		private Recipe currentRecipe;
@@ -49,7 +50,12 @@ namespace RecipeMaster.ViewModels
 		private ObservableCollection<Ingredient> ingredients;
 		public ObservableCollection<Ingredient> Ingredients
 		{
-			get => currentRecipe.Ingredients;
+			get
+			{
+				if (currentRecipe == null) return null;
+				return currentRecipe.Ingredients;
+			}
+
 			set
 			{
 				Set(ref ingredients, value);
@@ -106,6 +112,7 @@ namespace RecipeMaster.ViewModels
 			var result = await dialog.ShowAsync();
 
 			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, SelectedIngredient);
+			Ingredients.Add(newIngredient);
 		}
 
 		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)

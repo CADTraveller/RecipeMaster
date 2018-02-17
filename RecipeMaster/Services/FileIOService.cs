@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RecipeMaster.Models;
+using RecipeMaster.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,9 +51,9 @@ namespace RecipeMaster.Services
 
 		}
 
-		public static async Task<List<RecentRecipeBox >> ListKnownRecipeBoxes()
+		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
 		{
-			StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+			StorageFolder storageFolder = ApplicationData.Current.RoamingFolder;
 			Windows.Storage.Search.StorageFileQueryResult query = storageFolder.CreateFileQuery();
 			var files = await query.GetFilesAsync();
 			List<RecentRecipeBox> recentRecipeBoxes = new List<RecentRecipeBox>();
@@ -60,7 +61,7 @@ namespace RecipeMaster.Services
 			{
 				RecentRecipeBox rrb = new RecentRecipeBox(file.DisplayName);
 				Windows.Storage.FileProperties.BasicProperties fileProperties = await file.GetBasicPropertiesAsync();
-				rrb.LastOpened = Convert.ToDateTime(fileProperties.DateModified);
+				rrb.LastOpened = fileProperties.DateModified.Date;
 				recentRecipeBoxes.Add(rrb);
 			}
 			return recentRecipeBoxes;
@@ -79,6 +80,15 @@ namespace RecipeMaster.Services
 
 		}
 
+		public static async Task StoreRecipeBoxAsync(RecipeBox rb)
+		{
+			StorageFolder roaming = ApplicationData.Current.RoamingFolder;
+			StorageFile file = await roaming.CreateFileAsync(rb.Name);
+
+			string rbJson = JsonConvert.SerializeObject(rb);
+			await FileIO.WriteTextAsync(file, rbJson);
+		}
+
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
 
@@ -90,7 +100,7 @@ namespace RecipeMaster.Services
 			//// Default file name if the user does not type one in or select a file to replace
 			//savePicker.SuggestedFileName = "New Document";
 			//StorageFile file = await savePicker.PickSaveFileAsync();
-			
+
 			try
 			{
 
@@ -118,7 +128,12 @@ namespace RecipeMaster.Services
 				//{
 				//	return null;
 				//}
-				StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+				var dialog = new NewNamedItemDialog("Enter Recipe Box Name");
+				await dialog.ShowAsync();
+				if (dialog.WasCancelled) return null;
+
+				newName = dialog.TextEntry;
+				StorageFolder storageFolder = ApplicationData.Current.RoamingFolder;
 
 				StorageFile newFile = await storageFolder.CreateFileAsync(newName, CreationCollisionOption.ReplaceExisting);
 				RecipeBox rb = new RecipeBox(newName);
@@ -133,32 +148,25 @@ namespace RecipeMaster.Services
 			}
 		}
 
-		public static async Task<RecentRecipeBox> ImportRecipeBoxAsync()
+		public static async Task<RecentRecipeBox> CreateRecentRecipeBoxAsync(RecipeBox recipeBox)
 		{
 
 			try
 			{
-				FileOpenPicker picker = new FileOpenPicker();
-				picker.FileTypeFilter.Add(".rcpbx");
-				StorageFile file;
 
-				file = await picker.PickSingleFileAsync();
-				string contents = await FileIO.ReadTextAsync(file);
-				RecipeBox rb = JsonConvert.DeserializeObject<RecipeBox>(contents);
-				if (rb != null)
+				//_file was valid, store a copy in my storage
+				string recipeBoxName = recipeBox.Name;
+
+				// Create file; replace if exists.
+				//await SaveRecipeBoxAsync(rb);
+				return new RecentRecipeBox()
 				{
-					//_file was valid, store a copy in my storage
-					string recipeBoxName = rb.Name;
+					Name = recipeBoxName,
+					LastOpened = DateTime.Now,
+					Path = recipeBox.LastPath,
+					Description = recipeBox.Description
+				};
 
-					// Create file; replace if exists.
-					await SaveRecipeBoxAsync(rb);
-					return new RecentRecipeBox()
-					{
-						Name = recipeBoxName,
-						LastOpened = DateTime.Now
-					};
-				}
-				else return null;
 			}
 			catch (Exception e)
 			{
@@ -170,16 +178,16 @@ namespace RecipeMaster.Services
 		public static async Task SaveRecipeBoxAsync(RecipeBox recipeBox)
 		{
 			string path = recipeBox.LastPath;
-			//StorageFolder storageFolder = new StorageFolder();
-            // todo Check that this path exists, prompt user to browse if not
-			string recipeBoxName = recipeBox.Name;
+			
 
 			try
 			{
+				StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(path);
+				// todo Check that this path exists, prompt user to browse if not
+				string recipeBoxName = recipeBox.Name;
 				string recipeBoxJson = JsonConvert.SerializeObject(recipeBox);
-				//StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
-                File.WriteAllText(path, recipeBoxJson);
-				//await FileIO.WriteTextAsync(file, recipeBoxJson);
+				StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
+				await FileIO.WriteTextAsync(file, recipeBoxJson);
 				return;
 			}
 			catch (Exception e)
@@ -208,7 +216,7 @@ namespace RecipeMaster.Services
 			await FileIO.WriteTextAsync(newFile, fileContents);
 		}
 
-		public static async Task<RecipeBox>OpenRecipeBoxAsync(RecentRecipeBox rrb)
+		public static async Task<RecipeBox> OpenRecipeBoxAsync(RecentRecipeBox rrb)
 		{
 			StorageFolder appFolder = ApplicationData.Current.LocalFolder;
 			StorageFile file = await appFolder.GetFileAsync(rrb.Name);

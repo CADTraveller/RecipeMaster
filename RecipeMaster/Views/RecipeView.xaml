@@ -68,7 +68,7 @@
 			<controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Detail Page">
+                             RelativePanel.AlignTopWithPanel="True" Text="Recipe">
 				<controls:PageHeader.PrimaryCommands >
 				<AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
 
