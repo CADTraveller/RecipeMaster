@@ -177,13 +177,10 @@ namespace RecipeMaster.Services
 
 		public static async Task SaveRecipeBoxAsync(RecipeBox recipeBox)
 		{
-			string path = recipeBox.LastPath;
-			
-
 			try
 			{
-				StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(path);
-				// todo Check that this path exists, prompt user to browse if not
+				StorageFolder storageFolder = ApplicationData.Current.RoamingFolder;
+				
 				string recipeBoxName = recipeBox.Name;
 				string recipeBoxJson = JsonConvert.SerializeObject(recipeBox);
 				StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
@@ -218,7 +215,7 @@ namespace RecipeMaster.Services
 
 		public static async Task<RecipeBox> OpenRecipeBoxAsync(RecentRecipeBox rrb)
 		{
-			StorageFolder appFolder = ApplicationData.Current.LocalFolder;
+			StorageFolder appFolder = ApplicationData.Current.RoamingFolder;
 			StorageFile file = await appFolder.GetFileAsync(rrb.Name);
 			string json = await FileIO.ReadTextAsync(file);
 			RecipeBox rb = JsonConvert.DeserializeObject<RecipeBox>(json);

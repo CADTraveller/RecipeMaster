@@ -179,7 +179,10 @@ namespace RecipeMaster.ViewModels
 		{
 			if (SelectedRecentRecipeBox == null) return;
 			currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(SelectedRecentRecipeBox);
-			NavigationService.Navigate(typeof(Views.RecipeGroupsView), currentRecipeBox);
+			if (currentRecipeBox != null)
+			{
+				NavigationService.Navigate(typeof(Views.RecipeGroupsView), currentRecipeBox);
+			}
 		}
 
 		public void GotoSettings() =>

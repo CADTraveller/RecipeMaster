@@ -11,6 +11,7 @@ using RecipeMaster.Helpers;
 using RecipeMaster.Views;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using Template10.Services.NavigationService;
 
 namespace RecipeMaster.ViewModels
 {
@@ -247,6 +248,12 @@ namespace RecipeMaster.ViewModels
 
             await Task.CompletedTask;
         }
-        #endregion
-    }
+
+		public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+		{
+			NavigationService.SaveAsync();
+			return base.OnNavigatingFromAsync(args);
+		}
+		#endregion
+	}
 }
