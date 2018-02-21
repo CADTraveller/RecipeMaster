@@ -111,11 +111,22 @@ namespace RecipeMaster.ViewModels
 			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 			var result = await dialog.ShowAsync();
 
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, SelectedIngredient);
+			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, CurrentRecipe);
 			Ingredients.Add(newIngredient);
 		}
 
-		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+	    public async Task NewChildIngredientAsync()
+	    {
+	        var dialog = new NewNamedItemDialog("Enter Ingredient Name");
+	        var result = await dialog.ShowAsync();
+
+	        IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
+
+	        Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, parent);
+	        parent.Ingredients.Add(newIngredient);
+	    }
+
+        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
 		{
 			CurrentRecipe = parameter as Recipe;
 			RaisePropertyChanged();

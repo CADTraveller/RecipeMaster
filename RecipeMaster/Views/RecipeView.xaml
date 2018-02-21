@@ -22,13 +22,10 @@
 				<ResourceDictionary Source="/Styles/Custom.xaml"/>
 				<ResourceDictionary Source="/Styles/TextBlock.xaml"/>
 				<ResourceDictionary Source="/Styles/TextBox.xaml"/>
-				
-					<ResourceDictionary
-                    Source="ms-appx:///WinRTXamlToolkit/Controls/TreeView/TreeViewTouch.xaml" />
-					<ResourceDictionary
-                    Source="ms-appx:///WinRTXamlToolkit/Controls/TreeView/TreeViewMouse.xaml" />
-				
-			</ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Controls/TreeViewMouse.xaml"/>
+			    <ResourceDictionary Source="../Controls/TreeViewTouch.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 		
 	</Page.Resources>
@@ -97,7 +94,7 @@
 			</Grid.RowDefinitions>
 			<xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
 							 x:Name="IngredientsTreeView"
-							 
+                             SelectedItemChanged="IngredientsTreeView_OnSelectedItemChanged"
 							Grid.Row="1">
 				<xamlTK:TreeView.ItemTemplate >
 				<!--<DataTemplate x:DataType="model:Ingredient">
@@ -120,8 +117,21 @@
 						
 					<StackPanel Orientation="Horizontal">
 						<TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
+					    <TextBox Text=" - "/>
+					    <TextBox Text="{x:Bind Percent, Mode=TwoWay}"/>
+					    <TextBox Text="% "/>
 
-					</StackPanel>
+					    <TextBox Text="{x:Bind Weight, Mode=TwoWay}"/>
+					    <TextBox Text=" gm "/>
+                        
+                        <StackPanel.ContextFlyout>
+                            <MenuFlyout>
+                                    <MenuFlyoutItem Text="Add Ingredient" ContextRequested="Ingredient_OnClick" />
+                                <MenuFlyoutItem Text="Delete" ContextRequested="Ingredient_OnClick" />
+                                </MenuFlyout>
+                        </StackPanel.ContextFlyout>
+
+                        </StackPanel>
 				</DataTemplate>
 				</xamlTK:TreeView.ItemTemplate>
 
