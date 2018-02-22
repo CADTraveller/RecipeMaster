@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using RecipeMaster.Models;
+using RecipeMaster.ViewModels;
+using WinRTXamlToolkit.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,5 +29,25 @@ namespace RecipeMaster.Views
 		{
 			this.InitializeComponent();
 		}
+
+	    private void IngredientsTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+	    {
+	        RecipeViewModel vm = DataContext as RecipeViewModel;
+	        try
+	        {
+	            Ingredient selectedIngredient = (Ingredient)IngredientsTreeView.SelectedItem;
+	            if(selectedIngredient != null) vm.SelectedIngredient = selectedIngredient;
+	        }
+	        catch (Exception exception)
+	        {
+	            Console.WriteLine(exception);
+	            throw;
+	        }
+	    }
+
+	    private void Ingredient_OnClick(object sender, RoutedEventArgs e)
+	    {
+	        throw new NotImplementedException();
+	    }
 	}
 }
