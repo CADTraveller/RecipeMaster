@@ -47,7 +47,10 @@ namespace RecipeMaster.Views
 
 	    private void Ingredient_OnClick(object sender, RoutedEventArgs e)
 	    {
-	        throw new NotImplementedException();
+            //__no, comes in as MenuFlyoutItem
+	        Ingredient clickedIngredient = (Ingredient) sender;
 	    }
+
+	    
 	}
 }

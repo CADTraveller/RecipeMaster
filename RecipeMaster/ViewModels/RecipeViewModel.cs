@@ -115,12 +115,15 @@ namespace RecipeMaster.ViewModels
 			Ingredients.Add(newIngredient);
 		}
 
-	    public async Task NewChildIngredientAsync()
+	    public async Task NewChildIngredientAsync(IIngredientContainer sender = null)
 	    {
 	        var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 	        var result = await dialog.ShowAsync();
 
 	        IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
+
+            //__also work from passed in parent
+	        if (sender != null) parent = sender;
 
 	        Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, parent);
 	        parent.Ingredients.Add(newIngredient);
@@ -132,5 +135,11 @@ namespace RecipeMaster.ViewModels
 			RaisePropertyChanged();
 			return base.OnNavigatedToAsync(parameter, mode, state);
 		}
+
+	    public override Task OnNavigatingFromAsync(NavigatingEventArgs args)
+	    {
+	        NavigationService.SaveAsync();
+	        return base.OnNavigatingFromAsync(args);
+	    }
 	}
 }

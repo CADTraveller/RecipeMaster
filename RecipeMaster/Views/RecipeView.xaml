@@ -11,69 +11,69 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-	<Page.DataContext>
-		<viewModels:RecipeViewModel x:Name="vm"/>
-	</Page.DataContext>
+    <Page.DataContext>
+        <viewModels:RecipeViewModel x:Name="vm"/>
+    </Page.DataContext>
 
-	<Page.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/Styles/Buttons.xaml"/>
-				<ResourceDictionary Source="/Styles/Custom.xaml"/>
-				<ResourceDictionary Source="/Styles/TextBlock.xaml"/>
-				<ResourceDictionary Source="/Styles/TextBox.xaml"/>
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/Styles/Custom.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBox.xaml"/>
                 <ResourceDictionary Source="../Controls/TreeViewMouse.xaml"/>
-			    <ResourceDictionary Source="../Controls/TreeViewTouch.xaml"/>
+                <ResourceDictionary Source="../Controls/TreeViewTouch.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-		
-	</Page.Resources>
+        </ResourceDictionary>
 
-	<RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    </Page.Resources>
 
-			<VisualStateManager.VisualStateGroups>
-				<VisualStateGroup x:Name="AdaptiveVisualStateGroup">
-					<VisualState x:Name="VisualStateNarrow">
-						<VisualState.StateTriggers>
-							<AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
-						</VisualState.StateTriggers>
-						<VisualState.Setters>
-							<!--  TODO: change properties for narrow view  -->
-						</VisualState.Setters>
-					</VisualState>
-					<VisualState x:Name="VisualStateNormal">
-						<VisualState.StateTriggers>
-							<AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
-						</VisualState.StateTriggers>
-						<VisualState.Setters>
-							<!--  TODO: change properties for normal view  -->
-						</VisualState.Setters>
-					</VisualState>
-					<VisualState x:Name="VisualStateWide">
-						<VisualState.StateTriggers>
-							<AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
-						</VisualState.StateTriggers>
-						<VisualState.Setters>
-							<!--  TODO: change properties for wide view  -->
-						</VisualState.Setters>
-					</VisualState>
-				</VisualStateGroup>
-			</VisualStateManager.VisualStateGroups>
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-			<!--  header  -->
-			<controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
+                <VisualState x:Name="VisualStateNarrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for narrow view  -->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for normal view  -->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateWide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for wide view  -->
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!--  header  -->
+        <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="{x:Bind vm.CurrentRecipe.Name, Mode=OneWay}">
-				<controls:PageHeader.PrimaryCommands >
-				<AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
+            <controls:PageHeader.PrimaryCommands >
+                <AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
 
-			</controls:PageHeader.PrimaryCommands>
-			</controls:PageHeader>
+            </controls:PageHeader.PrimaryCommands>
+        </controls:PageHeader>
 
-			<!--  content  -->
-			<!--<ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
+        <!--  content  -->
+        <!--<ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
@@ -84,20 +84,20 @@
             </StackPanel>
         </ScrollViewer>-->
 
-		<Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
+        <Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="32"/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
 							 x:Name="IngredientsTreeView"
                              SelectedItemChanged="IngredientsTreeView_OnSelectedItemChanged"
 							Grid.Row="1">
-				<xamlTK:TreeView.ItemTemplate >
-				<!--<DataTemplate x:DataType="model:Ingredient">
+                <xamlTK:TreeView.ItemTemplate >
+                    <!--<DataTemplate x:DataType="model:Ingredient">
 						<StackPanel Orientation="Horizontal">
 							<TextBox Text="{x:Bind Name}"/>
 							<TextBox Text=" - "/>
@@ -109,37 +109,37 @@
 
 						</StackPanel>
 					</DataTemplate>-->
-					<DataTemplate x:DataType="model:Ingredient">
-					
-					<data:DataTemplateExtensions.Hierarchy >
-						<data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}" />
-					</data:DataTemplateExtensions.Hierarchy>
-						
-					<StackPanel Orientation="Horizontal">
-						<TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
-					    <TextBox Text=" - "/>
-					    <TextBox Text="{x:Bind Percent, Mode=TwoWay}"/>
-					    <TextBox Text="% "/>
+                    <DataTemplate x:DataType="model:Ingredient">
 
-					    <TextBox Text="{x:Bind Weight, Mode=TwoWay}"/>
-					    <TextBox Text=" gm "/>
-                        
-                        <StackPanel.ContextFlyout>
-                            <MenuFlyout>
-                                    <MenuFlyoutItem Text="Add Ingredient" ContextRequested="Ingredient_OnClick" />
-                                <MenuFlyoutItem Text="Delete" ContextRequested="Ingredient_OnClick" />
+                        <data:DataTemplateExtensions.Hierarchy >
+                            <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}" />
+                        </data:DataTemplateExtensions.Hierarchy>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
+                            <TextBox Text=" - "/>
+                            <TextBox Text="{x:Bind Percent, Mode=TwoWay}"/>
+                            <TextBox Text="% "/>
+
+                            <TextBox Text="{x:Bind Weight, Mode=TwoWay}"/>
+                            <TextBox Text=" gm "/>
+
+                            <StackPanel.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Add Ingredient" Icon="Add" Click="Ingredient_OnClick"  />
+                                    <!--<MenuFlyoutItem Text="Delete" ContextRequested="Ingredient_Delete" />-->
                                 </MenuFlyout>
-                        </StackPanel.ContextFlyout>
+                            </StackPanel.ContextFlyout>
 
                         </StackPanel>
-				</DataTemplate>
-				</xamlTK:TreeView.ItemTemplate>
+                    </DataTemplate>
+                </xamlTK:TreeView.ItemTemplate>
 
-			</xamlTK:TreeView>
-				
-			</Grid>
+            </xamlTK:TreeView>
 
-		</RelativePanel>
+        </Grid>
+
+    </RelativePanel>
 
 
 </Page>
