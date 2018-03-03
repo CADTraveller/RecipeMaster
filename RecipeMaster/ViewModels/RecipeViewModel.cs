@@ -18,6 +18,7 @@ using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Navigation;
+using Template10.Common;
 
 namespace RecipeMaster.ViewModels
 {
@@ -115,7 +116,10 @@ namespace RecipeMaster.ViewModels
 			Ingredients.Add(newIngredient);
 		}
 
-	    public async Task NewChildIngredientAsync(IIngredientContainer sender = null)
+	   
+
+
+        public async Task NewChildIngredientAsync(IIngredientContainer sender = null)
 	    {
 	        var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 	        var result = await dialog.ShowAsync();
@@ -131,7 +135,9 @@ namespace RecipeMaster.ViewModels
 
         public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
 		{
-			CurrentRecipe = parameter as Recipe;
+            string recipeKey = parameter.ToString();
+			CurrentRecipe = BootStrapper.Current.SessionState[recipeKey] as Recipe;// todo: use this version of navigation to pass complext objects throughout application
+
 			RaisePropertyChanged();
 			return base.OnNavigatedToAsync(parameter, mode, state);
 		}

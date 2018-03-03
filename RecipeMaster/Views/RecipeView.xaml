@@ -114,24 +114,24 @@
                         <data:DataTemplateExtensions.Hierarchy >
                             <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}" />
                         </data:DataTemplateExtensions.Hierarchy>
-
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
-                            <TextBox Text=" - "/>
-                            <TextBox Text="{x:Bind Percent, Mode=TwoWay}"/>
-                            <TextBox Text="% "/>
-
-                            <TextBox Text="{x:Bind Weight, Mode=TwoWay}"/>
-                            <TextBox Text=" gm "/>
-
-                            <StackPanel.ContextFlyout>
+                        <ContentControl>
+                            <ContentControl.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Add Ingredient" Icon="Add" Click="Ingredient_OnClick"  />
+                                    <MenuFlyoutItem Text="Add Ingredient"  Click="Ingredient_OnClick"  />
                                     <!--<MenuFlyoutItem Text="Delete" ContextRequested="Ingredient_Delete" />-->
                                 </MenuFlyout>
-                            </StackPanel.ContextFlyout>
+                            </ContentControl.ContextFlyout>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{x:Bind Name, Mode=TwoWay}" IsRightTapEnabled="False"/>
+                                <TextBox Text=" - "/>
+                                <TextBox Text="{x:Bind Percent, Mode=TwoWay}" IsRightTapEnabled="False"/>
+                                <TextBox Text="% "/>
 
-                        </StackPanel>
+                                <TextBox Text="{x:Bind Weight, Mode=TwoWay}" IsRightTapEnabled="False"/>
+                                <TextBox Text=" gm "/>
+
+                            </StackPanel>
+                        </ContentControl>
                     </DataTemplate>
                 </xamlTK:TreeView.ItemTemplate>
 
@@ -140,6 +140,5 @@
         </Grid>
 
     </RelativePanel>
-
 
 </Page>
