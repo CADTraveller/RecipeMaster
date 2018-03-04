@@ -25,18 +25,23 @@ namespace RecipeMaster.Views
 	/// </summary>
 	public sealed partial class RecipeView : Page
 	{
-		public RecipeView()
+	    RecipeViewModel Vm
+	    {
+            get => DataContext as RecipeViewModel;
+	    }
+
+        public RecipeView()
 		{
-			this.InitializeComponent();
+			InitializeComponent();
 		}
 
 	    private void IngredientsTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 	    {
-	        RecipeViewModel vm = DataContext as RecipeViewModel;
+	        
 	        try
 	        {
 	            Ingredient selectedIngredient = (Ingredient)IngredientsTreeView.SelectedItem;
-	            if(selectedIngredient != null) vm.SelectedIngredient = selectedIngredient;
+	            if(selectedIngredient != null) Vm.SelectedIngredient = selectedIngredient;
 	        }
 	        catch (Exception exception)
 	        {
@@ -45,9 +50,11 @@ namespace RecipeMaster.Views
 	        }
 	    }
 
-	    private void Ingredient_OnClick(object sender, RoutedEventArgs e)
+	    private async void Ingredient_OnClick(object sender, RoutedEventArgs e)
 	    {
-	        throw new NotImplementedException();
+	        await Vm.NewChildIngredientAsync();
 	    }
+
+	    
 	}
 }
