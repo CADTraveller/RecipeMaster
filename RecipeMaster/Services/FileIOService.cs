@@ -3,7 +3,6 @@ using RecipeMaster.Models;
 using RecipeMaster.Views;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -18,12 +17,10 @@ namespace RecipeMaster.Services
 
 			if (path == null)
 			{
-
 				FileOpenPicker picker = new FileOpenPicker();
 				picker.FileTypeFilter.Add(".rcpbx");
 
 				file = await picker.PickSingleFileAsync();
-
 			}
 			else
 			{
@@ -48,7 +45,6 @@ namespace RecipeMaster.Services
 				return null;
 				//__show the user error notice
 			}
-
 		}
 
 		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
@@ -67,7 +63,6 @@ namespace RecipeMaster.Services
 			return recentRecipeBoxes;
 		}
 
-
 		private static void AddToRecentsLists(StorageFile file)
 		{
 			//var mru = Windows.Storage.AccessCache.StorageApplicationPermissions.MostRecentlyUsedList;
@@ -77,7 +72,6 @@ namespace RecipeMaster.Services
 			//accessList.Add(file, file.Path);
 
 			ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
 		}
 
 		public static async Task StoreRecipeBoxAsync(RecipeBox rb)
@@ -91,8 +85,6 @@ namespace RecipeMaster.Services
 
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
-
-
 			//var savePicker = new FileSavePicker();
 			//savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 			//// Dropdown of file types the user can save the file as
@@ -103,8 +95,6 @@ namespace RecipeMaster.Services
 
 			try
 			{
-
-
 				// Prevent updates to the remote version of the file until
 				// we finish making changes and call CompleteUpdatesAsync.
 				//CachedFileManager.DeferUpdates(file);
@@ -150,10 +140,8 @@ namespace RecipeMaster.Services
 
 		public static async Task<RecentRecipeBox> CreateRecentRecipeBoxAsync(RecipeBox recipeBox)
 		{
-
 			try
 			{
-
 				//_file was valid, store a copy in my storage
 				string recipeBoxName = recipeBox.Name;
 
@@ -166,7 +154,6 @@ namespace RecipeMaster.Services
 					Path = recipeBox.LastPath,
 					Description = recipeBox.Description
 				};
-
 			}
 			catch (Exception e)
 			{
@@ -180,7 +167,7 @@ namespace RecipeMaster.Services
 			try
 			{
 				StorageFolder storageFolder = ApplicationData.Current.RoamingFolder;
-				
+
 				string recipeBoxName = recipeBox.Name;
 				string recipeBoxJson = JsonConvert.SerializeObject(recipeBox);
 				StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
@@ -189,7 +176,6 @@ namespace RecipeMaster.Services
 			}
 			catch (Exception e)
 			{
-
 			}
 		}
 

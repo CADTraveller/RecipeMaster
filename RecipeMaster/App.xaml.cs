@@ -33,6 +33,19 @@ namespace RecipeMaster
 			#endregion
 		}
 
+		#region Global string constants
+
+		public const string _activeRecipeBoxKey = "ActiveRecipeBox";
+		public const string _selectedRecipeGroupKey = "SelectedRecipeGroup";
+		private const string _selectedRecipeKey = "SelectedRecipe";
+
+		public static string SelectedRecipeKey => _selectedRecipeKey;
+		public static string SelectedRecipeGroupKey => _selectedRecipeGroupKey;
+		public static string ActiveRecipeBoxKey => _activeRecipeBoxKey;
+
+		#endregion
+		
+
 		public override UIElement CreateRootElement(IActivatedEventArgs e)
 		{
 			var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);

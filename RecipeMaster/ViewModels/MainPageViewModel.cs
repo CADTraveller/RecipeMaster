@@ -1,18 +1,15 @@
 ﻿//using RecipeMaster.Mvvm;
-using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
 using RecipeMaster.Models;
 using RecipeMaster.Services;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Windows.Storage.AccessCache;
-using Windows.UI.Notifications;
-using Windows.Storage;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Threading.Tasks;
+using Template10.Common;
 using Template10.Mvvm;
+using Template10.Services.NavigationService;
+using Windows.Storage;
+using Windows.UI.Xaml.Navigation;
 
 namespace RecipeMaster.ViewModels
 {
@@ -27,27 +24,21 @@ namespace RecipeMaster.ViewModels
 			}
 			else
 			{
-
 				populateRecentRecipeBoxList();
-
 			}
 		}
 
-
-
-
-
-
 		#region Properties
-		Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-		string _Value = "Gas";
+		private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+		private string _Value = "Gas";
+
 		public string Value
 		{
 			get { return _Value; }
 			set => Set(ref _Value, value);
 		}
-
 
 		private bool showRecentFiles;
 
@@ -69,7 +60,6 @@ namespace RecipeMaster.ViewModels
 			//set { showNoHistory = value; }
 		}
 
-	
 		public bool ShowHistory
 		{
 			get
@@ -82,6 +72,7 @@ namespace RecipeMaster.ViewModels
 		private RecipeBox currentRecipeBox;
 
 		private string statusMessage = "Nothing Selected";
+
 		public string StatusMessage
 		{
 			get { return statusMessage; }
@@ -89,6 +80,7 @@ namespace RecipeMaster.ViewModels
 		}
 
 		private RecentRecipeBox selectedRecentRecipeBox;
+
 		public RecentRecipeBox SelectedRecentRecipeBox
 		{
 			get { return selectedRecentRecipeBox; }
@@ -107,12 +99,11 @@ namespace RecipeMaster.ViewModels
 			set { Set(ref recentRecipeBoxes, value); }
 		}
 
-		private const string storedRecentsKey = "RecentRecipeBoxesList";
 
-		#endregion
-
+		#endregion Properties
 
 		#region Events
+
 		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
 		{
 			if (suspensionState.Any())
@@ -120,32 +111,8 @@ namespace RecipeMaster.ViewModels
 				Value = suspensionState[nameof(Value)]?.ToString();
 			}
 			await Task.CompletedTask;
-
-			//if (LocalSettings.Values.ContainsKey(settingsKey))
-			//{
-
-			//	try
-			//	{
-			//		string storedBoxesJson = LocalSettings.Values[settingsKey] as string;
-			//		List<RecentRecipeBox> storedBoxes = Newtonsoft.Json.JsonConvert.DeserializeObject(storedBoxesJson) as List<RecentRecipeBox>;
-			//		recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedBoxes);
-			//	}
-			//	catch (Exception)
-			//	{
-			//		var toastTemplate = ToastTemplateType.ToastText01;
-			//		var toastTemplateXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
-			//		var textNodes = toastTemplateXml.GetElementsByTagName("text");
-			//		textNodes[0].AppendChild(toastTemplateXml.CreateTextNode("Could not unpack history"));
-
-			//		var toast = new ToastNotification(toastTemplateXml);
-			//		ToastNotificationManager.CreateToastNotifier().Show(toast);
-			//	}
-
-			//}
-
+			
 		}
-
-
 
 		public ApplicationDataContainer LocalSettings { get => localSettings; set => localSettings = value; }
 
@@ -163,25 +130,37 @@ namespace RecipeMaster.ViewModels
 			args.Cancel = false;
 			await Task.CompletedTask;
 		}
-		#endregion
+
+		#endregion Events
 
 		#region Commands
+
 		private DelegateCommand viewRecipeBoxDetailsCommand;
 		public DelegateCommand ViewRecipeBoxDetailsCommand => viewRecipeBoxDetailsCommand ?? (viewRecipeBoxDetailsCommand = new DelegateCommand(() => GotoRecipeGroupsView()));
 
-		#endregion
+		#endregion Commands
 
 		#region Methods
+
 		//public void GotoDetailsPage() =>
 		//	NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
 		public async Task GotoRecipeGroupsView()
 		{
 			if (SelectedRecentRecipeBox == null) return;
-			currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(SelectedRecentRecipeBox);
+			string recipeBoxName = SelectedRecentRecipeBox.Name;
+
+			//__see if this RecipeBox is already in memory
+			if (!BootStrapper.Current.SessionState.Keys.Contains(recipeBoxName))
+			{
+				currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(SelectedRecentRecipeBox);
+				BootStrapper.Current.SessionState[recipeBoxName] = currentRecipeBox;
+			}
+			
+			BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] = recipeBoxName;
 			if (currentRecipeBox != null)
 			{
-				NavigationService.Navigate(typeof(Views.RecipeGroupsView), currentRecipeBox);
+				NavigationService.Navigate(typeof(Views.RecipeGroupsView));
 			}
 		}
 
@@ -210,9 +189,6 @@ namespace RecipeMaster.ViewModels
 			SelectedRecentRecipeBox = rrb;
 			updateDisplay();
 		}
-
-
-
 
 		private async Task populateRecentRecipeBoxList()
 		{
@@ -260,7 +236,27 @@ namespace RecipeMaster.ViewModels
 			updateDisplay();
 		}
 
-		#endregion
-
+		#endregion Methods
 	}
 }
+
+//if (LocalSettings.Values.ContainsKey(settingsKey))
+//{
+//	try
+//	{
+//		string storedBoxesJson = LocalSettings.Values[settingsKey] as string;
+//		List<RecentRecipeBox> storedBoxes = Newtonsoft.Json.JsonConvert.DeserializeObject(storedBoxesJson) as List<RecentRecipeBox>;
+//		recentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(storedBoxes);
+//	}
+//	catch (Exception)
+//	{
+//		var toastTemplate = ToastTemplateType.ToastText01;
+//		var toastTemplateXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+//		var textNodes = toastTemplateXml.GetElementsByTagName("text");
+//		textNodes[0].AppendChild(toastTemplateXml.CreateTextNode("Could not unpack history"));
+
+//		var toast = new ToastNotification(toastTemplateXml);
+//		ToastNotificationManager.CreateToastNotifier().Show(toast);
+//	}
+
+//}

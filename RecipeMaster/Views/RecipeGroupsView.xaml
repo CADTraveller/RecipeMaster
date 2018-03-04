@@ -19,10 +19,10 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
-                <ResourceDictionary Source="/Styles/Custom.xaml"/>
-                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
-                <ResourceDictionary Source="/Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="/Styles/Buttons.xaml" />
+                <ResourceDictionary Source="/Styles/Custom.xaml" />
+                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
+                <ResourceDictionary Source="/Styles/TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -63,11 +63,11 @@
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="Recipe Categories">
-            <controls:PageHeader.PrimaryCommands >
-                <AppBarButton Icon="View" Click="{x:Bind vm.GoToRecipeDetail, Mode=OneWay}" Label="View Recipe"/>
-                <AppBarButton Icon="NewFolder" Click="{x:Bind vm.NewRecipeGroupAsync}" Label="New Recipe Group"/>
-                <AppBarButton Icon="Add" Click="{x:Bind vm.NewRecipeAsync}" Label="New Recipe"/>
-                <AppBarButton Icon="Save" Click="{x:Bind vm.SaveRecipeBoxAsync}" Label="Save Recipe Box"/>
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton Icon="View" Click="{x:Bind vm.GoToRecipeDetail, Mode=OneWay}" Label="View Recipe" />
+                <AppBarButton Icon="NewFolder" Click="{x:Bind vm.NewRecipeGroupAsync}" Label="New Recipe Group" />
+                <AppBarButton Icon="Add" Click="{x:Bind vm.NewRecipeAsync}" Label="New Recipe" />
+                <AppBarButton Icon="Save" Click="{x:Bind vm.SaveRecipeBoxAsync}" Label="Save Recipe Box" />
             </controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
 
@@ -88,13 +88,13 @@
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="36"/>
-                <RowDefinition/>
+                <RowDefinition Height="36" />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
             <ListView ItemsSource="{x:Bind vm.CurrentRecipeGroups, Mode=TwoWay}"
@@ -103,30 +103,28 @@
 					  Grid.Row="1">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:RecipeGroup">
-                        <TextBox Text="{x:Bind Name, Mode=TwoWay}"/>
+                        <TextBox Text="{x:Bind Name, Mode=TwoWay}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
             <ListView ItemsSource="{x:Bind vm.SelectedRecipeGroup.Recipes, Mode=TwoWay}"
 					  SelectedItem="{x:Bind vm.SelectedRecipe, Mode=TwoWay}"
-					  
+
 					  Grid.Column="1" Grid.Row="1">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:Recipe">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{x:Bind Name, Mode=TwoWay}"
-									   Style="{StaticResource ListSubTitleStyle}"/>
+									   Style="{StaticResource ListSubTitleStyle}" />
                             <TextBlock Text=":  "
-									   Style="{StaticResource ListSubTitleStyle}"/>
+									   Style="{StaticResource ListSubTitleStyle}" />
                             <TextBlock Text="{x:Bind Description, Mode=TwoWay}"
-									   Style="{StaticResource ListSubTitleStyle}"/>
+									   Style="{StaticResource ListSubTitleStyle}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
         </Grid>
-
     </RelativePanel>
 </Page>

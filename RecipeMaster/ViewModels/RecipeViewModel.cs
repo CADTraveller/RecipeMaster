@@ -1,59 +1,54 @@
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
 //using GalaSoft.MvvmLight;
 //using GalaSoft.MvvmLight.Command;
 
 using RecipeMaster.Models;
-using RecipeMaster.Services;
 using RecipeMaster.Views;
-
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Template10.Services;
-using Template10.Mvvm;
-using Template10.Services.NavigationService;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Template10.Mvvm;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using Template10.Common;
 
 namespace RecipeMaster.ViewModels
 {
-    public class RecipeViewModel : ViewModelBase
+	public class RecipeViewModel : ViewModelBase
 	{
-        const string NarrowStateName = "NarrowState";
-        const string WideStateName = "WideState";
+		private const string NarrowStateName = "NarrowState";
+		private const string WideStateName = "WideState";
 
-        private VisualState _currentState;
+		private VisualState _currentState;
 
-        public RecipeViewModel()
-        {
+		public RecipeViewModel()
+		{
 			ingredients = new ObservableCollection<Ingredient>();
 			//CurrentRecipe = new Recipe();//__put a dummy in place to prevent errors
-        }
+		}
 
-		private Recipe currentRecipe;
+		private RecipeBox _activeRecipeBox;
+		private Recipe _currentRecipe;
+
 		public Recipe CurrentRecipe
 
 		{
-			get { return currentRecipe; }
+			get { return _currentRecipe; }
 			set
 			{
-				Set(ref currentRecipe, value);
-				Ingredients = currentRecipe.Ingredients;
+				Set(ref _currentRecipe, value);
+				Ingredients = _currentRecipe.Ingredients;
 			}
 		}
 
-
 		private ObservableCollection<Ingredient> ingredients;
+
 		public ObservableCollection<Ingredient> Ingredients
 		{
 			get
 			{
-				if (currentRecipe == null) return null;
-				return currentRecipe.Ingredients;
+				if (_currentRecipe == null) return null;
+				return _currentRecipe.Ingredients;
 			}
 
 			set
@@ -64,12 +59,12 @@ namespace RecipeMaster.ViewModels
 		}
 
 		private Ingredient selectedIngredient;
+
 		public Ingredient SelectedIngredient
 		{
 			get { return selectedIngredient; }
 			set { Set(ref selectedIngredient, value); }
 		}
-
 
 		//public async Task LoadDataAsync(VisualState currentState)
 		//{
@@ -115,20 +110,23 @@ namespace RecipeMaster.ViewModels
 			Ingredients.Add(newIngredient);
 		}
 
-	    public async Task NewChildIngredientAsync()
-	    {
-	        var dialog = new NewNamedItemDialog("Enter Ingredient Name");
-	        var result = await dialog.ShowAsync();
-
-	        IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
-
-	        Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, parent);
-	        parent.Ingredients.Add(newIngredient);
-	    }
-
-        public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+		public async Task NewChildIngredientAsync()
 		{
-			CurrentRecipe = parameter as Recipe;
+			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
+			var result = await dialog.ShowAsync();
+
+			IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
+
+			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, parent);
+			parent.Ingredients.Add(newIngredient);
+		}
+
+		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+		{
+			string recipeBoxName = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey].ToString();
+			_activeRecipeBox = BootStrapper.Current.SessionState[recipeBoxName] as RecipeBox;
+			CurrentRecipe	= BootStrapper.Current.SessionState[App.SelectedRecipeKey] as Recipe;
+
 			RaisePropertyChanged();
 			return base.OnNavigatedToAsync(parameter, mode, state);
 		}
