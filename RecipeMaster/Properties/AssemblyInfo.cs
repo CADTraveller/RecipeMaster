@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RecipeMaster")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Used to develop new or tweak existing recipes. All recipes are described by the weight of ingredients in grams.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RecipeMaster")]
-[assembly: AssemblyCopyright("Copyright Craig Colomb ©  2015")]
+[assembly: AssemblyCopyright("Copyright ©  2015 Craig Colomb")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

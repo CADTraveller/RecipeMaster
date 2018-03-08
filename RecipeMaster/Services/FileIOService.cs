@@ -3,6 +3,7 @@ using RecipeMaster.Models;
 using RecipeMaster.Views;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -47,10 +48,13 @@ namespace RecipeMaster.Services
 			}
 		}
 
+		private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+
 		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
 		{
-			StorageFolder storageFolder = ApplicationData.Current.RoamingFolder;
-			Windows.Storage.Search.StorageFileQueryResult query = storageFolder.CreateFileQuery();
+			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
 			var files = await query.GetFilesAsync();
 			List<RecentRecipeBox> recentRecipeBoxes = new List<RecentRecipeBox>();
 			foreach (StorageFile file in files)
@@ -71,16 +75,33 @@ namespace RecipeMaster.Services
 			//var accessList = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 			//accessList.Add(file, file.Path);
 
-			ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 		}
 
-		public static async Task StoreRecipeBoxAsync(RecipeBox rb)
+		public static async Task StoreRecipeBoxAsync(RecipeBox rb, bool doSaveAs = false)
 		{
-			StorageFolder roaming = ApplicationData.Current.RoamingFolder;
-			StorageFile file = await roaming.CreateFileAsync(rb.Name);
+			var savePicker = new FileSavePicker();
+			string lastSavePath = rb.LastPath;
+			StorageFile targetFile;
+
+			if (File.Exists(lastSavePath) && ! doSaveAs)
+			{
+				StorageFolder targetFolder = await StorageFolder.GetFolderFromPathAsync(lastSavePath);
+				targetFile = await targetFolder.CreateFileAsync(rb.Name, CreationCollisionOption.ReplaceExisting);
+			}
+			else
+			{
+				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+
+				// Dropdown of file types the user can save the file as
+				savePicker.FileTypeChoices.Add("Recipe Box", new List<string>() { ".rcpbx" });
+
+				// Default file name if the user does not type one in or select a file to replace
+				savePicker.SuggestedFileName = rb.Name;
+				targetFile = await savePicker.PickSaveFileAsync();
+			}
 
 			string rbJson = JsonConvert.SerializeObject(rb);
-			await FileIO.WriteTextAsync(file, rbJson);
+			await FileIO.WriteTextAsync(targetFile, rbJson);
 		}
 
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
@@ -168,11 +189,10 @@ namespace RecipeMaster.Services
 			{
 				StorageFolder storageFolder = ApplicationData.Current.RoamingFolder;
 
-				string recipeBoxName = recipeBox.Name;
+				string recipeBoxFileName = recipeBox.Name + ".rcpbx";
 				string recipeBoxJson = JsonConvert.SerializeObject(recipeBox);
-				StorageFile file = await storageFolder.CreateFileAsync(recipeBoxName, CreationCollisionOption.ReplaceExisting);
+				StorageFile file = await storageFolder.CreateFileAsync(recipeBoxFileName, CreationCollisionOption.ReplaceExisting);
 				await FileIO.WriteTextAsync(file, recipeBoxJson);
-				return;
 			}
 			catch (Exception e)
 			{

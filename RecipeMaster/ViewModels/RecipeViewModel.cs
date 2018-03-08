@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Template10.Mvvm;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using RecipeMaster.Services;
 using Template10.Common;
 
 namespace RecipeMaster.ViewModels
@@ -20,6 +21,7 @@ namespace RecipeMaster.ViewModels
 		private const string WideStateName = "WideState";
 
 		private VisualState _currentState;
+		
 
 		public RecipeViewModel()
 		{
@@ -108,6 +110,11 @@ namespace RecipeMaster.ViewModels
 
 			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, CurrentRecipe);
 			Ingredients.Add(newIngredient);
+		}
+
+		public async Task Save()
+		{
+			await FileIOService.SaveRecipeBoxAsync(_activeRecipeBox);
 		}
 
 		public async Task NewChildIngredientAsync()

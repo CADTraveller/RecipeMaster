@@ -67,9 +67,10 @@
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="{x:Bind vm.CurrentRecipe.Name, Mode=OneWay}">
             <controls:PageHeader.PrimaryCommands >
-                <AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
+				<AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
+				<AppBarButton Icon="Save" Click="{x:Bind vm.Save}" Label="Save"/>
 
-            </controls:PageHeader.PrimaryCommands>
+			</controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
 
         <!--  content  -->
@@ -122,13 +123,15 @@
                                 </MenuFlyout>
                             </ContentControl.ContextFlyout>
                             <StackPanel Orientation="Horizontal">
-                                <TextBox Text="{x:Bind Name, Mode=TwoWay}" IsRightTapEnabled="False"/>
-                                <TextBox Text=" - "/>
-                                <TextBox Text="{x:Bind Percent, Mode=TwoWay}" IsRightTapEnabled="False"/>
-                                <TextBox Text="% "/>
+                                <TextBlock Text="{x:Bind Name, Mode=TwoWay}" 
+                                         IsRightTapEnabled="False"
+                                         />
+                                <TextBlock Text=" - "/>
+                                <TextBox Text="{x:Bind Percent, Mode=TwoWay}" IsRightTapEnabled="False" ContextMenuOpening="TextBox_ContextMenuOpening" />
+                                <TextBlock Text="% "/>
 
                                 <TextBox Text="{x:Bind Weight, Mode=TwoWay}" IsRightTapEnabled="False"/>
-                                <TextBox Text=" gm "/>
+                                <TextBlock Text=" gm "/>
 
                             </StackPanel>
                         </ContentControl>

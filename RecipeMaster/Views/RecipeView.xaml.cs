@@ -55,6 +55,9 @@ namespace RecipeMaster.Views
 	        await Vm.NewChildIngredientAsync();
 	    }
 
-	    
+		private void TextBox_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+		{
+			e.Handled = true;
+		}
 	}
 }
