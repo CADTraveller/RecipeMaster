@@ -12,9 +12,9 @@
       xmlns:vm="using:RecipeMaster.ViewModels"
 	  mc:Ignorable="d">
 
-    <Page.DataContext>
-        <vm:MainPageViewModel x:Name="ViewModel" />
-    </Page.DataContext>
+	<Page.DataContext>
+		<vm:MainPageViewModel x:Name="ViewModel" />
+	</Page.DataContext>
 
 	<Page.Resources>
 		<ResourceDictionary>
@@ -26,55 +26,60 @@
 		</ResourceDictionary>
 	</Page.Resources>
 
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	<RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
-                <VisualState x:Name="VisualStateNarrow">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!--  TODO: change properties for narrow view  -->
-                        <!--<Setter Target="stateTextBox.Text" Value="Narrow Visual State" />-->
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="VisualStateNormal">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!--  TODO: change properties for normal view  -->
-                        <!--<Setter Target="stateTextBox.Text" Value="Normal Visual State" />-->
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="VisualStateWide">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <!--  TODO: change properties for wide view  -->
-                        <!--<Setter Target="stateTextBox.Text" Value="Wide Visual State" />-->
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="AdaptiveVisualStateGroup">
+				<VisualState x:Name="VisualStateNarrow">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!--  TODO: change properties for narrow view  -->
+						<!--<Setter Target="stateTextBox.Text" Value="Narrow Visual State" />-->
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="VisualStateNormal">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!--  TODO: change properties for normal view  -->
+						<!--<Setter Target="stateTextBox.Text" Value="Normal Visual State" />-->
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name="VisualStateWide">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!--  TODO: change properties for wide view  -->
+						<!--<Setter Target="stateTextBox.Text" Value="Wide Visual State" />-->
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 
-        <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" Text="Main Page">
+		<controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
 			<controls:PageHeader.PrimaryCommands>
 				<AppBarButton Icon="View" Click="{x:Bind ViewModel.GotoRecipeGroupsView, Mode=OneWay}" Label="View Recipe Box" />
 				<AppBarButton Icon="OpenFile" Click="{x:Bind ViewModel.ImportFileAsync}" Label="Import File" />
 				<AppBarButton Icon="Save" Click="{x:Bind ViewModel.SaveFileAsync}" Label="Save Current" />
+				<AppBarButton Click="{x:Bind ViewModel.SaveFileAsync}" Label="Save As">
+					<AppBarButton.Icon>
+						<PathIcon HorizontalAlignment="Center" VerticalAlignment="Center" Data="M5.68749380111694,16.1875152587891L5.68749380111694,17.8750038146973 16.5625267028809,17.8750038146973 16.5625267028809,16.1875152587891 5.68749380111694,16.1875152587891z M7.1875114440918,3.25000762939453L9.31249141693115,3.25000762939453 9.31249141693115,7.5 7.1875114440918,7.5 7.1875114440918,3.25000762939453z M2.812504529953,3.18750381469727L5.62500905990601,3.18750381469727 5.62500905990601,8.3125114440918 16.6250114440918,8.3125114440918 16.6250114440918,3.18750381469727 19.5,3.18750381469727 19.5,20 2.812504529953,20 2.812504529953,3.18750381469727z M13.750020980835,0L16.6250114440918,0 16.6250114440918,2.25000381469727 15.6250238418579,2.25000381469727 13.750020980835,2.25000381469727 13.750020980835,0z M4.37500667572021,0L6.49998664855957,0 6.49998664855957,2.1875 4.37500667572021,2.1875 4.37500667572021,0z M0,0L2.74998164176941,0 2.74998164176941,2.25000381469727 1.87500309944153,2.25000381469727 1.87500309944153,16.8125152587891 0,16.8125152587891 0,0z" />
+					</AppBarButton.Icon>
+				</AppBarButton>
 				<AppBarButton Icon="NewFolder" Click="{x:Bind ViewModel.NewRecipeBox}" Label="New Recipe Box" />
 			</controls:PageHeader.PrimaryCommands>
-            <!--  secondary commands  -->
-            <controls:PageHeader.SecondaryCommands>
-                <AppBarButton Click="{x:Bind ViewModel.GotoSettings}" Label="Settings" />
-                <AppBarButton Click="{x:Bind ViewModel.GotoPrivacy}" Label="Privacy" />
-                <AppBarButton Click="{x:Bind ViewModel.GotoAbout}" Label="About" />
-            </controls:PageHeader.SecondaryCommands>
-        </controls:PageHeader>
+			<!--  secondary commands  -->
+			<controls:PageHeader.SecondaryCommands>
+				<AppBarButton Click="{x:Bind ViewModel.GotoSettings}" Label="Settings" />
+				<AppBarButton Click="{x:Bind ViewModel.GotoPrivacy}" Label="Privacy" />
+				<AppBarButton Click="{x:Bind ViewModel.GotoAbout}" Label="About" />
+			</controls:PageHeader.SecondaryCommands>
+		</controls:PageHeader>
 
 		<!--<TextBlock x:Name="statusReport" Text="{x:Bind ViewModel.StatusMessage, Mode=TwoWay}"
 				   RelativePanel.Below="pageHeader" />-->
@@ -87,8 +92,8 @@
 			<GridView.ItemTemplate>
 				<DataTemplate x:DataType="model:RecentRecipeBox">
 					<Grid Width="100" Height="100">
-								<Image Source="/Assets/RecipeBoxReal.png" Stretch="UniformToFill" />
-								<TextBlock Text="{x:Bind Name}" />
+						<Image Source="/Assets/RecipeBoxReal.png" Stretch="UniformToFill" />
+						<TextBlock Text="{x:Bind Name}" />
 					</Grid>
 				</DataTemplate>
 			</GridView.ItemTemplate>
@@ -109,11 +114,15 @@
                      Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      TextWrapping="Wrap">
                 <Interactivity:Interaction.Behaviors>
-                    --><!--  enable submit on enter key  --><!--
+                    -->
+		<!--  enable submit on enter key  -->
+		<!--
                     <Behaviors:KeyBehavior Key="Enter">
                         <Core:CallMethodAction MethodName="GotoDetailsPage" TargetObject="{Binding}" />
                     </Behaviors:KeyBehavior>
-                    --><!--  focus on textbox when page loads  --><!--
+                    -->
+		<!--  focus on textbox when page loads  -->
+		<!--
                     <Core:EventTriggerBehavior>
                         <Behaviors:FocusAction />
                     </Core:EventTriggerBehavior>
@@ -130,5 +139,5 @@
                    RelativePanel.AlignLeftWith="parameterResizer"
                    RelativePanel.Below="parameterResizer"
                    Text="Current Visual State" />-->
-    </RelativePanel>
+	</RelativePanel>
 </Page>
