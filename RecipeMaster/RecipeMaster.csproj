@@ -110,6 +110,7 @@
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Models\IIngredientContainer.cs" />
     <Compile Include="Models\Ingredient.cs" />
+    <Compile Include="Models\IngredientType.cs" />
     <Compile Include="Models\NutritionInfo.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\RecentRecipeBox.cs" />
@@ -146,6 +147,9 @@
     </Compile>
     <Compile Include="Views\RecipeView.xaml.cs">
       <DependentUpon>RecipeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectTargetGroupDialog.xaml.cs">
+      <DependentUpon>SelectTargetGroupDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -279,6 +283,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\RecipeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectTargetGroupDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

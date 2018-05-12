@@ -20,18 +20,20 @@ namespace RecipeMaster.ViewModels
 		private const string NarrowStateName = "NarrowState";
 		private const string WideStateName = "WideState";
 
+		private RecipeBox _activeRecipeBox;
+		private Recipe _currentRecipe;
 		private VisualState _currentState;
-		
+
+
+		private ObservableCollection<Ingredient> ingredients;
+
+		private Ingredient selectedIngredient;
 
 		public RecipeViewModel()
 		{
 			ingredients = new ObservableCollection<Ingredient>();
 			//CurrentRecipe = new Recipe();//__put a dummy in place to prevent errors
 		}
-
-		private RecipeBox _activeRecipeBox;
-		private Recipe _currentRecipe;
-
 		public Recipe CurrentRecipe
 
 		{
@@ -42,9 +44,6 @@ namespace RecipeMaster.ViewModels
 				Ingredients = _currentRecipe.Ingredients;
 			}
 		}
-
-		private ObservableCollection<Ingredient> ingredients;
-
 		public ObservableCollection<Ingredient> Ingredients
 		{
 			get
@@ -57,65 +56,15 @@ namespace RecipeMaster.ViewModels
 			{
 				Set(ref ingredients, value);
 				CurrentRecipe.Ingredients = ingredients;
+				
 			}
 		}
-
-		private Ingredient selectedIngredient;
-
 		public Ingredient SelectedIngredient
 		{
 			get { return selectedIngredient; }
 			set { Set(ref selectedIngredient, value); }
 		}
 
-		//public async Task LoadDataAsync(VisualState currentState)
-		//{
-		//_currentState = currentState;
-		//SampleItems.Clear();
-
-		//var data = await SampleDataService.GetSampleModelDataAsync();
-
-		//foreach (var item in data)
-		//{
-		//    SampleItems.Add(item);
-		//}
-		//Selected = SampleItems.First();
-		//}
-
-		//private void OnStateChanged(VisualStateChangedEventArgs args)
-		//{
-		//    _currentState = args.NewState;
-		//}
-
-		//private void OnItemClick(ItemClickEventArgs args)
-		//{
-		//    Order item = args?.ClickedItem as Order;
-		//    if (item != null)
-		//    {
-		//        //if (_currentState.Name == NarrowStateName)
-		//        //{
-		//        //    NavigationService.Navigate(typeof(RecipesDetailViewModel).FullName, item);
-		//        //}
-		//        //else
-		//        //{
-		//        //    Selected = item;
-		//        //}
-		//    }
-		//}
-
-		public async Task NewIngredientAsync()
-		{
-			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
-			var result = await dialog.ShowAsync();
-
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, CurrentRecipe);
-			Ingredients.Add(newIngredient);
-		}
-
-		public async Task Save()
-		{
-			await FileIOService.SaveRecipeBoxAsync(_activeRecipeBox);
-		}
 
 		public async Task NewChildIngredientAsync()
 		{
@@ -128,14 +77,29 @@ namespace RecipeMaster.ViewModels
 			parent.Ingredients.Add(newIngredient);
 		}
 
+		public async Task NewIngredientAsync()
+		{
+			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
+			var result = await dialog.ShowAsync();
+
+			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, CurrentRecipe);
+			CurrentRecipe.AddIngredient(newIngredient);
+			RaisePropertyChanged("Ingredients");
+		}
+
 		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
 		{
 			string recipeBoxName = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey].ToString();
 			_activeRecipeBox = BootStrapper.Current.SessionState[recipeBoxName] as RecipeBox;
-			CurrentRecipe	= BootStrapper.Current.SessionState[App.SelectedRecipeKey] as Recipe;
+			CurrentRecipe = BootStrapper.Current.SessionState[App.SelectedRecipeKey] as Recipe;
 
 			RaisePropertyChanged();
 			return base.OnNavigatedToAsync(parameter, mode, state);
+		}
+
+		public async Task Save()
+		{
+			await FileIOService.SaveRecipeBoxAsync(_activeRecipeBox);
 		}
 	}
 }

@@ -5,9 +5,11 @@ using Windows.ApplicationModel.Activation;
 using Template10.Controls;
 using Template10.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Controls;
+using RecipeMaster.Models;
 
 namespace RecipeMaster
 {
@@ -29,7 +31,7 @@ namespace RecipeMaster
 			RequestedTheme = settings.AppTheme;
 			CacheMaxDuration = settings.CacheMaxDuration;
 			ShowShellBackButton = settings.UseShellBackButton;
-
+			//BootStrapper.Current.
 			#endregion
 		}
 
@@ -44,7 +46,9 @@ namespace RecipeMaster
 		public static string ActiveRecipeBoxKey => _activeRecipeBoxKey;
 
 		#endregion
-		
+
+		public Dictionary<string, RecipeBox> OpenRecipeBoxes { get; set; }
+
 
 		public override UIElement CreateRootElement(IActivatedEventArgs e)
 		{

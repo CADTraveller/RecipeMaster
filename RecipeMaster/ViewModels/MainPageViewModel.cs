@@ -24,14 +24,16 @@ namespace RecipeMaster.ViewModels
 			}
 			else
 			{
-				populateRecentRecipeBoxList();
+				//FileIOService.ClearHistory();
+				populateRecentRecipeBoxListAsync();
+				
 			}
 		}
 
 		#region Properties
 
 		private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
+		
 		private string _Value = "Gas";
 
 		public string Value
@@ -175,14 +177,14 @@ namespace RecipeMaster.ViewModels
 
 		public async void ImportFileAsync()
 		{
+			//__allow user to pick file
 			currentRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
 			if (currentRecipeBox == null) return;
 
+			//__add to current list, selection
 			RecentRecipeBox rrb = await FileIOService.CreateRecentRecipeBoxAsync(currentRecipeBox);
-			if (rrb == null) return;
+			if (rrb == null) return;//__in case something went wrong
 
-			//SelectedRecentRecipeBox = CreateRecentRecipeBox(currentRecipeBox);
-			//RecentRecipeBoxes.Add(SelectedRecentRecipeBox);
 			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 			RecentRecipeBoxes.Insert(0, rrb);
 
@@ -190,7 +192,7 @@ namespace RecipeMaster.ViewModels
 			updateDisplay();
 		}
 
-		private async Task populateRecentRecipeBoxList()
+		private async Task populateRecentRecipeBoxListAsync()
 		{
 			List<RecentRecipeBox> boxesOnFile = await FileIOService.ListKnownRecipeBoxes();
 			if (RecentRecipeBoxes != null)

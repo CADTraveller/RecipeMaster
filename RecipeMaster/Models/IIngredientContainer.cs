@@ -17,9 +17,9 @@ namespace RecipeMaster.Models
 
         void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight);
 
-        void UpdateChildrenWeightInEntryMode(double newWeight);
+        void UpdateChildrenWeightInEntryMode(double newWeight = 0);
 
-        void UpdateChildrenWeightInEditMode(double newWeight);
+        void UpdateChildrenWeightInEditMode(double newWeight = 0);
 
         void UpdateToNewChildPercent(Ingredient sender, double newPercent);
 

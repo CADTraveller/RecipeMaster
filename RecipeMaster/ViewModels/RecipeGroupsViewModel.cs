@@ -12,6 +12,7 @@ using Template10.Common;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace RecipeMaster.ViewModels
@@ -136,7 +137,15 @@ namespace RecipeMaster.ViewModels
 
 		public async Task NewRecipeAsync()
 		{
-			if (SelectedRecipeGroup == null) return;
+			if (SelectedRecipeGroup == null)
+			{
+				//__prompt user to select destination Group
+				IEnumerable<string> groupNames = CurrentRecipeGroups.Select(g => g.Name);
+				SelectTargetGroupDialog groupSelector = new SelectTargetGroupDialog(groupNames);
+				await groupSelector.ShowAsync();
+				string groupName = groupSelector.SelectedGroupName;
+				SelectedRecipeGroup = CurrentRecipeGroups.FirstOrDefault(g => g.Name == groupName);
+			}
 
 			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
 			var result = await dialog.ShowAsync();
