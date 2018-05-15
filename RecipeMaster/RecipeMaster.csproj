@@ -107,7 +107,6 @@
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Helpers\TaskExtensions.cs" />
-    <Compile Include="MainViewModel.cs" />
     <Compile Include="Models\IIngredientContainer.cs" />
     <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\IngredientType.cs" />

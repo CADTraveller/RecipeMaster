@@ -155,7 +155,7 @@ namespace RecipeMaster.ViewModels
 			//__see if this RecipeBox is already in memory
 			if (!BootStrapper.Current.SessionState.Keys.Contains(recipeBoxName))
 			{
-				currentRecipeBox = await FileIOService.OpenRecipeBoxAsync(SelectedRecentRecipeBox);
+				currentRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync(SelectedRecentRecipeBox);
 				BootStrapper.Current.SessionState[recipeBoxName] = currentRecipeBox;
 			}
 			
