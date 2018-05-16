@@ -10,6 +10,8 @@ using System.Linq;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Controls;
 using RecipeMaster.Models;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
 
 namespace RecipeMaster
 {
@@ -23,6 +25,7 @@ namespace RecipeMaster
 		{
 			InitializeComponent();
 			SplashFactory = (e) => new Views.Splash(e);
+			AppCenter.Start("8c9025c6-f84a-46cf-907b-1cdca720e459", typeof(Analytics));
 
 			#region app settings
 
@@ -31,6 +34,7 @@ namespace RecipeMaster
 			RequestedTheme = settings.AppTheme;
 			CacheMaxDuration = settings.CacheMaxDuration;
 			ShowShellBackButton = settings.UseShellBackButton;
+
 			//BootStrapper.Current.
 			#endregion
 		}

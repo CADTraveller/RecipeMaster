@@ -24,7 +24,7 @@ namespace RecipeMaster.ViewModels
 			}
 			else
 			{
-				//FileIOService.ClearHistory();
+				FileIOService.ClearHistory();
 				populateRecentRecipeBoxListAsync();
 				
 			}
@@ -135,12 +135,7 @@ namespace RecipeMaster.ViewModels
 
 		#endregion Events
 
-		#region Commands
 
-		private DelegateCommand viewRecipeBoxDetailsCommand;
-		public DelegateCommand ViewRecipeBoxDetailsCommand => viewRecipeBoxDetailsCommand ?? (viewRecipeBoxDetailsCommand = new DelegateCommand(() => GotoRecipeGroupsView()));
-
-		#endregion Commands
 
 		#region Methods
 

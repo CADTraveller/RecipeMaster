@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.Storage.Search;
 
 namespace RecipeMaster.Services
 {
 	public static class FileIOService
 	{
-		private static StorageItemAccessList accessList =
-			Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
-
 		//private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
 		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -131,11 +129,18 @@ namespace RecipeMaster.Services
 		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
 		{
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+			
+			List<string> typeFilters = new List<string>() {".rcpbx"};
+			QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, typeFilters);
+			
 			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
+			query.ApplyNewQueryOptions(options);
+
 			var files = await query.GetFilesAsync();
 			List<RecentRecipeBox> recentRecipeBoxes = new List<RecentRecipeBox>();
 			foreach (StorageFile file in files)
 			{
+				//if(file.FileType != ".rcpbx")
 				RecentRecipeBox rrb = new RecentRecipeBox(file.DisplayName);
 				Windows.Storage.FileProperties.BasicProperties fileProperties = await file.GetBasicPropertiesAsync();
 				rrb.LastOpened = fileProperties.DateModified.Date;
@@ -171,11 +176,12 @@ namespace RecipeMaster.Services
 				if (rb != null)
 				{
 					//_enable future access
+					StorageItemAccessList accessList =
+						Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
 					string faToken = accessList.Add(file);
 
 					//__make a record of this recipe box
 					rb.LastPath = file.Path;
-					await RecordRecentRecipeBoxAsync(rb);
 				}
 				else return null;
 			}
@@ -192,14 +198,6 @@ namespace RecipeMaster.Services
 
 			return rb;
 
-		}
-
-		private static RecentRecipeBox createRecentRecipeBoxFromFile(StorageFile file)
-		{
-			RecentRecipeBox rrb = new RecentRecipeBox(file.DisplayName);
-			rrb.Path = file.Path;
-			rrb.LastOpened = DateTime.Now;
-			return rrb;
 		}
 
 		public static async Task RecordRecentRecipeBoxAsync(RecipeBox rb)
