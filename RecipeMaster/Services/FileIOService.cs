@@ -17,7 +17,18 @@ namespace RecipeMaster.Services
 	{
 		//private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
-		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+		#region Public Methods
+
+		public static async Task ClearHistory()
+		{
+			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
+			var files = await query.GetFilesAsync();
+			foreach (StorageFile storageFile in files)
+			{
+				storageFile.DeleteAsync();
+			}
+		}
 
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
@@ -129,10 +140,10 @@ namespace RecipeMaster.Services
 		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
 		{
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			
-			List<string> typeFilters = new List<string>() {".rcpbx"};
+
+			List<string> typeFilters = new List<string>() { ".rcpbx" };
 			QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, typeFilters);
-			
+
 			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
 			query.ApplyNewQueryOptions(options);
 
@@ -149,8 +160,7 @@ namespace RecipeMaster.Services
 			return recentRecipeBoxes;
 		}
 
-
-
+		// todo Use FutureAccessList to store permissions and to retreive, this function is currently broken :~P
 		public static async Task<RecipeBox> OpenRecipeBoxFromFileAsync(RecentRecipeBox rrb = null, bool needToRecordAccess = true)
 		{
 			StorageFile file;
@@ -175,12 +185,6 @@ namespace RecipeMaster.Services
 				rb = JsonConvert.DeserializeObject<RecipeBox>(contents);
 				if (rb != null)
 				{
-					//_enable future access
-					StorageItemAccessList accessList =
-						Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
-					string faToken = accessList.Add(file);
-
-					//__make a record of this recipe box
 					rb.LastPath = file.Path;
 				}
 				else return null;
@@ -197,7 +201,6 @@ namespace RecipeMaster.Services
 			}
 
 			return rb;
-
 		}
 
 		public static async Task RecordRecentRecipeBoxAsync(RecipeBox rb)
@@ -251,15 +254,12 @@ namespace RecipeMaster.Services
 			await FileIO.WriteTextAsync(targetFile, rbJson);
 		}
 
-		public static async Task ClearHistory()
-		{
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
-			var files = await query.GetFilesAsync();
-			foreach (StorageFile storageFile in files)
-			{
-				storageFile.DeleteAsync();
-			}
-		}
+		#endregion Public Methods
+
+		#region Private Fields
+
+		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+		#endregion Private Fields
 	}
 }

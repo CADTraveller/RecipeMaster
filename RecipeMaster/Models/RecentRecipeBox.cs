@@ -1,33 +1,24 @@
 ﻿using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
 using System;
+using Template10.Mvvm;
 
 namespace RecipeMaster.Models
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class RecentRecipeBox : ObservableObject
+	public class RecentRecipeBox : BindableBase
 	{
+		#region Public Constructors
+
 		public RecentRecipeBox(string name = "Name")
 		{
 			this.name = name;
 			LastOpened = new DateTime();
 		}
 
-		private string recipeBoxImagePath = "/Assets/RecipeBoxReal.jpg";
+		#endregion Public Constructors
 
-		[JsonProperty]
-		public string RecipeBoxImagePath { get => recipeBoxImagePath; }
-
-		private string name;
-
-		[JsonProperty]
-		public string Name
-		{
-			get { return name; }
-			set { Set(ref name, value); }
-		}
-
-		private string description;
+		#region Public Properties
 
 		[JsonProperty]
 		public string Description
@@ -36,16 +27,11 @@ namespace RecipeMaster.Models
 			set { Set(ref description, value); }
 		}
 
-		private string path;
-
-		[JsonProperty]
-		public string Path
+		public string FutureAccessToken
 		{
-			get { return path; }
-			set { Set(ref path, value); }
+			get => _futureAccessToken;
+			set => Set(ref _futureAccessToken, value);
 		}
-
-		private DateTime lastOpened;
 
 		[JsonProperty]
 		//[JsonConverter(typeof())]
@@ -57,5 +43,35 @@ namespace RecipeMaster.Models
 				Set(ref lastOpened, value);
 			}
 		}
+
+		[JsonProperty]
+		public string Name
+		{
+			get { return name; }
+			set { Set(ref name, value); }
+		}
+
+		[JsonProperty]
+		public string Path
+		{
+			get { return path; }
+			set { Set(ref path, value); }
+		}
+
+		[JsonProperty]
+		public string RecipeBoxImagePath { get => recipeBoxImagePath; }
+
+		#endregion Public Properties
+
+		#region Private Fields
+
+		private string _futureAccessToken;
+		private string description;
+		private DateTime lastOpened;
+		private string name;
+		private string path;
+		private string recipeBoxImagePath = "/Assets/RecipeBoxReal.jpg";
+
+		#endregion Private Fields
 	}
 }
