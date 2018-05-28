@@ -24,9 +24,8 @@ namespace RecipeMaster.ViewModels
 			}
 			else
 			{
-				FileIOService.ClearHistory();
+				//FileIOService.ClearHistory();
 				populateRecentRecipeBoxListAsync();
-				
 			}
 		}
 
@@ -150,15 +149,13 @@ namespace RecipeMaster.ViewModels
 			//__see if this RecipeBox is already in memory
 			if (!BootStrapper.Current.SessionState.Keys.Contains(recipeBoxName))
 			{
-				currentRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync(SelectedRecentRecipeBox);
-				BootStrapper.Current.SessionState[recipeBoxName] = currentRecipeBox;
+				 await FileIOService.OpenRecipeBoxFromFileAsync(SelectedRecentRecipeBox);
 			}
 			
 			BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] = recipeBoxName;
-			if (currentRecipeBox != null)
-			{
-				NavigationService.Navigate(typeof(Views.RecipeGroupsView));
-			}
+
+			NavigationService.Navigate(typeof(Views.RecipeGroupsView));
+
 		}
 
 		public void GotoSettings() =>
@@ -173,13 +170,8 @@ namespace RecipeMaster.ViewModels
 		public async void ImportFileAsync()
 		{
 			//__allow user to pick file
-			currentRecipeBox = await FileIOService.OpenRecipeBoxFromFileAsync();
-			if (currentRecipeBox == null) return;
-
-			//__add to current list, selection
-			RecentRecipeBox rrb = await FileIOService.CreateRecentRecipeBoxAsync(currentRecipeBox);
-			if (rrb == null) return;//__in case something went wrong
-
+			RecentRecipeBox rrb= await FileIOService.OpenRecipeBoxFromFileAsync();
+			
 			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 			RecentRecipeBoxes.Insert(0, rrb);
 

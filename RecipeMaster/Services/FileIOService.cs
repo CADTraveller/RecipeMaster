@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
+using Template10.Common;
 
 namespace RecipeMaster.Services
 {
@@ -21,40 +22,8 @@ namespace RecipeMaster.Services
 
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
-			//var savePicker = new FileSavePicker();
-			//savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-			//// Dropdown of file types the user can save the file as
-			//savePicker.FileTypeChoices.Add("Recipe Box", new List<string>() { ".rcpbx" });
-			//// Default file name if the user does not type one in or select a file to replace
-			//savePicker.SuggestedFileName = "New Document";
-			//StorageFile file = await savePicker.PickSaveFileAsync();
-
 			try
 			{
-				// Prevent updates to the remote version of the file until
-				// we finish making changes and call CompleteUpdatesAsync.
-				//CachedFileManager.DeferUpdates(file);
-
-				//// write blank RecipeBox to file
-				//RecipeBox rb = new RecipeBox(file.Name);
-				//rb.LastPath = file.Path;
-				//string rbJson = JsonConvert.SerializeObject(rb);
-				//await FileIO.WriteTextAsync(file, rbJson);
-				//// Let Windows know that we're finished changing the file so
-				//// the other app can update the remote version of the file.
-				//// Completing updates may require Windows to ask for user input.
-				//Windows.Storage.Provider.FileUpdateStatus status =
-				//	await CachedFileManager.CompleteUpdatesAsync(file);
-				//if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
-				//{
-				//	AddToRecentsLists(file);
-				//	return rb;
-				//}
-				//else
-				//{
-				//	return null;
-				//}
-
 				var savePicker = new FileSavePicker();
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 				// Dropdown of file types the user can save the file as
@@ -72,7 +41,7 @@ namespace RecipeMaster.Services
 
 				string recipeBoxJson = JsonConvert.SerializeObject(rb);
 				await FileIO.WriteTextAsync(file, recipeBoxJson);
-				await RecordRecentRecipeBoxAsync(rb);
+				await RecordRecentRecipeBoxAsync(rb, file);
 				return rb;
 			}
 			catch
@@ -109,8 +78,6 @@ namespace RecipeMaster.Services
 		public static async Task ExportRecipeBoxAsync(RecipeBox rb = null, RecentRecipeBox rrb = null)
 		{
 			if (rb == null && rrb == null) return;
-
-			if (rb == null && rrb != null) rb = await OpenRecipeBoxFromFileAsync(rrb);
 
 			string fileContents = JsonConvert.SerializeObject(rb);
 
@@ -151,12 +118,13 @@ namespace RecipeMaster.Services
 
 
 
-		public static async Task<RecipeBox> OpenRecipeBoxFromFileAsync(RecentRecipeBox rrb = null, bool needToRecordAccess = true)
+		public static async Task<RecentRecipeBox> OpenRecipeBoxFromFileAsync(RecentRecipeBox rrb = null, bool needToRecordAccess = false)
 		{
-			StorageFile file;
+			string token = rrb?.Token;
+			StorageFile file = null;
 			RecipeBox rb;
 
-			if (rrb == null)
+			if (rrb == null || string.IsNullOrEmpty(token))
 			{
 				FileOpenPicker picker = new FileOpenPicker();
 				picker.FileTypeFilter.Add(".rcpbx");
@@ -166,49 +134,54 @@ namespace RecipeMaster.Services
 			}
 			else
 			{
-				file = await StorageFile.GetFileFromPathAsync(rrb.Path);
+				file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
+				//file = await StorageFile.GetFileFromPathAsync(rrb.Path);
 			}
 
 			try
 			{
 				string contents = await FileIO.ReadTextAsync(file);
 				rb = JsonConvert.DeserializeObject<RecipeBox>(contents);
-				if (rb != null)
-				{
-					//_enable future access
-					StorageItemAccessList accessList =
-						Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList;
-					string faToken = accessList.Add(file);
-
-					//__make a record of this recipe box
-					rb.LastPath = file.Path;
-				}
-				else return null;
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine(e);
 				return null;
 				//__show the user error notice
 			}
 
 			if (needToRecordAccess)
 			{
-				await RecordRecentRecipeBoxAsync(rb);
+				rrb = await RecordRecentRecipeBoxAsync(rb, file);
 			}
 
-			return rb;
+			return rrb;
 
 		}
 
-		public static async Task RecordRecentRecipeBoxAsync(RecipeBox rb)
+		public static async Task<RecentRecipeBox> RecordRecentRecipeBoxAsync(RecipeBox rb, StorageFile file)
 		{
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-
 			RecentRecipeBox rrb = await CreateRecentRecipeBoxAsync(rb);
+			rb.LastPath = file.Path;
+
+			if (file != null)
+			{
+				// Add to FA without metadata
+				string faToken = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+				rrb.Token = faToken;
+			}
+			
+			//__store a record of this access
+			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			string name = rrb.Name;
 			string contents = JsonConvert.SerializeObject(rrb);
 			StorageFile newRecord = await localFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
 			await FileIO.WriteTextAsync(newRecord, contents);
+
+			//__store an instance of the rb if it doesn't already exist
+			BootStrapper.Current.SessionState[rb.Name] = rb;
+
+			return rrb;
 		}
 
 		public static async Task RemoveRecentRecipeBoxAsync(RecentRecipeBox rrb)
@@ -228,9 +201,10 @@ namespace RecipeMaster.Services
 		{
 			var savePicker = new FileSavePicker();
 			string lastSavePath = rb.LastPath;
+			FileInfo info = new FileInfo(lastSavePath);
 			StorageFile targetFile;
-
-			if (File.Exists(lastSavePath) && !doSaveAs)
+			
+			if (info.Exists && !doSaveAs)
 			{
 				StorageFolder targetFolder = await StorageFolder.GetFolderFromPathAsync(lastSavePath);
 				targetFile = await targetFolder.CreateFileAsync(rb.Name, CreationCollisionOption.ReplaceExisting);

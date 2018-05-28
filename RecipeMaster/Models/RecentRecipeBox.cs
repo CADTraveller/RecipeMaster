@@ -57,5 +57,8 @@ namespace RecipeMaster.Models
 				Set(ref lastOpened, value);
 			}
 		}
+
+		[JsonProperty]
+		public string Token { get; set; }
 	}
 }
