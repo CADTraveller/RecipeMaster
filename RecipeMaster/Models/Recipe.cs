@@ -76,6 +76,7 @@ namespace RecipeMaster.Models
 			set { Set(ref steps, value); }
 		}
 
+		public string AccessToken { get; set; }
 		public double TotalWeight
 		{
 			get { return Math.Round(totalWeight); }

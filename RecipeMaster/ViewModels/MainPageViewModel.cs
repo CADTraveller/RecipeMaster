@@ -24,7 +24,7 @@ namespace RecipeMaster.ViewModels
 			}
 			else
 			{
-				//FileIOService.ClearHistory();
+				//FileIOService.ClearHistoryAsync();
 				populateRecentRecipeBoxListAsync();
 			}
 		}

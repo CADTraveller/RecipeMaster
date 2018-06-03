@@ -23,12 +23,41 @@ namespace RecipeMaster.ViewModels
 		private RecipeBox _activeRecipeBox;
 		private Recipe _currentRecipe;
 		private VisualState _currentState;
-
+		private bool _entryModeActive;
 
 		private ObservableCollection<Ingredient> ingredients;
 
 		private Ingredient selectedIngredient;
 
+		public bool EntryModeActive
+		{
+			get => _entryModeActive;
+			set
+			{
+				if(_entryModeActive == value) return;
+				Set(ref _entryModeActive, value);
+				RaisePropertyChanged("EditModeActive");
+				foreach (Ingredient ingredient in Ingredients)
+				{
+					ingredient.EntryModeActive = value;
+				}
+			}
+		}
+
+		public bool EditModeActive
+		{
+			get => !_entryModeActive;
+			set
+			{
+				if(!_entryModeActive == value) return;
+				Set(ref _entryModeActive, !value);
+				RaisePropertyChanged("EntryModeActive");
+				foreach (Ingredient ingredient in Ingredients)
+				{
+					ingredient.EntryModeActive = !value;
+				}
+			}
+		}
 		public RecipeViewModel()
 		{
 			ingredients = new ObservableCollection<Ingredient>();

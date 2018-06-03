@@ -90,7 +90,11 @@
 				         VerticalAlignment="Center"
 				         Style="{StaticResource PrimaryTextBoxStyle}"/>
 				</StackPanel>
-
+			<StackPanel Orientation="Horizontal"
+			            FlowDirection="RightToLeft">
+				<ToggleButton IsChecked="{x:Bind vm.EntryModeActive, Mode=TwoWay}">Entry Mode</ToggleButton>
+				<ToggleButton IsChecked="{x:Bind vm.EditModeActive, Mode=TwoWay}">Edit Mode</ToggleButton>
+			</StackPanel>
             <xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
 							 x:Name="IngredientsTreeView"
                              SelectedItemChanged="IngredientsTreeView_OnSelectedItemChanged"

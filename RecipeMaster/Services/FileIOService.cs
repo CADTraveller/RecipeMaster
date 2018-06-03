@@ -167,8 +167,9 @@ namespace RecipeMaster.Services
 			if (file != null)
 			{
 				// Add to FA without metadata
-				string faToken = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+				string faToken = StorageApplicationPermissions.FutureAccessList.Add(file);
 				rrb.Token = faToken;
+				rb.AccessToken = faToken;
 			}
 			
 			//__store a record of this access
@@ -201,15 +202,16 @@ namespace RecipeMaster.Services
 		{
 			var savePicker = new FileSavePicker();
 			string lastSavePath = rb.LastPath;
-			FileInfo info = new FileInfo(lastSavePath);
-			StorageFile targetFile;
+			string accessToken = rb.AccessToken;
+			StorageFile targetFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(accessToken);
 			
-			if (info.Exists && !doSaveAs)
-			{
-				StorageFolder targetFolder = await StorageFolder.GetFolderFromPathAsync(lastSavePath);
-				targetFile = await targetFolder.CreateFileAsync(rb.Name, CreationCollisionOption.ReplaceExisting);
-			}
-			else
+			//if (targetFile != null && !doSaveAs)
+			//{
+			//	StorageFolder targetFolder = await StorageFolder.GetFolderFromPathAsync(lastSavePath);
+			//	targetFile = await targetFolder.CreateFileAsync(rb.Name, CreationCollisionOption.ReplaceExisting);
+			//}
+			//else
+			if(targetFile == null || doSaveAs)
 			{
 				savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 
@@ -221,11 +223,13 @@ namespace RecipeMaster.Services
 				targetFile = await savePicker.PickSaveFileAsync();
 			}
 
-			string rbJson = JsonConvert.SerializeObject(rb);
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+			string rbJson = JsonConvert.SerializeObject(rb, settings);
 			await FileIO.WriteTextAsync(targetFile, rbJson);
 		}
 
-		public static async Task ClearHistory()
+		public static async Task ClearHistoryAsync()
 		{
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
