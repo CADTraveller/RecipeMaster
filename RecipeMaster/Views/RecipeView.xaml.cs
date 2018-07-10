@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using RecipeMaster.Models;
+using RecipeMaster.ViewModels;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using RecipeMaster.Models;
-using RecipeMaster.ViewModels;
 using WinRTXamlToolkit.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -25,39 +14,53 @@ namespace RecipeMaster.Views
 	/// </summary>
 	public sealed partial class RecipeView : Page
 	{
-	    RecipeViewModel Vm
-	    {
-            get => DataContext as RecipeViewModel;
-	    }
+		#region Public Constructors
 
-        public RecipeView()
+		public RecipeView()
 		{
 			InitializeComponent();
 		}
 
-	    private void IngredientsTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-	    {
-	        
-	        try
-	        {
-	            Ingredient selectedIngredient = (Ingredient)IngredientsTreeView.SelectedItem;
-	            if(selectedIngredient != null) Vm.SelectedIngredient = selectedIngredient;
-	        }
-	        catch (Exception exception)
-	        {
-	            Console.WriteLine(exception);
-	            throw;
-	        }
-	    }
+		#endregion Public Constructors
 
-	    private async void Ingredient_OnClick(object sender, RoutedEventArgs e)
-	    {
-	        await Vm.NewChildIngredientAsync();
-	    }
+		#region Private Properties
+
+		private RecipeViewModel Vm
+		{
+			get => DataContext as RecipeViewModel;
+		}
+
+		#endregion Private Properties
+
+		#region Private Methods
+
+		private async void Ingredient_OnClick(object sender, RoutedEventArgs e)
+		{
+			await Vm.NewChildIngredientAsync();
+		}
+
+		private void IngredientsTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+		{
+			try
+			{
+				Ingredient selectedIngredient = (Ingredient)IngredientsTreeView.SelectedItem;
+				if (selectedIngredient != null)
+				{
+					Vm.SelectedIngredient = selectedIngredient;
+				}
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine(exception);
+				throw;
+			}
+		}
 
 		private void TextBox_ContextMenuOpening(object sender, ContextMenuEventArgs e)
 		{
 			e.Handled = true;
 		}
+
+		#endregion Private Methods
 	}
 }

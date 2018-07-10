@@ -3,18 +3,16 @@
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:common="using:Template10.Common">
 
-    <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles\Custom.xaml" />
-                <ResourceDictionary Source="Styles\Buttons.xaml" />
-                <ResourceDictionary Source="Styles\TextBlock.xaml" />
-                <ResourceDictionary Source="Styles\TextBox.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Styles\Custom.xaml" />
+				<ResourceDictionary Source="Styles\Buttons.xaml" />
+				<ResourceDictionary Source="Styles\TextBlock.xaml" />
+				<ResourceDictionary Source="Styles\TextBox.xaml" />
+			</ResourceDictionary.MergedDictionaries>
 
-            <!--  custom resources  -->
-
-        </ResourceDictionary>
-    </Application.Resources>
-
+			<!--  custom resources  -->
+		</ResourceDictionary>
+	</Application.Resources>
 </common:BootStrapper>

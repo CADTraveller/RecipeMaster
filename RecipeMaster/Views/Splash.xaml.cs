@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.ApplicationModel.Activation;
+﻿using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -7,12 +6,23 @@ namespace RecipeMaster.Views
 {
 	public sealed partial class Splash : UserControl
 	{
+		#region Public Constructors
+
 		public Splash(SplashScreen splashScreen)
 		{
 			InitializeComponent();
 			Window.Current.SizeChanged += (s, e) => Resize(splashScreen);
 			Resize(splashScreen);
 			Opacity = 0;
+		}
+
+		#endregion Public Constructors
+
+		#region Private Methods
+
+		private void Image_Loaded(object sender, RoutedEventArgs e)
+		{
+			Opacity = 1;
 		}
 
 		private void Resize(SplashScreen splashScreen)
@@ -34,9 +44,6 @@ namespace RecipeMaster.Views
 			ProgressTransform.TranslateY = splashImage.Height / 2;
 		}
 
-		private void Image_Loaded(object sender, RoutedEventArgs e)
-		{
-			Opacity = 1;
-		}
+		#endregion Private Methods
 	}
 }

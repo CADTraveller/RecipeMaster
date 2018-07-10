@@ -1,43 +1,51 @@
 ﻿using GalaSoft.MvvmLight;
 
-
 namespace RecipeMaster.Models
 {
-    public class Step:ObservableObject
-    {
-        public Step()
-        {
-            Description = "Please edit this description";
-        }
+	public class Step : ObservableObject
+	{
+		#region Public Constructors
 
-        public Step(string about)
-        {
-            Description = about;
-        }
+		public Step()
+		{
+			Description = "Please edit this description";
+		}
 
-        private string description;
-        public string Description
-        {
-            get { return description; }
-            set { Set(() => Description, ref description, value); }
-        }
+		public Step(string about)
+		{
+			Description = about;
+		}
 
-        private int order;
+		#endregion Public Constructors
 
-        public int Order
-        {
-            get { return order; }
-            set { Set(() => Order, ref order, value); }
-        }
+		#region Public Properties
 
-        private int duration;
-        public int Duration
-        {
-            get { return duration; }
-            set { Set(() => Duration, ref duration, value); }
-        }
+		public string Description
+		{
+			get { return description; }
+			set { Set(() => Description, ref description, value); }
+		}
 
+		public int Duration
+		{
+			get { return duration; }
+			set { Set(() => Duration, ref duration, value); }
+		}
 
+		public int Order
+		{
+			get { return order; }
+			set { Set(() => Order, ref order, value); }
+		}
 
-    }
+		#endregion Public Properties
+
+		#region Private Fields
+
+		private string description;
+		private int duration;
+		private int order;
+
+		#endregion Private Fields
+	}
 }

@@ -2,67 +2,33 @@
 //using GalaSoft.MvvmLight.Command;
 
 using RecipeMaster.Models;
+using RecipeMaster.Services;
 using RecipeMaster.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Template10.Common;
 using Template10.Mvvm;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
-using RecipeMaster.Services;
-using Template10.Common;
 
 namespace RecipeMaster.ViewModels
 {
 	public class RecipeViewModel : ViewModelBase
 	{
-		private const string NarrowStateName = "NarrowState";
-		private const string WideStateName = "WideState";
+		#region Public Constructors
 
-		private RecipeBox _activeRecipeBox;
-		private Recipe _currentRecipe;
-		private VisualState _currentState;
-		private bool _entryModeActive;
-
-		private ObservableCollection<Ingredient> ingredients;
-
-		private Ingredient selectedIngredient;
-
-		public bool EntryModeActive
-		{
-			get => _entryModeActive;
-			set
-			{
-				if(_entryModeActive == value) return;
-				Set(ref _entryModeActive, value);
-				RaisePropertyChanged("EditModeActive");
-				foreach (Ingredient ingredient in Ingredients)
-				{
-					ingredient.EntryModeActive = value;
-				}
-			}
-		}
-
-		public bool EditModeActive
-		{
-			get => !_entryModeActive;
-			set
-			{
-				if(!_entryModeActive == value) return;
-				Set(ref _entryModeActive, !value);
-				RaisePropertyChanged("EntryModeActive");
-				foreach (Ingredient ingredient in Ingredients)
-				{
-					ingredient.EntryModeActive = !value;
-				}
-			}
-		}
 		public RecipeViewModel()
 		{
 			ingredients = new ObservableCollection<Ingredient>();
 			//CurrentRecipe = new Recipe();//__put a dummy in place to prevent errors
 		}
+
+		#endregion Public Constructors
+
+		#region Public Properties
+
 		public Recipe CurrentRecipe
 
 		{
@@ -73,11 +39,54 @@ namespace RecipeMaster.ViewModels
 				Ingredients = _currentRecipe.Ingredients;
 			}
 		}
+
+		public bool EditModeActive
+		{
+			get => !_entryModeActive;
+			set
+			{
+				if (!_entryModeActive == value)
+				{
+					return;
+				}
+
+				Set(ref _entryModeActive, !value);
+				RaisePropertyChanged("EntryModeActive");
+				foreach (Ingredient ingredient in Ingredients)
+				{
+					ingredient.EntryModeActive = !value;
+				}
+			}
+		}
+
+		public bool EntryModeActive
+		{
+			get => _entryModeActive;
+			set
+			{
+				if (_entryModeActive == value)
+				{
+					return;
+				}
+
+				Set(ref _entryModeActive, value);
+				RaisePropertyChanged("EditModeActive");
+				foreach (Ingredient ingredient in Ingredients)
+				{
+					ingredient.EntryModeActive = value;
+				}
+			}
+		}
+
 		public ObservableCollection<Ingredient> Ingredients
 		{
 			get
 			{
-				if (_currentRecipe == null) return null;
+				if (_currentRecipe == null)
+				{
+					return null;
+				}
+
 				return _currentRecipe.Ingredients;
 			}
 
@@ -85,20 +94,23 @@ namespace RecipeMaster.ViewModels
 			{
 				Set(ref ingredients, value);
 				CurrentRecipe.Ingredients = ingredients;
-				
 			}
 		}
+
 		public Ingredient SelectedIngredient
 		{
 			get { return selectedIngredient; }
 			set { Set(ref selectedIngredient, value); }
 		}
 
+		#endregion Public Properties
+
+		#region Public Methods
 
 		public async Task NewChildIngredientAsync()
 		{
-			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
-			var result = await dialog.ShowAsync();
+			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Ingredient Name");
+			Windows.UI.Xaml.Controls.ContentDialogResult result = await dialog.ShowAsync();
 
 			IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
 
@@ -108,8 +120,8 @@ namespace RecipeMaster.ViewModels
 
 		public async Task NewIngredientAsync()
 		{
-			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
-			var result = await dialog.ShowAsync();
+			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Ingredient Name");
+			Windows.UI.Xaml.Controls.ContentDialogResult result = await dialog.ShowAsync();
 
 			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, CurrentRecipe);
 			CurrentRecipe.AddIngredient(newIngredient);
@@ -130,5 +142,23 @@ namespace RecipeMaster.ViewModels
 		{
 			await FileIOService.SaveRecipeBoxAsync(_activeRecipeBox);
 		}
+
+		#endregion Public Methods
+
+		#region Private Fields
+
+		private const string NarrowStateName = "NarrowState";
+		private const string WideStateName = "WideState";
+
+		private RecipeBox _activeRecipeBox;
+		private Recipe _currentRecipe;
+		private VisualState _currentState;
+		private bool _entryModeActive;
+
+		private ObservableCollection<Ingredient> ingredients;
+
+		private Ingredient selectedIngredient;
+
+		#endregion Private Fields
 	}
 }

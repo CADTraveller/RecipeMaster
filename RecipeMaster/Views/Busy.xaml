@@ -21,5 +21,4 @@
                        Text="{x:Bind BusyText, Mode=OneWay, FallbackValue='BusyText'}" />
         </Grid>
     </Viewbox>
-
 </UserControl>

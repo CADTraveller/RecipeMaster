@@ -12,16 +12,16 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition x:Name="TitleRow" Height="48"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="48"/>
+            <RowDefinition x:Name="TitleRow" Height="48" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="48" />
         </Grid.RowDefinitions>
 
         <TextBlock
             x:Name="TitlePage"
             x:Uid="ActiveRecipes_Pivot"
             Text="Navigation Item 1"
-            Margin="12,0,12,7"/>
+            Margin="12,0,12,7" />
 
         <Pivot Grid.Row="1"
                ItemsSource="{Binding ViewModel.ActiveRecipes}"
@@ -30,9 +30,8 @@
 
                 <DataTemplate x:DataType="model:Recipe">
                     <Grid>
-                        <TextBlock Text="{Binding Name}" Style="{StaticResource ResourceKey=ListTitleStyle}"/>
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource ResourceKey=ListTitleStyle}" />
                     </Grid>
-
                 </DataTemplate>
             </Pivot.HeaderTemplate>
 
@@ -44,28 +43,25 @@
 
                                 <DataTemplate x:DataType="model:Ingredient">
                                     <data:DataTemplateExtensions.Hierarchy>
-                                        <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}"/>
+                                        <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}" />
                                     </data:DataTemplateExtensions.Hierarchy>
                                     <Border BorderBrush="#FF3A5F49">
-                                        
                                     </Border>
                                 </DataTemplate>
-
                             </tk:TreeView.ItemTemplate>
                         </tk:TreeView>
                     </Grid>
-
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
         <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
-            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="144" Content="Add Ingredient"/>
-            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="144" Content="Add Step"/>
-            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="96" Content="Save"/>
+            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="144" Content="Add Ingredient" />
+            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="144" Content="Add Step" />
+            <Button Style="{StaticResource RecipeGroupButtonStyle}" Width="96" Content="Save" />
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <ComboBox Name="Servings"/>
-            <TextBox Name="TotalWeight"/>
+            <ComboBox Name="Servings" />
+            <TextBox Name="TotalWeight" />
         </StackPanel>
     </Grid>
 </Page>

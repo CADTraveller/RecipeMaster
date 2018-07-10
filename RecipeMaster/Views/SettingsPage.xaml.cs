@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace RecipeMaster.Views
 {
 	public sealed partial class SettingsPage : Page
 	{
-		Template10.Services.SerializationService.ISerializationService _SerializationService;
+		#region Public Constructors
 
 		public SettingsPage()
 		{
@@ -15,10 +14,22 @@ namespace RecipeMaster.Views
 			_SerializationService = Template10.Services.SerializationService.SerializationService.Json;
 		}
 
+		#endregion Public Constructors
+
+		#region Protected Methods
+
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
-			var index = int.Parse(_SerializationService.Deserialize(e.Parameter?.ToString()).ToString());
+			int index = int.Parse(_SerializationService.Deserialize(e.Parameter?.ToString()).ToString());
 			MyPivot.SelectedIndex = index;
 		}
+
+		#endregion Protected Methods
+
+		#region Private Fields
+
+		private Template10.Services.SerializationService.ISerializationService _SerializationService;
+
+		#endregion Private Fields
 	}
 }

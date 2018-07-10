@@ -19,42 +19,26 @@ namespace RecipeMaster.ViewModels
 {
 	public class RecipeGroupsViewModel : ViewModelBase
 	{
+		#region Public Constructors
+
 		public RecipeGroupsViewModel()
 		{
 			Messenger.Default.Register<RecipeBoxSelectedMessage>(this, (message) => ReceiveMessage(message));
 		}
 
+		#endregion Public Constructors
+
 		#region Properties
-
-		private const string NarrowStateName = "NarrowState";
-		private const string WideStateName = "WideState";
-
-		private VisualState _currentState;
-		private RecipeBox activeRecipeBox;
-
-		private bool recipeBoxOpen;
-
-		public bool RecipeBoxOpen
-		{
-			get { return recipeBoxOpen; }
-			set { Set(ref recipeBoxOpen, value); }
-		}
-
-		private bool recipeGroupIsSelected;
-
-		public bool RecipeGroupIsSelected
-		{
-			get { return recipeGroupIsSelected; }
-			set { Set(ref recipeGroupIsSelected, value); }
-		}
-
-		private ObservableCollection<RecipeGroup> currentRecipeGroups;
 
 		public ObservableCollection<RecipeGroup> CurrentRecipeGroups
 		{
 			get
 			{
-				if (activeRecipeBox == null) return null;
+				if (activeRecipeBox == null)
+				{
+					return null;
+				}
+
 				return currentRecipeGroups;
 			}
 			set
@@ -63,32 +47,6 @@ namespace RecipeMaster.ViewModels
 				RecipeGroupIsSelected = true;
 			}
 		}
-
-		private RecipeGroup selectedRecipeGroup;
-
-		public RecipeGroup SelectedRecipeGroup
-		{
-			get { return selectedRecipeGroup; }
-			set
-			{
-				Set(ref selectedRecipeGroup, value);
-				BootStrapper.Current.SessionState[App.SelectedRecipeGroupKey] = SelectedRecipeGroup;//__this might not be required, we shall see
-			}
-		}
-
-		private Recipe selectedRecipe;
-
-		public Recipe SelectedRecipe
-		{
-			get { return selectedRecipe; }
-			set
-			{
-				Set(ref selectedRecipe, value);
-				BootStrapper.Current.SessionState[App.SelectedRecipeKey] = value;
-			}
-		}
-
-		private ObservableCollection<Recipe> currentRecipes;
 
 		public ObservableCollection<Recipe> CurrentRecipes
 		{
@@ -104,32 +62,61 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
+		public bool RecipeBoxOpen
+		{
+			get { return recipeBoxOpen; }
+			set { Set(ref recipeBoxOpen, value); }
+		}
+
+		public bool RecipeGroupIsSelected
+		{
+			get { return recipeGroupIsSelected; }
+			set { Set(ref recipeGroupIsSelected, value); }
+		}
+
+		public Recipe SelectedRecipe
+		{
+			get { return selectedRecipe; }
+			set
+			{
+				Set(ref selectedRecipe, value);
+				BootStrapper.Current.SessionState[App.SelectedRecipeKey] = value;
+			}
+		}
+
+		public RecipeGroup SelectedRecipeGroup
+		{
+			get { return selectedRecipeGroup; }
+			set
+			{
+				Set(ref selectedRecipeGroup, value);
+				BootStrapper.Current.SessionState[App.SelectedRecipeGroupKey] = SelectedRecipeGroup;//__this might not be required, we shall see
+			}
+		}
+
+		private const string NarrowStateName = "NarrowState";
+		private const string WideStateName = "WideState";
+
+		private VisualState _currentState;
+		private RecipeBox activeRecipeBox;
+
+		private ObservableCollection<RecipeGroup> currentRecipeGroups;
+		private ObservableCollection<Recipe> currentRecipes;
+		private bool recipeBoxOpen;
+		private bool recipeGroupIsSelected;
+		private Recipe selectedRecipe;
+		private RecipeGroup selectedRecipeGroup;
+
 		#endregion Properties
 
 		#region Methods
 
-		private object ReceiveMessage(RecipeBoxSelectedMessage item)
-		{
-			activeRecipeBox = item.SelectedRecipeBox;
-			if (currentRecipeGroups == null) currentRecipeGroups = new ObservableCollection<RecipeGroup>();
-			// if (currentRecipes == null) currentRecipes = new ObservableCollection<Recipe>();
-			CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
-			RecipeBoxOpen = true;
-			return null;
-		}
-
-		public async Task NewRecipeGroupAsync()
-		{
-			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Group Name");
-			var result = await dialog.ShowAsync();
-
-			RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
-			CurrentRecipeGroups.Add(newGroup);
-		}
-
 		public void GoToRecipeDetail()
 		{
-			if (SelectedRecipe == null) return;
+			if (SelectedRecipe == null)
+			{
+				return;
+			}
 
 			BootStrapper.Current.SessionState["ActiveRecipe"] = SelectedRecipe;
 			NavigationService.Navigate(typeof(RecipeView));
@@ -148,10 +135,13 @@ namespace RecipeMaster.ViewModels
 			}
 
 			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
-			var result = await dialog.ShowAsync();
+			ContentDialogResult result = await dialog.ShowAsync();
 
 			//__quit quietly if dialog was cancelled
-			if (dialog.WasCancelled) return;
+			if (dialog.WasCancelled)
+			{
+				return;
+			}
 
 			//__create new Recipe with entered Name
 			Recipe newRecipe = new Recipe(dialog.TextEntry);
@@ -161,14 +151,14 @@ namespace RecipeMaster.ViewModels
 			GoToRecipeDetail();
 		}
 
-		public async Task SaveRecipeBoxAsync()
+		public async Task NewRecipeGroupAsync()
 		{
-			await FileIOService.SaveRecipeBoxAsync(activeRecipeBox);
+			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Group Name");
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
+			CurrentRecipeGroups.Add(newGroup);
 		}
-
-		#endregion Methods
-
-		#region Sample Code
 
 		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
 		{
@@ -196,41 +186,24 @@ namespace RecipeMaster.ViewModels
 			return base.OnNavigatingFromAsync(args);
 		}
 
-		#endregion Sample Code
+		public async Task SaveRecipeBoxAsync()
+		{
+			await FileIOService.SaveRecipeBoxAsync(activeRecipeBox);
+		}
+
+		private object ReceiveMessage(RecipeBoxSelectedMessage item)
+		{
+			activeRecipeBox = item.SelectedRecipeBox;
+			if (currentRecipeGroups == null)
+			{
+				currentRecipeGroups = new ObservableCollection<RecipeGroup>();
+			}
+			// if (currentRecipes == null) currentRecipes = new ObservableCollection<Recipe>();
+			CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
+			RecipeBoxOpen = true;
+			return null;
+		}
+
+		#endregion Methods
 	}
 }
-
-//public async Task LoadDataAsync(VisualState currentState)
-//{
-//    _currentState = currentState;
-//    SampleItems.Clear();
-
-//    var data = await SampleDataService.GetSampleModelDataAsync();
-
-//    foreach (var item in data)
-//    {
-//        SampleItems.Add(item);
-//    }
-//    Selected = SampleItems.First();
-//}
-
-//private void OnStateChanged(VisualStateChangedEventArgs args)
-//{
-//    _currentState = args.NewState;
-//}
-
-//private void OnItemClick(ItemClickEventArgs args)
-//{
-//    Order item = args?.ClickedItem as Order;
-//    if (item != null)
-//    {
-//        if (_currentState.Name == NarrowStateName)
-//        {
-//            NavigationService.Navigate(typeof(RecipeGroupsDetailViewModel).FullName, item);
-//        }
-//        else
-//        {
-//            Selected = item;
-//        }
-//    }
-//}

@@ -1,14 +1,13 @@
 ﻿using RecipeMaster.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RecipeMaster.Helpers
 {
-    public class RecipeSelectedMessage
-    {
-        public Recipe SelectedRecipe;
-    }
+	public class RecipeSelectedMessage
+	{
+		#region Public Fields
+
+		public Recipe SelectedRecipe;
+
+		#endregion Public Fields
+	}
 }
