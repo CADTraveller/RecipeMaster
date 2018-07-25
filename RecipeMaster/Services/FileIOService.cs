@@ -76,8 +76,6 @@ namespace RecipeMaster.Services
 					recipeBoxName = recipeBoxName.Remove(recipeBoxName.Length - 6);
 				}
 
-				// Create file; replace if exists.
-				//await SaveRecipeBoxAsync(rb);
 				return new RecentRecipeBox()
 				{
 					Name = recipeBoxName,
@@ -198,6 +196,7 @@ namespace RecipeMaster.Services
 				// Add to FA without metadata
 				string faToken = StorageApplicationPermissions.FutureAccessList.Add(file);
 				rrb.Token = faToken;
+				rb.AccessToken = faToken;
 			}
 
 			//__store a record of this access

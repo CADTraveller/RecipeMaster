@@ -86,7 +86,7 @@ namespace RecipeMaster.Models
 				}
 
 				RaisePropertyChanged("TypeImage");
-				Parent.UpdateHydration();
+				Parent?.UpdateHydration();
 				return;
 			}
 		}
