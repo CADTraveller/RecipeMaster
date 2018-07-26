@@ -1,32 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RecipeMaster.Models
+﻿namespace RecipeMaster.Models
 {
-    public interface IIngredientContainer
-    {
-        
+	public interface IIngredientContainer
+	{
+		#region Public Properties
 
-        System.Collections.ObjectModel.ObservableCollection<Ingredient> Ingredients { get; set; }
+		System.Collections.ObjectModel.ObservableCollection<Ingredient> Ingredients { get; set; }
 
+		#endregion Public Properties
 
-        void UpdateSelfToNewChildWeightInEntryMode();
+		#region Public Methods
 
-        void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight);
+		void DeleteChild(Ingredient sender);
 
-        void UpdateChildrenWeightInEntryMode(double newWeight = 0);
+		void SetEntryMode(bool EntryModeActive);
 
-        void UpdateChildrenWeightInEditMode(double newWeight = 0);
+		void UpdateChildrenWeightInEditMode(double newWeight = 0);
 
-        void UpdateToNewChildPercent(Ingredient sender, double newPercent);
+		void UpdateChildrenWeightInEntryMode(double newWeight = 0);
 
-        void DeleteChild(Ingredient sender);
+		void UpdateHydration();
 
-        void UpdateHydration();
+		void UpdateSelfToNewChildWeightInEntryMode();
 
-        void SetEntryMode(bool EntryModeActive);
-    }
+		void UpdateToNewChildPercent(Ingredient sender, double newPercent);
+
+		void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight);
+
+		#endregion Public Methods
+	}
 }

@@ -1,17 +1,14 @@
-﻿using Windows.UI.Xaml;
-using System.Threading.Tasks;
-using RecipeMaster.Services.SettingsServices;
-using Windows.ApplicationModel.Activation;
-using Template10.Controls;
-using Template10.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Controls;
-using RecipeMaster.Models;
-using Microsoft.AppCenter;
+﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+using RecipeMaster.Models;
+using RecipeMaster.Services.SettingsServices;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Template10.Common;
+using Template10.Controls;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 
 namespace RecipeMaster
 {
@@ -19,8 +16,10 @@ namespace RecipeMaster
 	/// https://github.com/Windows-XAML/Template10/wiki
 
 	[Bindable]
-	sealed partial class App : BootStrapper
+	public sealed partial class App : BootStrapper
 	{
+		#region Public Constructors
+
 		public App()
 		{
 			InitializeComponent();
@@ -30,33 +29,40 @@ namespace RecipeMaster
 			#region app settings
 
 			// some settings must be set in app.constructor
-			var settings = SettingsService.Instance;
+			SettingsService settings = SettingsService.Instance;
 			RequestedTheme = settings.AppTheme;
 			CacheMaxDuration = settings.CacheMaxDuration;
 			ShowShellBackButton = settings.UseShellBackButton;
 
 			//BootStrapper.Current.
-			#endregion
+
+			#endregion app settings
 		}
+
+		#endregion Public Constructors
 
 		#region Global string constants
 
 		public const string _activeRecipeBoxKey = "ActiveRecipeBox";
 		public const string _selectedRecipeGroupKey = "SelectedRecipeGroup";
+		public static string ActiveRecipeBoxKey => _activeRecipeBoxKey;
+		public static string SelectedRecipeGroupKey => _selectedRecipeGroupKey;
+		public static string SelectedRecipeKey => _selectedRecipeKey;
 		private const string _selectedRecipeKey = "SelectedRecipe";
 
-		public static string SelectedRecipeKey => _selectedRecipeKey;
-		public static string SelectedRecipeGroupKey => _selectedRecipeGroupKey;
-		public static string ActiveRecipeBoxKey => _activeRecipeBoxKey;
+		#endregion Global string constants
 
-		#endregion
+		#region Public Properties
 
 		public Dictionary<string, RecipeBox> OpenRecipeBoxes { get; set; }
 
+		#endregion Public Properties
+
+		#region Public Methods
 
 		public override UIElement CreateRootElement(IActivatedEventArgs e)
 		{
-			var service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
+			Template10.Services.NavigationService.INavigationService service = NavigationServiceFactory(BackButton.Attach, ExistingContent.Exclude);
 			return new ModalDialog
 			{
 				DisableBackButtonWhenModal = true,
@@ -70,5 +76,7 @@ namespace RecipeMaster
 			// TODO: add your long-running task here
 			await NavigationService.NavigateAsync(typeof(Views.MainPage));
 		}
+
+		#endregion Public Methods
 	}
 }

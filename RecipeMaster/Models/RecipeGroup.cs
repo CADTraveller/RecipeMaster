@@ -1,50 +1,58 @@
 ﻿using GalaSoft.MvvmLight;
 using System.Collections.ObjectModel;
-using RecipeMaster.Models;
-
 
 namespace RecipeMaster.Models
 {
-    public class RecipeGroup : ObservableObject
-    { 
-        private ObservableCollection<Recipe> recipes;
+	public class RecipeGroup : ObservableObject
+	{
+		#region Public Constructors
 
-        public ObservableCollection<Recipe> Recipes
-        {
-            get { return recipes; }
-            set
-            {
-                recipes = value;
-                Set(ref recipes, value);
-            }
-        }
+		public RecipeGroup(string name = "Group Name")
+		{
+			recipes = new ObservableCollection<Recipe>();
+			Name = name;
+		}
 
-        private string name;
+		#endregion Public Constructors
 
-        public string Name
-        {
-            get { return name; }
-            set
-            {
-                Set(ref name, value);
-            }
-        }
+		#region Public Properties
 
-        public RecipeGroup(string name = "Group Name")
-        {
-            recipes = new ObservableCollection<Recipe>();
-            Name = name;
-        }
+		public string Name
+		{
+			get { return name; }
+			set
+			{
+				Set(ref name, value);
+			}
+		}
 
-        private string recipeCount ;
-        public string RecipeCount
-        {
-            get
-            {
-                return "(" + recipes?.Count + ") Recipies";
-            }
-            set { Set(ref recipeCount, value); }
-        }
+		public string RecipeCount
+		{
+			get
+			{
+				return "(" + recipes?.Count + ") Recipies";
+			}
+			set { Set(ref recipeCount, value); }
+		}
 
-    }
+		public ObservableCollection<Recipe> Recipes
+		{
+			get { return recipes; }
+			set
+			{
+				recipes = value;
+				Set(ref recipes, value);
+			}
+		}
+
+		#endregion Public Properties
+
+		#region Private Fields
+
+		private string name;
+		private string recipeCount;
+		private ObservableCollection<Recipe> recipes;
+
+		#endregion Private Fields
+	}
 }

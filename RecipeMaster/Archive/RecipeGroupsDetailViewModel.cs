@@ -1,20 +1,39 @@
-using System;
-using System.Windows.Input;
-
 //using GalaSoft.MvvmLight;
 //using GalaSoft.MvvmLight.Command;
 
 using RecipeMaster.Models;
-using RecipeMaster.Services;
-
-using Windows.UI.Xaml;
 using RecipeMaster.Mvvm;
+using System.Windows.Input;
+using Windows.UI.Xaml;
+
 //using Template10.Services.NavigationService;
 
 namespace RecipeMaster.ViewModels
 {
-    public class RecipeGroupsDetailViewModel : ViewModelBase
+	public class RecipeGroupsDetailViewModel : ViewModelBase
 	{
+		#region Public Constructors
+
+		public RecipeGroupsDetailViewModel()
+		{
+			StateChangedCommand = new Template10.Mvvm.DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
+		}
+
+		#endregion Public Constructors
+
+		#region Public Properties
+
+		public Order Item
+		{
+			get { return _item; }
+			set { Set(ref _item, value); }
+		}
+
+		public ICommand StateChangedCommand { get; private set; }
+
+		#endregion Public Properties
+
+		#region Private Fields
 
 		//public NavigationService NavigationService
 		//{
@@ -23,29 +42,23 @@ namespace RecipeMaster.ViewModels
 		//		return Microsoft.Practices.ServiceLocation.ServiceLocator.Current.GetInstance<NavigationService>();
 		//	}
 		//}
-		const string NarrowStateName = "NarrowState";
-        const string WideStateName = "WideState";
+		private const string NarrowStateName = "NarrowState";
 
-        public ICommand StateChangedCommand { get; private set; }
+		private const string WideStateName = "WideState";
+		private Order _item;
 
-        private Order _item;
-        public Order Item
-        {
-            get { return _item; }
-            set { Set(ref _item, value); }
-        }
+		#endregion Private Fields
 
-        public RecipeGroupsDetailViewModel()
-        {
-            StateChangedCommand = new Template10.Mvvm.DelegateCommand<VisualStateChangedEventArgs>(OnStateChanged);
-        }
-        
-        private void OnStateChanged(VisualStateChangedEventArgs args)
-        {
-            if (args.OldState.Name == NarrowStateName && args.NewState.Name == WideStateName)
-            {
-                NavigationService.GoBack();
-            }
-        }
-    }
+		#region Private Methods
+
+		private void OnStateChanged(VisualStateChangedEventArgs args)
+		{
+			if (args.OldState.Name == NarrowStateName && args.NewState.Name == WideStateName)
+			{
+				NavigationService.GoBack();
+			}
+		}
+
+		#endregion Private Methods
+	}
 }

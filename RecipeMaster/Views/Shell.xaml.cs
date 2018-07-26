@@ -1,21 +1,13 @@
-﻿using System.ComponentModel;
-using System.Linq;
-using System;
-using Template10.Common;
-using Template10.Controls;
+﻿using Template10.Controls;
 using Template10.Services.NavigationService;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Template10.Mvvm;
 
 namespace RecipeMaster.Views
 {
 	public sealed partial class Shell : Page
 	{
-		public static Shell Instance { get; set; }
-		public static HamburgerMenu HamburgerMenu => Instance.MyHamburgerMenu;
-		Services.SettingsServices.SettingsService _settings;
+		#region Public Constructors
 
 		public Shell()
 		{
@@ -29,6 +21,17 @@ namespace RecipeMaster.Views
 			SetNavigationService(navigationService);
 		}
 
+		#endregion Public Constructors
+
+		#region Public Properties
+
+		public static HamburgerMenu HamburgerMenu => Instance.MyHamburgerMenu;
+		public static Shell Instance { get; set; }
+
+		#endregion Public Properties
+
+		#region Public Methods
+
 		public void SetNavigationService(INavigationService navigationService)
 		{
 			MyHamburgerMenu.NavigationService = navigationService;
@@ -36,5 +39,13 @@ namespace RecipeMaster.Views
 			HamburgerMenu.IsFullScreen = _settings.IsFullScreen;
 			HamburgerMenu.HamburgerButtonVisibility = _settings.ShowHamburgerButton ? Visibility.Visible : Visibility.Collapsed;
 		}
+
+		#endregion Public Methods
+
+		#region Private Fields
+
+		private Services.SettingsServices.SettingsService _settings;
+
+		#endregion Private Fields
 	}
 }

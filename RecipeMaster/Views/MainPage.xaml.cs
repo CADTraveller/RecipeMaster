@@ -1,19 +1,17 @@
-﻿using System;
-using RecipeMaster.ViewModels;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
+﻿using Windows.UI.Xaml.Controls;
 
 namespace RecipeMaster.Views
 {
 	public sealed partial class MainPage : Page
 	{
+		#region Public Constructors
+
 		public MainPage()
 		{
 			InitializeComponent();
 			NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 		}
 
+		#endregion Public Constructors
 	}
 }
