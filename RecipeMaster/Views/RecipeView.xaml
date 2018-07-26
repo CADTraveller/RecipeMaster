@@ -115,6 +115,10 @@
                             </ContentControl.ContextFlyout>
                             <StackPanel Orientation="Horizontal"
                                         Padding="4">
+								<ToggleSwitch OnContent="Ratio Locked"
+								              OffContent="Ratio Edit"
+								              IsOn="{x:Bind RatioLocked}"
+								              Visibility="{x:Bind EditModeActive, Converter=}"></ToggleSwitch>
                                 <TextBlock Text="{x:Bind Name, Mode=TwoWay}" 
                                          IsRightTapEnabled="False"
                                            VerticalAlignment="Bottom"/>

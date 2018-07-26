@@ -100,6 +100,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Locked.xaml.cs">
+      <DependentUpon>Locked.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\RecipeBoxSelectedMessage.cs" />
     <Compile Include="Helpers\RecipeSelectedMessage.cs" />
@@ -223,6 +226,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\Locked.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\TreeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
