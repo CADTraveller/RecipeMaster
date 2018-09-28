@@ -131,7 +131,9 @@
                                 Content="Show Busy"
                                 RelativePanel.AlignBottomWith="BusyTextTextBox"
                                 RelativePanel.RightOf="BusyTextTextBox" />
+
                     </RelativePanel>
+
                 </ScrollViewer>
             </PivotItem>
 
@@ -215,8 +217,11 @@
                         <Run>Version</Run>
                         <Run Text="{Binding Version}" />
                     </TextBlock>
+
                 </RelativePanel>
             </PivotItem>
         </Pivot>
+
     </RelativePanel>
+
 </Page>

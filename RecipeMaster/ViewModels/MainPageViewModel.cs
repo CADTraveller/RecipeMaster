@@ -15,8 +15,6 @@ namespace RecipeMaster.ViewModels
 {
 	public class MainPageViewModel : ViewModelBase
 	{
-		#region Public Constructors
-
 		public MainPageViewModel()
 		{
 			if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
@@ -31,15 +29,58 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		#endregion Public Constructors
-
 		#region Properties
 
-		public ObservableCollection<RecentRecipeBox> RecentRecipeBoxes
+		private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+		
+		private string _Value = "Gas";
+
+		public string Value
 		{
-			get { return recentRecipeBoxes; }
-			set { Set(ref recentRecipeBoxes, value); }
+			get { return _Value; }
+			set => Set(ref _Value, value);
 		}
+
+		private bool showRecentFiles;
+
+		public bool ShowRecentFiles
+		{
+			get { return showRecentFiles; }
+			set { Set(ref showRecentFiles, value); }
+		}
+
+		private bool showNoHistory;
+
+		public bool ShowNoHistory
+		{
+			get
+			{
+				if (recentRecipeBoxes == null) return true;
+				return recentRecipeBoxes.Count == 0;
+			}
+			//set { showNoHistory = value; }
+		}
+
+		public bool ShowHistory
+		{
+			get
+			{
+				if (recentRecipeBoxes == null) return false;
+				return recentRecipeBoxes.Count > 0;
+			}
+		}
+
+		private RecipeBox currentRecipeBox;
+
+		private string statusMessage = "Nothing Selected";
+
+		public string StatusMessage
+		{
+			get { return statusMessage; }
+			set { Set(ref statusMessage, value); }
+		}
+
+		private RecentRecipeBox selectedRecentRecipeBox;
 
 		public RecentRecipeBox SelectedRecentRecipeBox
 		{
@@ -51,63 +92,28 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		public bool ShowHistory
-		{
-			get
-			{
-				if (recentRecipeBoxes == null)
-				{
-					return false;
-				}
-
-				return recentRecipeBoxes.Count > 0;
-			}
-		}
-
-		public bool ShowNoHistory
-		{
-			get
-			{
-				if (recentRecipeBoxes == null)
-				{
-					return true;
-				}
-
-				return recentRecipeBoxes.Count == 0;
-			}
-			//set { showNoHistory = value; }
-		}
-
-		public bool ShowRecentFiles
-		{
-			get { return showRecentFiles; }
-			set { Set(ref showRecentFiles, value); }
-		}
-
-		public string StatusMessage
-		{
-			get { return statusMessage; }
-			set { Set(ref statusMessage, value); }
-		}
-
-		public string Value
-		{
-			get { return _Value; }
-			set => Set(ref _Value, value);
-		}
-
-		private string _Value = "Gas";
-		private RecipeBox currentRecipeBox;
-		private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 		private ObservableCollection<RecentRecipeBox> recentRecipeBoxes;
-		private RecentRecipeBox selectedRecentRecipeBox;
-		private bool showNoHistory;
-		private bool showRecentFiles;
-		private string statusMessage = "Nothing Selected";
+
+		public ObservableCollection<RecentRecipeBox> RecentRecipeBoxes
+		{
+			get { return recentRecipeBoxes; }
+			set { Set(ref recentRecipeBoxes, value); }
+		}
+
 
 		#endregion Properties
 
 		#region Events
+
+		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
+		{
+			if (suspensionState.Any())
+			{
+				Value = suspensionState[nameof(Value)]?.ToString();
+			}
+			await Task.CompletedTask;
+			
+		}
 
 		public ApplicationDataContainer LocalSettings { get => localSettings; set => localSettings = value; }
 
@@ -120,15 +126,6 @@ namespace RecipeMaster.ViewModels
 			await Task.CompletedTask;
 		}
 
-		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-		{
-			if (suspensionState.Any())
-			{
-				Value = suspensionState[nameof(Value)]?.ToString();
-			}
-			await Task.CompletedTask;
-		}
-
 		public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
 		{
 			args.Cancel = false;
@@ -137,54 +134,80 @@ namespace RecipeMaster.ViewModels
 
 		#endregion Events
 
+
+
 		#region Methods
 
 		//public void GotoDetailsPage() =>
 		//	NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
-		public void GotoAbout() =>
-			NavigationService.Navigate(typeof(Views.SettingsPage), 2);
-
-		public void GotoPrivacy() =>
-			NavigationService.Navigate(typeof(Views.SettingsPage), 1);
-
 		public async Task GotoRecipeGroupsView()
 		{
-			if (SelectedRecentRecipeBox == null)
-			{
-				return;
-			}
-
+			if (SelectedRecentRecipeBox == null) return;
 			string recipeBoxName = SelectedRecentRecipeBox.Name;
 
 			//__see if this RecipeBox is already in memory
 			if (!BootStrapper.Current.SessionState.Keys.Contains(recipeBoxName))
 			{
-				await FileIOService.OpenRecipeBoxFromFileAsync(SelectedRecentRecipeBox);
+				 await FileIOService.OpenRecipeBoxFromFileAsync(SelectedRecentRecipeBox);
 			}
-
+			
 			BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] = recipeBoxName;
 
 			NavigationService.Navigate(typeof(Views.RecipeGroupsView));
+
 		}
 
 		public void GotoSettings() =>
 			NavigationService.Navigate(typeof(Views.SettingsPage), 0);
 
+		public void GotoPrivacy() =>
+			NavigationService.Navigate(typeof(Views.SettingsPage), 1);
+
+		public void GotoAbout() =>
+			NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+
 		public async void ImportFileAsync()
 		{
 			//__allow user to pick file
-			RecentRecipeBox rrb = await FileIOService.OpenRecipeBoxFromFileAsync();
-
-			if (RecentRecipeBoxes == null)
-			{
-				RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
-			}
-
+			RecentRecipeBox rrb= await FileIOService.OpenRecipeBoxFromFileAsync();
+			
+			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 			RecentRecipeBoxes.Insert(0, rrb);
 
 			SelectedRecentRecipeBox = rrb;
 			updateDisplay();
+		}
+
+		private async Task populateRecentRecipeBoxListAsync()
+		{
+			List<RecentRecipeBox> boxesOnFile = await FileIOService.ListKnownRecipeBoxes();
+			if (RecentRecipeBoxes != null)
+			{
+				RecentRecipeBoxes.Clear();
+				foreach (RecentRecipeBox rrb in boxesOnFile)
+				{
+					RecentRecipeBoxes.Add(rrb);
+				}
+			}
+			else RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(boxesOnFile);
+
+			//__trigger update of displaye
+			updateDisplay();
+		}
+
+		private void updateDisplay()
+		{
+			RaisePropertyChanged("RecentRecipeBoxes");
+			RaisePropertyChanged("ShowNoHistory");
+			RaisePropertyChanged("ShowHistory");
+		}
+
+		public async Task SaveFileAsync()
+		{
+			if (currentRecipeBox == null) return;
+
+			await FileIOService.SaveRecipeBoxAsync(currentRecipeBox);
 		}
 
 		public async void NewRecipeBox()
@@ -200,43 +223,6 @@ namespace RecipeMaster.ViewModels
 
 			//__trigger update of displaye
 			updateDisplay();
-		}
-
-		public async Task SaveFileAsync()
-		{
-			if (currentRecipeBox == null)
-			{
-				return;
-			}
-
-			await FileIOService.SaveRecipeBoxAsync(currentRecipeBox);
-		}
-
-		private async Task populateRecentRecipeBoxListAsync()
-		{
-			List<RecentRecipeBox> boxesOnFile = await FileIOService.ListKnownRecipeBoxes();
-			if (RecentRecipeBoxes != null)
-			{
-				RecentRecipeBoxes.Clear();
-				foreach (RecentRecipeBox rrb in boxesOnFile)
-				{
-					RecentRecipeBoxes.Add(rrb);
-				}
-			}
-			else
-			{
-				RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>(boxesOnFile);
-			}
-
-			//__trigger update of displaye
-			updateDisplay();
-		}
-
-		private void updateDisplay()
-		{
-			RaisePropertyChanged("RecentRecipeBoxes");
-			RaisePropertyChanged("ShowNoHistory");
-			RaisePropertyChanged("ShowHistory");
 		}
 
 		#endregion Methods

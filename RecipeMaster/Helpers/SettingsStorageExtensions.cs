@@ -7,122 +7,111 @@ using Windows.Storage.Streams;
 
 namespace RecipeMaster.Helpers
 {
-	public static class SettingsStorageExtensions
-	{
-		// Use this extension methods to store and retrieve in local and roaming app data
-		// For more info regarding storing and retrieving app data,
-		// Documentation: https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
+    public static class SettingsStorageExtensions
+    {
+        // Use this extension methods to store and retrieve in local and roaming app data
+        // For more info regarding storing and retrieving app data,
+        // Documentation: https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
 
-		#region Public Methods
+        private const string fileExtension = ".json";
 
-		public static bool IsRoamingStorageAvailable(this ApplicationData appData)
-		{
-			return (appData.RoamingStorageQuota == 0);
-		}
+        public static bool IsRoamingStorageAvailable(this ApplicationData appData)
+        {
+            return (appData.RoamingStorageQuota == 0);
+        }
 
-		public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name)
-		{
-			if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
-			{
-				return default(T);
-			}
+        public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
+        {
+            var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+            var fileContent = await Json.StringifyAsync(content);
 
-			StorageFile file = await folder.GetFileAsync($"{name}.json");
-			string fileContent = await FileIO.ReadTextAsync(file);
+            await FileIO.WriteTextAsync(file, fileContent);
+        }
 
-			return await Json.ToObjectAsync<T>(fileContent);
-		}
+        public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name)
+        {
+            if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
+            {
+                return default(T);
+            }
 
-		public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
-		{
-			object obj = null;
+            var file = await folder.GetFileAsync($"{name}.json");
+            var fileContent = await FileIO.ReadTextAsync(file);
 
-			if (settings.Values.TryGetValue(key, out obj))
-			{
-				return await Json.ToObjectAsync<T>((string)obj);
-			}
+            return await Json.ToObjectAsync<T>(fileContent);
+        }
 
-			return default(T);
-		}
+        public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
+        {
+            settings.Values[key] = await Json.StringifyAsync(value);
+        }
 
-		public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
-		{
-			if (file != null)
-			{
-				using (IRandomAccessStream stream = await file.OpenReadAsync())
-				{
-					using (DataReader reader = new DataReader(stream.GetInputStreamAt(0)))
-					{
-						await reader.LoadAsync((uint)stream.Size);
-						byte[] bytes = new byte[stream.Size];
-						reader.ReadBytes(bytes);
-						return bytes;
-					}
-				}
-			}
+        public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
+        {
+            object obj = null;
 
-			return null;
-		}
+            if (settings.Values.TryGetValue(key, out obj))
+            {
+                return await Json.ToObjectAsync<T>((string)obj);
+            }
 
-		public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
-		{
-			IStorageItem item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
+            return default(T);
+        }
 
-			if ((item != null) && item.IsOfType(StorageItemTypes.File))
-			{
-				StorageFile storageFile = await folder.GetFileAsync(fileName);
-				byte[] content = await storageFile.ReadBytesAsync();
-				return content;
-			}
+         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
+        {
+            if(content == null)
+            {
+                throw new ArgumentNullException("content");
+            }
 
-			return null;
-		}
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentException("File name is null or empty. Specify a valid file name", "fileName");
+            }
 
-		public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
-		{
-			StorageFile file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-			string fileContent = await Json.StringifyAsync(content);
+            var storageFile = await folder.CreateFileAsync(fileName, options);
+            await FileIO.WriteBytesAsync(storageFile, content);
+            return storageFile;
+        }
 
-			await FileIO.WriteTextAsync(file, fileContent);
-		}
+        public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
+        {
+            var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
 
-		public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
-		{
-			settings.Values[key] = await Json.StringifyAsync(value);
-		}
+            if((item != null) && item.IsOfType(StorageItemTypes.File))
+            {
+                var storageFile = await folder.GetFileAsync(fileName);
+                byte[] content = await storageFile.ReadBytesAsync();
+                return content;
+            }
 
-		public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
-		{
-			if (content == null)
-			{
-				throw new ArgumentNullException("content");
-			}
+            return null;
+        }
 
-			if (string.IsNullOrEmpty(fileName))
-			{
-				throw new ArgumentException("File name is null or empty. Specify a valid file name", "fileName");
-			}
+        public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
+        {
+            if (file != null)
+            {
 
-			StorageFile storageFile = await folder.CreateFileAsync(fileName, options);
-			await FileIO.WriteBytesAsync(storageFile, content);
-			return storageFile;
-		}
+                using (IRandomAccessStream stream = await file.OpenReadAsync())
+                {
+                    using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+                    {
+                        await reader.LoadAsync((uint)stream.Size);
+                        var bytes = new byte[stream.Size];
+                        reader.ReadBytes(bytes);
+                        return bytes;
+                    }
+                }
+            }
 
-		#endregion Public Methods
+            return null;
+        }
 
-		#region Private Fields
-
-		private const string fileExtension = ".json";
-
-		#endregion Private Fields
-
-		#region Private Methods
-
-		private static string GetFileName(string name)
-		{
-			return string.Concat(name, fileExtension);
-		}
-
-		#endregion Private Methods
-	}
+        private static string GetFileName(string name)
+        {
+            return string.Concat(name, fileExtension);
+        }
+    }
 }

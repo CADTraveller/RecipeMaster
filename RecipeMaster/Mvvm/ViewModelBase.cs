@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
 
 using System.Collections.Generic;
 
@@ -6,34 +7,22 @@ using System.Threading.Tasks;
 
 using Windows.UI.Xaml.Navigation;
 
+
+
 namespace RecipeMaster.Mvvm
 
 {
+
 	public abstract class ViewModelBase :
 		 GalaSoft.MvvmLight.ViewModelBase, Template10.Services.NavigationService.INavigable
 
 	{
-		#region Public Properties
-
-		[JsonIgnore]
-		public Template10.Common.IDispatcherWrapper Dispatcher { get; set; }
-
-		[JsonIgnore]
-		public Template10.Services.NavigationService.INavigationService NavigationService { get; set; }
-
-		[JsonIgnore]
-		public Template10.Common.IStateItems SessionState { get; set; }
-
-		#endregion Public Properties
-
-		#region Public Methods
-
-		public virtual Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
+		public virtual Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
 		{
 			return Task.CompletedTask;
 		}
 
-		public virtual Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
+		public virtual Task OnNavigatedFromAsync(IDictionary<string, object> state, bool suspending)
 		{
 			return Task.CompletedTask;
 		}
@@ -43,6 +32,15 @@ namespace RecipeMaster.Mvvm
 			return Task.CompletedTask;
 		}
 
-		#endregion Public Methods
+		[JsonIgnore]
+		public Template10.Services.NavigationService.INavigationService NavigationService { get; set; }
+
+
+		[JsonIgnore]
+		public Template10.Common.IDispatcherWrapper Dispatcher { get; set; }
+
+
+		[JsonIgnore]
+		public Template10.Common.IStateItems SessionState { get; set; }
 	}
 }

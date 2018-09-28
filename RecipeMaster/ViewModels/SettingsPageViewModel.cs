@@ -1,45 +1,21 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Template10.Mvvm;
+using Template10.Services.SettingsService;
 using Windows.UI.Xaml;
 
 namespace RecipeMaster.ViewModels
 {
-	public class AboutPartViewModel : ViewModelBase
-	{
-		#region Public Properties
-
-		public string DisplayName => Windows.ApplicationModel.Package.Current.DisplayName;
-		public Uri Logo => Windows.ApplicationModel.Package.Current.Logo;
-		public string Publisher => Windows.ApplicationModel.Package.Current.PublisherDisplayName;
-
-		public Uri RateMe => new Uri("http://aka.ms/template10");
-
-		public string Version
-		{
-			get
-			{
-				Windows.ApplicationModel.PackageVersion v = Windows.ApplicationModel.Package.Current.Id.Version;
-				return $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
-			}
-		}
-
-		#endregion Public Properties
-	}
-
 	public class SettingsPageViewModel : ViewModelBase
 	{
-		#region Public Properties
-
-		public AboutPartViewModel AboutPartViewModel { get; } = new AboutPartViewModel();
 		public SettingsPartViewModel SettingsPartViewModel { get; } = new SettingsPartViewModel();
-
-		#endregion Public Properties
+		public AboutPartViewModel AboutPartViewModel { get; } = new AboutPartViewModel();
 	}
 
 	public class SettingsPartViewModel : ViewModelBase
 	{
-		#region Public Constructors
+		Services.SettingsServices.SettingsService _settings;
 
 		public SettingsPartViewModel()
 		{
@@ -53,18 +29,10 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		#endregion Public Constructors
-
-		#region Public Properties
-
-		public string BusyText
+		public bool ShowHamburgerButton
 		{
-			get { return _BusyText; }
-			set
-			{
-				Set(ref _BusyText, value);
-				_ShowBusyCommand.RaiseCanExecuteChanged();
-			}
+			get { return _settings.ShowHamburgerButton; }
+			set { _settings.ShowHamburgerButton = value; base.RaisePropertyChanged(); }
 		}
 
 		public bool IsFullScreen
@@ -85,18 +53,10 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		public DelegateCommand ShowBusyCommand
-			=> _ShowBusyCommand ?? (_ShowBusyCommand = new DelegateCommand(async () =>
-			{
-				Views.Busy.SetBusy(true, _BusyText);
-				await Task.Delay(5000);
-				Views.Busy.SetBusy(false);
-			}, () => !string.IsNullOrEmpty(BusyText)));
-
-		public bool ShowHamburgerButton
+		public bool UseShellBackButton
 		{
-			get { return _settings.ShowHamburgerButton; }
-			set { _settings.ShowHamburgerButton = value; base.RaisePropertyChanged(); }
+			get { return _settings.UseShellBackButton; }
+			set { _settings.UseShellBackButton = value; base.RaisePropertyChanged(); }
 		}
 
 		public bool UseLightThemeButton
@@ -105,20 +65,44 @@ namespace RecipeMaster.ViewModels
 			set { _settings.AppTheme = value ? ApplicationTheme.Light : ApplicationTheme.Dark; base.RaisePropertyChanged(); }
 		}
 
-		public bool UseShellBackButton
+		private string _BusyText = "Please wait...";
+		public string BusyText
 		{
-			get { return _settings.UseShellBackButton; }
-			set { _settings.UseShellBackButton = value; base.RaisePropertyChanged(); }
+			get { return _BusyText; }
+			set
+			{
+				Set(ref _BusyText, value);
+				_ShowBusyCommand.RaiseCanExecuteChanged();
+			}
 		}
 
-		#endregion Public Properties
+		DelegateCommand _ShowBusyCommand;
+		public DelegateCommand ShowBusyCommand
+			=> _ShowBusyCommand ?? (_ShowBusyCommand = new DelegateCommand(async () =>
+			{
+				Views.Busy.SetBusy(true, _BusyText);
+				await Task.Delay(5000);
+				Views.Busy.SetBusy(false);
+			}, () => !string.IsNullOrEmpty(BusyText)));
+	}
 
-		#region Private Fields
+	public class AboutPartViewModel : ViewModelBase
+	{
+		public Uri Logo => Windows.ApplicationModel.Package.Current.Logo;
 
-		private string _BusyText = "Please wait...";
-		private Services.SettingsServices.SettingsService _settings;
-		private DelegateCommand _ShowBusyCommand;
+		public string DisplayName => Windows.ApplicationModel.Package.Current.DisplayName;
 
-		#endregion Private Fields
+		public string Publisher => Windows.ApplicationModel.Package.Current.PublisherDisplayName;
+
+		public string Version
+		{
+			get
+			{
+				var v = Windows.ApplicationModel.Package.Current.Id.Version;
+				return $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
+			}
+		}
+
+		public Uri RateMe => new Uri("http://aka.ms/template10");
 	}
 }

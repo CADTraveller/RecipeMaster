@@ -1,40 +1,41 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RecipeMaster.Styles">
 
-	<!--<ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Styles/_Colors.xaml" />
-        <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
-        <ResourceDictionary Source="/Styles/_Thickness.xaml" />
+
+    <!--<ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Styles/_Colors.xaml"/>
+        <ResourceDictionary Source="/Styles/_FontSizes.xaml"/>
+        <ResourceDictionary Source="/Styles/_Thickness.xaml"/>
     </ResourceDictionary.MergedDictionaries>-->
 
-	<!--Common texts-->
-	<Style x:Key="HomeButtonStyle" TargetType="Button">
-		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="FontWeight" Value="SemiLight" />
-		<!--<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />-->
-		<Setter Property="Width" Value="144" />
-		<!--<Setter Property="Margin" Value="{StaticResource PageTitleMargin}" />-->
-	</Style>
-	<Style x:Key="RecipeBoxStyle" TargetType="Button">
-		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="FontWeight" Value="SemiLight" />
-		<!--<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />-->
-		<Setter Property="Width" Value="200" />
-		<Setter Property="Height" Value="200" />
-		<!--<Setter Property="Margin" Value="{StaticResource PageTitleMargin}" />-->
-		<!--<Setter Property="Background" Value="{StaticResource ButtonBackground}" />-->
-	</Style>
-	<Style x:Key="RecipeGroupButtonStyle" TargetType="Button">
-		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="FontWeight" Value="SemiBold" />
-		<!--<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />-->
-		<Setter Property="Width" Value="96" />
-		<Setter Property="Height" Value="44" />
-		<Setter Property="Margin" Value="4,0" />
-		<!--<Setter Property="Background" Value="{StaticResource ButtonBackground}" />-->
-	</Style>
+    <!--Common texts-->
+    <Style x:Key="HomeButtonStyle" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="SemiLight"/>
+        <!--<Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>-->
+        <Setter Property="Width" Value="144"/>
+        <!--<Setter Property="Margin" Value="{StaticResource PageTitleMargin}"/>-->
+    </Style>
+    <Style x:Key="RecipeBoxStyle" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="FontWeight" Value="SemiLight"/>
+		<!--<Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>-->
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="200"/>
+        <!--<Setter Property="Margin" Value="{StaticResource PageTitleMargin}"/>-->
+        <!--<Setter Property="Background" Value="{StaticResource ButtonBackground}"/>-->
+    </Style>
+    <Style x:Key="RecipeGroupButtonStyle" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <!--<Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>-->
+        <Setter Property="Width" Value="96"/>
+        <Setter Property="Height" Value="44"/>
+        <Setter Property="Margin" Value="4,0"/>
+        <!--<Setter Property="Background" Value="{StaticResource ButtonBackground}"/>-->
+    </Style>
 
 	<!--Base style that needs to be defined once in a project.-->
 
@@ -42,19 +43,23 @@
 		<Setter Property="ContentTemplate">
 			<Setter.Value>
 				<DataTemplate>
-					<Path Width="18" Height="18"
+					<Path Width="18" Height="18" 
              Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Margin="0 0 2 0" RenderTransformOrigin="0.5,0.5"
-             Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-             Data="{Binding Path=Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                       Margin="0 0 2 0" RenderTransformOrigin="0.5,0.5" 
+             Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+             Data="{Binding Path=Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
 				</DataTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
 
+
 	<Style x:Key="Contact_Add-WFAppBarButtonStyle" BasedOn="{StaticResource PathBasedAppBarButtonStyle}" TargetType="ButtonBase">
-		<Setter Property="AutomationProperties.Name" Value="Contact Add-WF" />
-		<Setter Property="AutomationProperties.AutomationId" Value="Contact Add-WFAppBarButton" />
-		<Setter Property="Content" Value="M7.9999995,26L14,26C14.553,26 15,26.447001 15,27 15,27.553 14.553,28 14,28L7.9999995,28C7.4469995,28 7,27.553 7,27 7,26.447001 7.4469995,26 7.9999995,26z M7.9999995,22L14,22C14.553,22 15,22.447001 15,23 15,23.553 14.553,24 14,24L7.9999995,24C7.4469995,24 7,23.553 7,23 7,22.447001 7.4469995,22 7.9999995,22z M24,19C24.552999,19,25,19.447,25,20.000001L25,23 28,23C28.552999,23 29,23.447001 29,24 29,24.553 28.552999,25 28,25L25,25 25,28C25,28.553 24.552999,29 24,29 23.447,29 23,28.553 23,28L23,25 19.999999,25C19.447,25 19,24.553 19,24 19,23.447001 19.447,23 19.999999,23L23,23 23,20.000001C23,19.447,23.447,19,24,19z M23.984946,18.000014C20.669014,18.000013 17.971004,20.690992 17.971004,24.000013 17.971004,27.308973 20.669014,30.000013 23.984946,30.000013 27.301001,30.000013 29.999987,27.308973 29.999987,24.000013 29.999987,20.690992 27.301001,18.000013 23.984946,18.000014z M23.984946,16.000013C28.404033,16.000013 31.999995,19.589003 31.999995,24.000013 31.999995,28.411024 28.404033,32.000013 23.984946,32.000013 19.565982,32.000013 15.970996,28.411024 15.970996,24.000013 15.970996,19.589003 19.565982,16.000013 23.984946,16.000013z M11.70401,12.842014C9.6729937,12.842015,8.0689807,14.145011,7.6419773,16.000006L15.768042,16.000006C15.341039,14.145011,13.736026,12.842015,11.70401,12.842014z M11.70401,6.5260105C10.626021,6.5260105 9.7480311,7.4000111 9.7480311,8.4730115 9.7480311,9.5470123 10.626021,10.422013 11.70401,10.422013 12.782998,10.422013 13.660989,9.5470123 13.660989,8.4730115 13.660989,7.4000111 12.782998,6.5260105 11.70401,6.5260105z M11.70401,4.5260096C13.885986,4.5260096 15.660967,6.2970104 15.660967,8.4730115 15.660967,9.6295433 15.16002,10.671773 14.363232,11.394743L14.342217,11.412919 14.404095,11.44039C16.478025,12.422746,17.87906,14.518166,17.87906,17.000003L17.87906,18 5.5309601,18 5.5309601,17.000003C5.5309601,14.518166,6.9319944,12.422746,9.0051823,11.44039L9.0665169,11.413151 9.0452404,11.394743C8.2487173,10.671773 7.7480526,9.6295433 7.7480526,8.4730115 7.7480526,6.2970104 9.5220337,4.5260096 11.70401,4.5260096z M0,0L24,0 24,14 22,14 22,2 2,2 2,30 17,30 17,32 0,32z" />
+		<Setter Property="AutomationProperties.Name" Value="Contact Add-WF"/>
+		<Setter Property="AutomationProperties.AutomationId" Value="Contact Add-WFAppBarButton"/>
+		<Setter Property="Content" Value="M7.9999995,26L14,26C14.553,26 15,26.447001 15,27 15,27.553 14.553,28 14,28L7.9999995,28C7.4469995,28 7,27.553 7,27 7,26.447001 7.4469995,26 7.9999995,26z M7.9999995,22L14,22C14.553,22 15,22.447001 15,23 15,23.553 14.553,24 14,24L7.9999995,24C7.4469995,24 7,23.553 7,23 7,22.447001 7.4469995,22 7.9999995,22z M24,19C24.552999,19,25,19.447,25,20.000001L25,23 28,23C28.552999,23 29,23.447001 29,24 29,24.553 28.552999,25 28,25L25,25 25,28C25,28.553 24.552999,29 24,29 23.447,29 23,28.553 23,28L23,25 19.999999,25C19.447,25 19,24.553 19,24 19,23.447001 19.447,23 19.999999,23L23,23 23,20.000001C23,19.447,23.447,19,24,19z M23.984946,18.000014C20.669014,18.000013 17.971004,20.690992 17.971004,24.000013 17.971004,27.308973 20.669014,30.000013 23.984946,30.000013 27.301001,30.000013 29.999987,27.308973 29.999987,24.000013 29.999987,20.690992 27.301001,18.000013 23.984946,18.000014z M23.984946,16.000013C28.404033,16.000013 31.999995,19.589003 31.999995,24.000013 31.999995,28.411024 28.404033,32.000013 23.984946,32.000013 19.565982,32.000013 15.970996,28.411024 15.970996,24.000013 15.970996,19.589003 19.565982,16.000013 23.984946,16.000013z M11.70401,12.842014C9.6729937,12.842015,8.0689807,14.145011,7.6419773,16.000006L15.768042,16.000006C15.341039,14.145011,13.736026,12.842015,11.70401,12.842014z M11.70401,6.5260105C10.626021,6.5260105 9.7480311,7.4000111 9.7480311,8.4730115 9.7480311,9.5470123 10.626021,10.422013 11.70401,10.422013 12.782998,10.422013 13.660989,9.5470123 13.660989,8.4730115 13.660989,7.4000111 12.782998,6.5260105 11.70401,6.5260105z M11.70401,4.5260096C13.885986,4.5260096 15.660967,6.2970104 15.660967,8.4730115 15.660967,9.6295433 15.16002,10.671773 14.363232,11.394743L14.342217,11.412919 14.404095,11.44039C16.478025,12.422746,17.87906,14.518166,17.87906,17.000003L17.87906,18 5.5309601,18 5.5309601,17.000003C5.5309601,14.518166,6.9319944,12.422746,9.0051823,11.44039L9.0665169,11.413151 9.0452404,11.394743C8.2487173,10.671773 7.7480526,9.6295433 7.7480526,8.4730115 7.7480526,6.2970104 9.5220337,4.5260096 11.70401,4.5260096z M0,0L24,0 24,14 22,14 22,2 2,2 2,30 17,30 17,32 0,32z"/>
 	</Style>-->
+
+
+
 </ResourceDictionary>

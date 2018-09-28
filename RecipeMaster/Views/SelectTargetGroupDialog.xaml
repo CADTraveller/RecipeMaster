@@ -7,9 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="Group for new Recipe"
-
+    
     SecondaryButtonText="Cancel"
-
+    
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
@@ -17,6 +17,7 @@
 		          SelectedItem="{x:Bind SelectedGroupName, Mode=TwoWay}"
 		          HorizontalAlignment="Center"
 		          VerticalAlignment="Center"
-		          MinWidth="200" />
+		          MinWidth="200"/>
+
     </Grid>
 </ContentDialog>

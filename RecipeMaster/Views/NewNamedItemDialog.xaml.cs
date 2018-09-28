@@ -5,45 +5,29 @@ using Windows.UI.Xaml.Controls;
 
 namespace RecipeMaster.Views
 {
-	public sealed partial class NewNamedItemDialog
-	{
-		#region Public Fields
+    public sealed partial class NewNamedItemDialog
+    {
+        public NewNamedItemDialog(string title = "Enter Name")
+        {
+            Title = title;
+            InitializeComponent();
+        }
 
-		public string TextEntry;
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+        }
 
-		public bool WasCancelled = false;
+        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            WasCancelled = true;
+        }
 
-		#endregion Public Fields
-
-		#region Public Constructors
-
-		public NewNamedItemDialog(string title = "Enter Name")
-		{
-			Title = title;
-			InitializeComponent();
-		}
-
-		#endregion Public Constructors
-
-		#region Private Methods
-
-		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-		{
-		}
-
-		private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-		{
-			WasCancelled = true;
-		}
+        public string TextEntry;
+        public bool WasCancelled = false;
 
 		private void NameBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			if (e.Key == VirtualKey.Enter)
-			{
-				Hide();
-			}
+			if (e.Key == VirtualKey.Enter) Hide();
 		}
-
-		#endregion Private Methods
 	}
 }

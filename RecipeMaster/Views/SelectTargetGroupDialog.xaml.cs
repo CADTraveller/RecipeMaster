@@ -1,6 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+using Template10.Mvvm;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -8,25 +21,19 @@ namespace RecipeMaster.Views
 {
 	public sealed partial class SelectTargetGroupDialog : ContentDialog
 	{
-		#region Public Fields
-
-		public bool WasCancelled = false;
-
-		#endregion Public Fields
-
-		#region Public Constructors
-
 		public SelectTargetGroupDialog(IEnumerable<string> groupNames)
 		{
 			groups = new ObservableCollection<string>(groupNames);
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 
-		#endregion Public Constructors
+		public bool WasCancelled = false;
 
-		#region Public Properties
+		private ObservableCollection<string> groups;
 
 		public ObservableCollection<string> Groups => groups;
+
+		private string selectedGroupName = "";
 
 		public string SelectedGroupName
 		{
@@ -38,23 +45,10 @@ namespace RecipeMaster.Views
 			}
 		}
 
-		#endregion Public Properties
-
-		#region Private Fields
-
-		private ObservableCollection<string> groups;
-		private string selectedGroupName = "";
-
-		#endregion Private Fields
-
-		#region Private Methods
-
 		private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
-			WasCancelled = true;
+			WasCancelled = true; 
 			Hide();
 		}
-
-		#endregion Private Methods
 	}
 }

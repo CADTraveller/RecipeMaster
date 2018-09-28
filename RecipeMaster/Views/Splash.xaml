@@ -34,5 +34,7 @@
                 <CompositeTransform x:Name="ProgressTransform" TranslateY="120" />
             </ProgressRing.RenderTransform>
         </ProgressRing>
+
     </Grid>
+
 </UserControl>

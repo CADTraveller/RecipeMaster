@@ -7,13 +7,16 @@ namespace RecipeMaster.Models
 {
 	public class Recipe : ObservableObject, IIngredientContainer
 	{
-		#region Public Fields
-
 		public bool EntryModeActive;
+		private string description;
+		private double hydration;
+		private string image = "Assets/Croissant.jpg";
+		private ObservableCollection<Ingredient> ingredients;
+		private string name;
+		private RecipeBox parentRecipeBox; //todo Use this to enable Save from detail views
+		private ObservableCollection<Step> steps = new ObservableCollection<Step>();
 
-		#endregion Public Fields
-
-		#region Public Constructors
+		private double totalWeight;
 
 		public Recipe(string name = "New Recipe")
 		{
@@ -24,12 +27,6 @@ namespace RecipeMaster.Models
 			steps = new ObservableCollection<Step>();
 			ingredients = new ObservableCollection<Ingredient>();
 		}
-
-		#endregion Public Constructors
-
-		#region Public Properties
-
-		public string AccessToken { get; set; }
 
 		// todo: Add ID Guid
 		public string Description
@@ -43,16 +40,8 @@ namespace RecipeMaster.Models
 			get { return Math.Round(hydration, 1); }
 			set
 			{
-				if (value < 0)
-				{
-					value = 0;
-				}
-
-				if (double.IsNaN(value))
-				{
-					value = 0;
-				}
-
+				if (value < 0) value = 0;
+				if (double.IsNaN(value)) value = 0;
 				Set(ref hydration, value);
 			}
 		}
@@ -81,13 +70,13 @@ namespace RecipeMaster.Models
 				}
 			}
 		}
-
 		public ObservableCollection<Step> Steps
 		{
 			get { return steps; }
 			set { Set(ref steps, value); }
 		}
 
+		public string AccessToken { get; set; }
 		public double TotalWeight
 		{
 			get { return Math.Round(totalWeight); }
@@ -97,11 +86,6 @@ namespace RecipeMaster.Models
 				UpdateIngredientWeights();
 			}
 		}
-
-		#endregion Public Properties
-
-		#region Public Methods
-
 		public void AddIngredient(Ingredient i)
 		{
 			i.Percent = 1;
@@ -114,12 +98,12 @@ namespace RecipeMaster.Models
 		public void AddStep(Step newStep)
 		{
 			int newOrder = newStep.Order;
-			foreach (Step step in steps.Where(step => step.Order >= newOrder))
+			foreach (var step in steps.Where(step => step.Order >= newOrder))
 			{
 				step.Order++;
 			}
 			steps.Add(newStep);
-			System.Collections.Generic.List<Step> orderedList = steps.OrderBy(s => s.Order).ToList();
+			var orderedList = steps.OrderBy(s => s.Order).ToList();
 			steps.Clear();
 			steps = new ObservableCollection<Step>(orderedList);
 		}
@@ -127,19 +111,12 @@ namespace RecipeMaster.Models
 		public void BalancePercentages()
 		{
 			double currentTotal = Ingredients.Sum(i => i.Percent);
-			if (TotalWeight > currentTotal)
-			{
-				currentTotal = TotalWeight;
-			}
-
+			if (TotalWeight > currentTotal) currentTotal = TotalWeight;
 			double percentLeft = 100;
 			for (int i = 0; i < Ingredients.Count; i++)
 			{
 				Ingredient ingredient = Ingredients[i];
-				if (i == Ingredients.Count - 1)
-				{
-					ingredient.AdjustPercent(percentLeft);
-				}
+				if (i == Ingredients.Count - 1) ingredient.AdjustPercent(percentLeft);
 				else
 				{
 					double newPercent = (ingredient.Percent / currentTotal) * 100;
@@ -156,18 +133,9 @@ namespace RecipeMaster.Models
 			double dryWeight = ingredients.Sum(i => i.getDryWeight());
 			double wetWeight = ingredients.Sum(i => i.getWetWeight());
 			// if (Math.Abs(wetWeight) < 1) Hydration = 0;
-			if (dryWeight > 0)
-			{
-				Hydration = Math.Round(wetWeight / dryWeight * 100, 1);
-			}
-			else if (wetWeight > 0)
-			{
-				Hydration = 100;
-			}
-			else
-			{
-				Hydration = 0;
-			}
+			if (dryWeight > 0) Hydration = Math.Round(wetWeight / dryWeight * 100, 1);
+			else if (wetWeight > 0) Hydration = 100;
+			else Hydration = 0;
 
 			//__Calculate Hydration is also called when type is changed, so update those as well
 			foreach (Ingredient i in Ingredients)
@@ -197,14 +165,10 @@ namespace RecipeMaster.Models
 
 		public void UpdateChildrenWeightInEditMode(double newWeight = 0)
 		{
-			if (newWeight == 0)
-			{
-				newWeight = TotalWeight;
-			}
-
+			if (newWeight == 0) newWeight = TotalWeight;
 			foreach (Ingredient i in ingredients)
 			{
-				i.AdjustWeight(i.Percent * newWeight / 100);
+				i.AdjustWeight(i.Percent * newWeight/100);
 			}
 			RaisePropertyChanged("Ingredients");
 		}
@@ -219,16 +183,6 @@ namespace RecipeMaster.Models
 		{
 			CalculateHydration();
 		}
-
-		public void UpdateIngredientWeights()
-		{
-			foreach (Ingredient item in Ingredients)
-			{
-				item.AdjustWeight(item.GetExactPercent() * totalWeight / 100);
-				item.UpdateIngredientWeights();
-			}
-		}
-
 		public void UpdateSelfToNewChildWeightInEntryMode()
 		{
 			totalWeight = ingredients.Sum(i => i.Weight);
@@ -246,30 +200,19 @@ namespace RecipeMaster.Models
 			double newTotalWeight = totalWeight + (newWeight - sender.Weight);
 			foreach (Ingredient i in ingredients)
 			{
-				if (i == sender)
-				{
-					continue;
-				}
-
+				if (i == sender) continue;
 				i.AdjustWeight(i.Percent * newTotalWeight);
 			}
 			RaisePropertyChanged("Ingredients");
 		}
 
-		#endregion Public Methods
-
-		#region Private Fields
-
-		private string description;
-		private double hydration;
-		private string image = "Assets/Croissant.jpg";
-		private ObservableCollection<Ingredient> ingredients;
-		private string name;
-		private RecipeBox parentRecipeBox; //todo Use this to enable Save from detail views
-		private ObservableCollection<Step> steps = new ObservableCollection<Step>();
-
-		private double totalWeight;
-
-		#endregion Private Fields
+		public void UpdateIngredientWeights()
+		{
+			foreach (Ingredient item in Ingredients)
+			{
+				item.AdjustWeight(item.GetExactPercent() * totalWeight / 100);
+				item.UpdateIngredientWeights();
+			}
+		}
 	}
 }

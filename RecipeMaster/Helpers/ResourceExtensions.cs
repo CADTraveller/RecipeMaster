@@ -1,22 +1,16 @@
+using System.Runtime.InteropServices;
+
 using Windows.ApplicationModel.Resources;
 
 namespace RecipeMaster.Helpers
 {
-	internal static class ResourceExtensions
-	{
-		#region Public Methods
+    internal static class ResourceExtensions
+    {
+        private static ResourceLoader _resLoader = new ResourceLoader();
 
-		public static string GetLocalized(this string resourceKey)
-		{
-			return _resLoader.GetString(resourceKey);
-		}
-
-		#endregion Public Methods
-
-		#region Private Fields
-
-		private static ResourceLoader _resLoader = new ResourceLoader();
-
-		#endregion Private Fields
-	}
+        public static string GetLocalized(this string resourceKey)
+        {
+            return _resLoader.GetString(resourceKey);
+        }
+    }
 }

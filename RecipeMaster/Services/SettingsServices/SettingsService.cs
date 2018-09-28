@@ -7,16 +7,33 @@ namespace RecipeMaster.Services.SettingsServices
 {
 	public class SettingsService
 	{
-		#region Public Properties
-
 		public static SettingsService Instance { get; } = new SettingsService();
+		Template10.Services.SettingsService.ISettingsHelper _helper;
+		private SettingsService()
+		{
+			_helper = new Template10.Services.SettingsService.SettingsHelper();
+		}
+
+		public bool UseShellBackButton
+		{
+			get { return _helper.Read<bool>(nameof(UseShellBackButton), true); }
+			set
+			{
+				_helper.Write(nameof(UseShellBackButton), value);
+				BootStrapper.Current.NavigationService.GetDispatcherWrapper().Dispatch(() =>
+				{
+					BootStrapper.Current.ShowShellBackButton = value;
+					BootStrapper.Current.UpdateShellBackButton();
+				});
+			}
+		}
 
 		public ApplicationTheme AppTheme
 		{
 			get
 			{
-				ApplicationTheme theme = ApplicationTheme.Light;
-				string value = _helper.Read<string>(nameof(AppTheme), theme.ToString());
+				var theme = ApplicationTheme.Light;
+				var value = _helper.Read<string>(nameof(AppTheme), theme.ToString());
 				return Enum.TryParse<ApplicationTheme>(value, out theme) ? theme : ApplicationTheme.Dark;
 			}
 			set
@@ -37,16 +54,6 @@ namespace RecipeMaster.Services.SettingsServices
 			}
 		}
 
-		public bool IsFullScreen
-		{
-			get { return _helper.Read<bool>(nameof(IsFullScreen), false); }
-			set
-			{
-				_helper.Write(nameof(IsFullScreen), value);
-				Views.Shell.HamburgerMenu.IsFullScreen = value;
-			}
-		}
-
 		public bool ShowHamburgerButton
 		{
 			get { return _helper.Read<bool>(nameof(ShowHamburgerButton), true); }
@@ -57,35 +64,14 @@ namespace RecipeMaster.Services.SettingsServices
 			}
 		}
 
-		public bool UseShellBackButton
+		public bool IsFullScreen
 		{
-			get { return _helper.Read<bool>(nameof(UseShellBackButton), true); }
+			get { return _helper.Read<bool>(nameof(IsFullScreen), false); }
 			set
 			{
-				_helper.Write(nameof(UseShellBackButton), value);
-				BootStrapper.Current.NavigationService.GetDispatcherWrapper().Dispatch(() =>
-				{
-					BootStrapper.Current.ShowShellBackButton = value;
-					BootStrapper.Current.UpdateShellBackButton();
-				});
+				_helper.Write(nameof(IsFullScreen), value);
+				Views.Shell.HamburgerMenu.IsFullScreen = value;
 			}
 		}
-
-		#endregion Public Properties
-
-		#region Private Fields
-
-		private Template10.Services.SettingsService.ISettingsHelper _helper;
-
-		#endregion Private Fields
-
-		#region Private Constructors
-
-		private SettingsService()
-		{
-			_helper = new Template10.Services.SettingsService.SettingsHelper();
-		}
-
-		#endregion Private Constructors
 	}
 }

@@ -12,7 +12,7 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
-        <TextBox Name="NameBox"  AcceptsReturn="False"
+        <TextBox Name="NameBox"  AcceptsReturn="False" 
                  Text="{x:Bind TextEntry, Mode=TwoWay}"
                  HorizontalContentAlignment="Center"
                  VerticalContentAlignment="Center"

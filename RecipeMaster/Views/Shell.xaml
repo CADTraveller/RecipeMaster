@@ -68,5 +68,7 @@
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
         </Controls:HamburgerMenu.SecondaryButtons>
+
     </Controls:HamburgerMenu>
+
 </Page>

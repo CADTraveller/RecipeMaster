@@ -7,17 +7,27 @@ namespace RecipeMaster.Models
 	[JsonObject(MemberSerialization.OptIn)]
 	public class RecentRecipeBox : ObservableObject
 	{
-		#region Public Constructors
-
 		public RecentRecipeBox(string name = "Name")
 		{
 			this.name = name;
 			LastOpened = new DateTime();
 		}
 
-		#endregion Public Constructors
+		private string recipeBoxImagePath = "/Assets/RecipeBoxReal.jpg";
 
-		#region Public Properties
+		[JsonProperty]
+		public string RecipeBoxImagePath { get => recipeBoxImagePath; }
+
+		private string name;
+
+		[JsonProperty]
+		public string Name
+		{
+			get { return name; }
+			set { Set(ref name, value); }
+		}
+
+		private string description;
 
 		[JsonProperty]
 		public string Description
@@ -25,6 +35,17 @@ namespace RecipeMaster.Models
 			get { return description; }
 			set { Set(ref description, value); }
 		}
+
+		private string path;
+
+		[JsonProperty]
+		public string Path
+		{
+			get { return path; }
+			set { Set(ref path, value); }
+		}
+
+		private DateTime lastOpened;
 
 		[JsonProperty]
 		//[JsonConverter(typeof())]
@@ -38,35 +59,6 @@ namespace RecipeMaster.Models
 		}
 
 		[JsonProperty]
-		public string Name
-		{
-			get { return name; }
-			set { Set(ref name, value); }
-		}
-
-		[JsonProperty]
-		public string Path
-		{
-			get { return path; }
-			set { Set(ref path, value); }
-		}
-
-		[JsonProperty]
-		public string RecipeBoxImagePath { get => recipeBoxImagePath; }
-
-		[JsonProperty]
 		public string Token { get; set; }
-
-		#endregion Public Properties
-
-		#region Private Fields
-
-		private string description;
-		private DateTime lastOpened;
-		private string name;
-		private string path;
-		private string recipeBoxImagePath = "/Assets/RecipeBoxReal.jpg";
-
-		#endregion Private Fields
 	}
 }
