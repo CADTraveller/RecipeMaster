@@ -3,6 +3,7 @@
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:common="using:Template10.Common">
 
+<<<<<<< HEAD
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -13,4 +14,20 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>
+=======
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles\Custom.xaml" />
+                <ResourceDictionary Source="Styles\Buttons.xaml" />
+                <ResourceDictionary Source="Styles\TextBlock.xaml" />
+                <ResourceDictionary Source="Styles\TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--  custom resources  -->
+
+        </ResourceDictionary>
+    </Application.Resources>
+
+>>>>>>> parent of dd89954... Local RecipeView had toggle button to lock ratio
 </common:BootStrapper>
