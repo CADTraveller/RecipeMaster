@@ -13,8 +13,10 @@
 			</ResourceDictionary.MergedDictionaries>
 
 			<!--  custom resources  -->
+			
 		</ResourceDictionary>
 
-		<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+		
 	</Application.Resources>
+
 </common:BootStrapper>

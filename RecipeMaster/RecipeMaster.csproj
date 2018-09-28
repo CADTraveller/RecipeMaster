@@ -93,7 +93,6 @@
     <None Include="Controls\TreeViewItem.xbf" />
     <None Include="Controls\TreeViewMouse.xbf" />
     <None Include="Controls\TreeViewTouch.xbf" />
-    <None Include="Hamburger_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActiveRecipesViewModel.cs" />
