@@ -12,20 +12,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.DataContext>
-        <viewModels:RecipeViewModel x:Name="vm" />
+        <viewModels:RecipeViewModel x:Name="vm"/>
     </Page.DataContext>
 
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Buttons.xaml" />
-                <ResourceDictionary Source="/Styles/Custom.xaml" />
-                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="/Styles/TextBox.xaml" />
-                <ResourceDictionary Source="../Controls/TreeViewMouse.xaml" />
-                <ResourceDictionary Source="../Controls/TreeViewTouch.xaml" />
+                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/Styles/Custom.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="../Controls/TreeViewMouse.xaml"/>
+                <ResourceDictionary Source="../Controls/TreeViewTouch.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+
     </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -64,26 +66,29 @@
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="{x:Bind vm.CurrentRecipe.Name, Mode=OneWay}">
-            <controls:PageHeader.PrimaryCommands>
-				<AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient" />
-				<AppBarButton Icon="Save" Click="{x:Bind vm.Save}" Label="Save" />
+            <controls:PageHeader.PrimaryCommands >
+				<AppBarButton Icon="Add" Click="{x:Bind vm.NewIngredientAsync}" Label="New Ingredient"/>
+				<AppBarButton Icon="Save" Click="{x:Bind vm.Save}" Label="Save"/>
+
 			</controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
+
+
 
         <Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader">
             <Grid.RowDefinitions>
-                <RowDefinition Height="32" />
-                <RowDefinition />
+                <RowDefinition Height="32"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Total Weight" />
+				<TextBlock Text="Total Weight"/>
 				<TextBox Text="{x:Bind vm.CurrentRecipe.TotalWeight, Mode=TwoWay}"
 				         VerticalAlignment="Center"
-				         Style="{StaticResource PrimaryTextBoxStyle}" />
+				         Style="{StaticResource PrimaryTextBoxStyle}"/>
 				</StackPanel>
 			<StackPanel Orientation="Horizontal"
 			            FlowDirection="RightToLeft">
@@ -94,42 +99,51 @@
 							 x:Name="IngredientsTreeView"
                              SelectedItemChanged="IngredientsTreeView_OnSelectedItemChanged"
 							Grid.Row="1">
-                <xamlTK:TreeView.ItemTemplate>
-
+                <xamlTK:TreeView.ItemTemplate >
+                    
                     <DataTemplate x:DataType="model:Ingredient">
 
-                        <data:DataTemplateExtensions.Hierarchy>
+                        <data:DataTemplateExtensions.Hierarchy >
                             <data:HierarchicalDataTemplate ItemsSource="{Binding Ingredients}" />
                         </data:DataTemplateExtensions.Hierarchy>
                         <ContentControl>
                             <ContentControl.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Add Ingredient"  Click="Ingredient_OnClick" />
+                                    <MenuFlyoutItem Text="Add Ingredient"  Click="Ingredient_OnClick"  />
                                     <!--<MenuFlyoutItem Text="Delete" ContextRequested="Ingredient_Delete" />-->
                                 </MenuFlyout>
                             </ContentControl.ContextFlyout>
                             <StackPanel Orientation="Horizontal"
                                         Padding="4">
-                                <TextBlock Text="{x:Bind Name, Mode=TwoWay}"
+								<ToggleSwitch OnContent="Ratio Locked"
+								              OffContent="Ratio Edit"
+								              IsOn="{x:Bind RatioLocked}"
+								              Visibility="{x:Bind EditModeActive, Converter=}"></ToggleSwitch>
+                                <TextBlock Text="{x:Bind Name, Mode=TwoWay}" 
                                          IsRightTapEnabled="False"
-                                           VerticalAlignment="Bottom" />
-
+                                           VerticalAlignment="Bottom"/>
+                                
                                 <TextBox Text="{x:Bind Percent, Mode=TwoWay}" IsRightTapEnabled="False"
 										 Style="{StaticResource PrimaryTextBoxStyle}"
                                          ContextMenuOpening="TextBox_ContextMenuOpening" />
                                 <TextBlock Text="% "
-                                           VerticalAlignment="Bottom" />
+                                           VerticalAlignment="Bottom"/>
 
-                                <TextBox Text="{x:Bind Weight, Mode=TwoWay}"
+                                <TextBox Text="{x:Bind Weight, Mode=TwoWay}" 
                                          IsRightTapEnabled="False"
-										 Style="{StaticResource PrimaryTextBoxStyle}" />
+										 Style="{StaticResource PrimaryTextBoxStyle}"/>
                                 <TextBlock Text=" gm "
-                                           VerticalAlignment="Bottom" />
+                                           VerticalAlignment="Bottom"/>
+
                             </StackPanel>
                         </ContentControl>
                     </DataTemplate>
                 </xamlTK:TreeView.ItemTemplate>
+
             </xamlTK:TreeView>
+
         </Grid>
+
     </RelativePanel>
+
 </Page>
