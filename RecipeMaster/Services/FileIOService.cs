@@ -142,6 +142,7 @@ namespace RecipeMaster.Services
 			{
 				string contents = await FileIO.ReadTextAsync(file);
 				rb = JsonConvert.DeserializeObject<RecipeBox>(contents);
+				rb.ConnectParentsToChildren();
 			}
 			catch (Exception e)
 			{

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Template10.Utils;
 
 namespace RecipeMaster.Models
 {
@@ -163,6 +164,8 @@ namespace RecipeMaster.Models
 			}
 		}
 
+		
+
 		public void UpdateChildrenWeightInEditMode(double newWeight = 0)
 		{
 			if (newWeight == 0) newWeight = TotalWeight;
@@ -212,6 +215,20 @@ namespace RecipeMaster.Models
 			{
 				item.AdjustWeight(item.GetExactPercent() * totalWeight / 100);
 				item.UpdateIngredientWeights();
+			}
+		}
+
+		public void LinkRecipesToIngredients(RecipeBox rb)
+		{
+			parentRecipeBox = rb;
+			LinkParentsToChildren(null);
+		}
+
+		public void LinkParentsToChildren(IIngredientContainer myParent)
+		{
+			foreach (Ingredient ingredient in Ingredients)
+			{
+				ingredient.LinkParentsToChildren(this);
 			}
 		}
 	}

@@ -49,5 +49,16 @@ namespace RecipeMaster.Models
             Name = name;
         }
 
+	    public void ConnectParentsToChildren()
+	    {
+		    foreach (RecipeGroup recipeGroup in RecipeGroups)
+		    {
+			    foreach (Recipe recipe in recipeGroup.Recipes)
+			    {
+				    recipe.LinkRecipesToIngredients(null);
+			    }
+		    }
+	    }
+
     }
 }

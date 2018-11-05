@@ -28,5 +28,7 @@ namespace RecipeMaster.Models
         void UpdateHydration();
 
         void SetEntryMode(bool EntryModeActive);
+
+	    void LinkParentsToChildren(IIngredientContainer myParent);
     }
 }

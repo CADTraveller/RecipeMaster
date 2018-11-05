@@ -159,7 +159,17 @@ namespace RecipeMaster.Models
 			}
 		}
 
-		public void SetTypeFromChildren()
+	    public void LinkParentsToChildren(IIngredientContainer myParent)
+	    {
+		    Parent = myParent;
+
+		    foreach (Ingredient ingredient in Ingredients)
+		    {
+			    ingredient.LinkParentsToChildren(this);
+		    }
+		}
+
+	    public void SetTypeFromChildren()
 		{
             if (ingredients == null || ingredients.Count == 0) return;
 
