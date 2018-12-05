@@ -6,29 +6,66 @@ using System.Threading.Tasks;
 
 namespace RecipeMaster.Models
 {
-    public interface IIngredientContainer
-    {
-        
-
-        System.Collections.ObjectModel.ObservableCollection<Ingredient> Ingredients { get; set; }
+	public interface IIngredientContainer
+	{
 
 
-        void UpdateSelfToNewChildWeightInEntryMode();
+		System.Collections.ObjectModel.ObservableCollection<Ingredient> Ingredients { get; set; }
 
-        void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight);
 
-        void UpdateChildrenWeightInEntryMode(double newWeight = 0);
+		void UpdateSelfToNewChildWeightInEntryMode();
 
-        void UpdateChildrenWeightInEditMode(double newWeight = 0);
+		void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight);
 
-        void UpdateToNewChildPercent(Ingredient sender, double newPercent);
+		void UpdateChildrenWeightInEntryMode(double newWeight = 0);
 
-        void DeleteChild(Ingredient sender);
+		void UpdateChildrenWeightInEditMode(double newWeight = 0);
 
-        void UpdateHydration();
+		void UpdateToNewChildPercent(Ingredient sender, double newPercent);
 
-        void SetEntryMode(bool EntryModeActive);
+		void DeleteChild(Ingredient sender);
 
-	    void LinkParentsToChildren(IIngredientContainer myParent);
-    }
+		void UpdateHydration();
+
+		void SetEntryMode(bool EntryModeActive);
+
+		void LinkParentsToChildren(IIngredientContainer myParent);
+
+		event EventHandler ChildWeightChanged;
+
+		event EventHandler ChildPercentageChanged;
+
+	}
 }
+
+/*
+ * namespace ImplementInterfaceEvents  
+{  
+    public interface IDrawingObject  
+    {  
+        event EventHandler ShapeChanged;  
+    }  
+    public class MyEventArgs : EventArgs   
+    {  
+        // class members  
+    }  
+    public class Shape : IDrawingObject  
+    {  
+        public event EventHandler ShapeChanged;  
+        void ChangeShape()  
+        {  
+            // Do something here before the event…  
+
+            OnShapeChanged(new MyEventArgs(?arguments?));  
+
+            // or do something here after the event.   
+        }  
+        protected virtual void OnShapeChanged(MyEventArgs e)
+		{
+			ShapeChanged?.Invoke(this, e);
+		}  
+    }  
+
+}
+
+*/
