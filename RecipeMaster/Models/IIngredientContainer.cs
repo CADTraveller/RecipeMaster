@@ -12,10 +12,11 @@ namespace RecipeMaster.Models
 
 		System.Collections.ObjectModel.ObservableCollection<Ingredient> Ingredients { get; set; }
 
+		void UpdateToNewChildWeight(Ingredient sender, WeightChangedEventArgs weightChangedArgs);
 
 		void UpdateSelfToNewChildWeightInEntryMode();
 
-		void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight);
+		void UpdateToNewChildWeightInEditMode(Ingredient sender, WeightChangedEventArgs weightChangedArgs);
 
 		void UpdateChildrenWeightInEntryMode(double newWeight = 0);
 
@@ -29,12 +30,13 @@ namespace RecipeMaster.Models
 
 		void SetEntryMode(bool EntryModeActive);
 
-		void LinkParentsToChildren(IIngredientContainer myParent);
+		void LinkChildEvents();
 
-		event EventHandler ChildWeightChanged;
+		event EventHandler WeightChanged;
 
-		event EventHandler ChildPercentageChanged;
+		event EventHandler PercentageChanged;
 
+		event EventHandler TypeChanged;
 	}
 }
 

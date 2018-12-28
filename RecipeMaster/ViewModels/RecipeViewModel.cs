@@ -102,7 +102,7 @@ namespace RecipeMaster.ViewModels
 
 			IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
 
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, parent);
+			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex);
 			parent.Ingredients.Add(newIngredient);
 		}
 
@@ -111,7 +111,7 @@ namespace RecipeMaster.ViewModels
 			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 			var result = await dialog.ShowAsync();
 
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex, CurrentRecipe);
+			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex);
 			CurrentRecipe.AddIngredient(newIngredient);
 			RaisePropertyChanged("Ingredients");
 		}

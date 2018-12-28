@@ -93,7 +93,7 @@ namespace RecipeMaster.Models
 			Ingredients.Add(i);
 			BalancePercentages();
 			CalculateHydration();
-			i.Parent = this;
+			//i.Parent = this;
 		}
 
 		public void AddStep(Step newStep)
@@ -164,7 +164,15 @@ namespace RecipeMaster.Models
 			}
 		}
 
-		
+		public void LinkChildEvents()
+		{
+			throw new NotImplementedException();
+		}
+
+		public event EventHandler WeightChanged;
+		public event EventHandler PercentageChanged;
+		public event EventHandler TypeChanged;
+
 
 		public void UpdateChildrenWeightInEditMode(double newWeight = 0)
 		{
@@ -174,6 +182,11 @@ namespace RecipeMaster.Models
 				i.AdjustWeight(i.Percent * newWeight/100);
 			}
 			RaisePropertyChanged("Ingredients");
+		}
+
+		public void UpdateToNewChildWeightInEditMode(Ingredient sender, WeightChangedEventArgs weightChangedArgs)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void UpdateChildrenWeightInEntryMode(double newWeight)
@@ -186,16 +199,22 @@ namespace RecipeMaster.Models
 		{
 			CalculateHydration();
 		}
+
+		public void UpdateToNewChildWeight(Ingredient sender, WeightChangedEventArgs weightChangedArgs)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void UpdateSelfToNewChildWeightInEntryMode()
 		{
 			totalWeight = ingredients.Sum(i => i.Weight);
-			RaisePropertyChanged("TotalWeight");
+			RaisePropertyChanged(nameof(TotalWeight));
 		}
 
 		public void UpdateToNewChildPercent(Ingredient sender, double newPercent)
 		{
 			ValueAdjusters.AdjustIngredientPercentages(sender, newPercent, Ingredients);
-			RaisePropertyChanged("Ingredients");
+			RaisePropertyChanged(nameof(Ingredients));
 		}
 
 		public void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight)
@@ -206,7 +225,7 @@ namespace RecipeMaster.Models
 				if (i == sender) continue;
 				i.AdjustWeight(i.Percent * newTotalWeight);
 			}
-			RaisePropertyChanged("Ingredients");
+			RaisePropertyChanged(nameof(Ingredients));
 		}
 
 		public void UpdateIngredientWeights()
@@ -218,18 +237,6 @@ namespace RecipeMaster.Models
 			}
 		}
 
-		public void LinkRecipesToIngredients(RecipeBox rb)
-		{
-			parentRecipeBox = rb;
-			LinkParentsToChildren(null);
-		}
 
-		public void LinkParentsToChildren(IIngredientContainer myParent)
-		{
-			foreach (Ingredient ingredient in Ingredients)
-			{
-				ingredient.LinkParentsToChildren(this);
-			}
-		}
 	}
 }
