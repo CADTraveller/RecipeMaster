@@ -200,12 +200,16 @@ namespace RecipeMaster.Models
 		private bool showChildren;
 		private double _weight;
 
-		public event EventHandler WeightChanged;
-		public event EventHandler PercentageChanged;
+		public event EventHandler<WeightChangedEventArgs> WeightChanged;
+		public event EventHandler<PercentChangedEventArgs> PercentageChanged;
 		public event EventHandler TypeChanged;
+		public event EventHandler HydrationChanged;
 
-		public void UpdateToNewChildPercent(Ingredient sender, double newPercent)
+		public void UpdateToNewChildPercent(object sender, PercentChangedEventArgs percentChangedArgs)
 		{
+			Ingredient senderIngredient = (Ingredient) sender;
+			if(senderIngredient is null) return;
+			double newPercent = percentChangedArgs.NewPercent;
 			double oldOthersPercentTotal = _ingredients.Where(i => i != sender).Sum(i => i._percent);
 			double newOthersPercentTotal = 100 - newPercent;
 			double deltaPercent = newOthersPercentTotal / oldOthersPercentTotal;
@@ -293,7 +297,7 @@ namespace RecipeMaster.Models
 			Ingredients.Add(add);
 			BalancePercentages();
 			ShowChildren = true;
-			RaisePropertyChanged("Ingredients");
+			RaisePropertyChanged(nameof(Ingredients));
 			hasChildren = true;
 			return true;
 		}
@@ -392,7 +396,7 @@ namespace RecipeMaster.Models
 
 		public void UpdateHydration()
 		{
-			//Parent.UpdateHydration();
+			HydrationChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		public void UpdateIngredientWeights(object senderObj, double newPercent)
@@ -415,12 +419,22 @@ namespace RecipeMaster.Models
 			}
 		}
 
-
-		public void UpdateToNewChildWeight(Ingredient sender, EventArgs args)
+		public void OnTypeChanged(Object sender, EventArgs args)
 		{
-			WeightChangedEventArgs weightChangedArgs = (WeightChangedEventArgs) args;
-			if (EditModeActive) UpdateToNewChildWeightInEditMode(sender, weightChangedArgs);
-			if (EntryModeActive) UpdateSelfToNewChildWeightInEntryMode();
+			if(Ingredients.Count == 0) return;
+			IngredientType sampleType = Ingredients[0].Type;
+			Type = Ingredients.All(i => i.Type == sampleType) ? sampleType : IngredientType.Complex;
+		}
+
+		public void UpdateToNewChildWeight(object sender, WeightChangedEventArgs args)
+		{
+			IIngredientContainer ingredientContainer = (IIngredientContainer) sender;
+			if (EditModeActive) UpdateToNewChildWeightInEditMode(ingredientContainer, args);
+			if (EntryModeActive)
+			{
+				UpdateSelfToNewChildWeightInEntryMode();
+				UpdateHydration();
+			}
 
 			RaisePropertyChanged(nameof(Weight));
 		}
@@ -431,8 +445,9 @@ namespace RecipeMaster.Models
 			UpdateHydration();
 		}
 
-		public void UpdateToNewChildWeightInEditMode(Ingredient sender, WeightChangedEventArgs weightChangedArgs)
+		public void UpdateToNewChildWeightInEditMode(object senderObject, WeightChangedEventArgs weightChangedArgs)
 		{
+			Ingredient sender = (Ingredient) senderObject;
 			WeightChangedEventArgs myWeightChangedArgs = new WeightChangedEventArgs();
 			myWeightChangedArgs.OldWeight = _weight;
 			//__calculate new total
@@ -448,13 +463,28 @@ namespace RecipeMaster.Models
 			RaisePropertyChanged(nameof(Ingredients));
 		}
 
-		public void LinkChildEvents()
+		public void LinkAllChildEvents()
 		{
+			if (Ingredients is null || Ingredients?.Count == 0) return;
 			foreach (Ingredient ingredient in Ingredients)
 			{
-				//__ todo: add weakevent link
-				ingredient.WeightChanged += UpdateToNewChildWeight;
+				LinkChildEvents(ingredient);
+				ingredient.LinkAllChildEvents();
 			}
+		}
+
+		private void LinkChildEvents(Ingredient ingredient)
+		{
+//__ todo: add weakevent link
+			ingredient.WeightChanged += UpdateToNewChildWeight;
+			ingredient.PercentageChanged += UpdateToNewChildPercent;
+			ingredient.TypeChanged += OnTypeChanged;
+			ingredient.HydrationChanged += OnHydrationChanged;
+		}
+
+		public void OnHydrationChanged(object sender, EventArgs args)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
