@@ -55,7 +55,7 @@ namespace RecipeMaster.Models
 		    {
 			    foreach (Recipe recipe in recipeGroup.Recipes)
 			    {
-				    recipe.LinkRecipesToIngredients(null);
+				    recipe.LinkAllChildEvents();
 			    }
 		    }
 	    }

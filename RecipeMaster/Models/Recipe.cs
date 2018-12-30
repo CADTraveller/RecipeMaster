@@ -6,7 +6,7 @@ using Template10.Utils;
 
 namespace RecipeMaster.Models
 {
-	public class Recipe : ObservableObject, IIngredientContainer
+	public class Recipe : Ingredient
 	{
 		public bool EntryModeActive;
 		private string description;
@@ -56,24 +56,7 @@ namespace RecipeMaster.Models
 			set { Set(ref image, value); }
 		}
 
-		public ObservableCollection<Ingredient> Ingredients
-		{
-			get { return ingredients; }
-			set { Set(ref ingredients, value); }
-		}
 
-		public string Name
-		{
-			get { return name; }
-			set
-			{
-				bool nameOK = true;///todo check for duplicates
-				if (nameOK)
-				{
-					Set(ref name, value);
-				}
-			}
-		}
 		public ObservableCollection<Step> Steps
 		{
 			get { return steps; }
@@ -90,14 +73,7 @@ namespace RecipeMaster.Models
 				UpdateIngredientWeights();
 			}
 		}
-		public void AddIngredient(Ingredient i)
-		{
-			i.Percent = 1;
-			Ingredients.Add(i);
-			BalancePercentages();
-			CalculateHydration();
-			i.Parent = this;
-		}
+
 
 		public void AddStep(Step newStep)
 		{
@@ -112,25 +88,7 @@ namespace RecipeMaster.Models
 			steps = new ObservableCollection<Step>(orderedList);
 		}
 
-		public void BalancePercentages()
-		{
-			double currentTotal = Ingredients.Sum(i => i.Percent);
-			if (TotalWeight > currentTotal) currentTotal = TotalWeight;
-			double percentLeft = 100;
-			for (int i = 0; i < Ingredients.Count; i++)
-			{
-				Ingredient ingredient = Ingredients[i];
-				if (i == Ingredients.Count - 1) ingredient.AdjustPercent(percentLeft);
-				else
-				{
-					double newPercent = (ingredient.Percent / currentTotal) * 100;
-					percentLeft -= newPercent;
-					ingredient.AdjustPercent(newPercent);
-				}
-			}
-			UpdateIngredientWeights();
-			CalculateHydration();
-		}
+
 
 		public void CalculateHydration()
 		{
@@ -148,69 +106,18 @@ namespace RecipeMaster.Models
 			}
 		}
 
-		public void DeleteChild(Ingredient sender)
-		{
-			ingredients.Remove(sender);
-			double currentPercentTotal = ingredients.Sum(i => i.Percent);
-			foreach (Ingredient i in Ingredients)
-			{
-				i.Percent = i.Percent * 100 / currentPercentTotal;
-			}
-		}
 
-		public void SetEntryMode(bool entryModeActive)
-		{
-			EntryModeActive = entryModeActive;
-			foreach (Ingredient i in ingredients)
-			{
-				i.SetEntryMode(entryModeActive);
-			}
-		}
 
-		
 
-		public void UpdateChildrenWeightInEditMode(double newWeight = 0)
-		{
-			if (newWeight == 0) newWeight = TotalWeight;
-			foreach (Ingredient i in ingredients)
-			{
-				i.AdjustWeight(i.Percent * newWeight/100);
-			}
-			RaisePropertyChanged("Ingredients");
-		}
-
-		public void UpdateChildrenWeightInEntryMode(double newWeight)
-		{
-			//__do not support user edits of Total Weight in Entry Mode
-			return;
-		}
 
 		public void UpdateHydration()//_this is a wrapper while the new IIngredientContainer approach is implimented
 		{
 			CalculateHydration();
 		}
-		public void UpdateSelfToNewChildWeightInEntryMode()
-		{
-			totalWeight = ingredients.Sum(i => i.Weight);
-			RaisePropertyChanged("TotalWeight");
-		}
 
-		public void UpdateToNewChildPercent(Ingredient sender, double newPercent)
-		{
-			ValueAdjusters.AdjustIngredientPercentages(sender, newPercent, Ingredients);
-			RaisePropertyChanged("Ingredients");
-		}
 
-		public void UpdateToNewChildWeightInEditMode(Ingredient sender, double newWeight)
-		{
-			double newTotalWeight = totalWeight + (newWeight - sender.Weight);
-			foreach (Ingredient i in ingredients)
-			{
-				if (i == sender) continue;
-				i.AdjustWeight(i.Percent * newTotalWeight);
-			}
-			RaisePropertyChanged("Ingredients");
-		}
+
+
 
 		public void UpdateIngredientWeights()
 		{
@@ -221,18 +128,6 @@ namespace RecipeMaster.Models
 			}
 		}
 
-		public void LinkRecipesToIngredients(RecipeBox rb)
-		{
-			parentRecipeBox = rb;
-			LinkParentsToChildren(null);
-		}
 
-		public void LinkParentsToChildren(IIngredientContainer myParent)
-		{
-			foreach (Ingredient ingredient in Ingredients)
-			{
-				ingredient.LinkParentsToChildren(this);
-			}
-		}
 	}
 }
