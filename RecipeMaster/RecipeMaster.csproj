@@ -75,6 +75,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -102,6 +103,7 @@
     <Compile Include="Helpers\TaskExtensions.cs" />
     <Compile Include="Models\IIngredientContainer.cs" />
     <Compile Include="Models\Ingredient.cs" />
+    <Compile Include="Models\IngredientChangedEventArgs.cs" />
     <Compile Include="Models\IngredientType.cs" />
     <Compile Include="Models\NutritionInfo.cs" />
     <Compile Include="Models\Order.cs" />

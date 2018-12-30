@@ -161,7 +161,7 @@ namespace RecipeMaster.Models
 
 	    public void LinkParentsToChildren(IIngredientContainer myParent)
 	    {
-		    Parent = myParent;
+		    
 
 		    foreach (Ingredient ingredient in Ingredients)
 		    {
@@ -215,6 +215,9 @@ namespace RecipeMaster.Models
 		bool ratioLocked = default(bool);
 
 		private bool showChildren;
+
+		public event EventHandler ChildWeightChanged;
+		public event EventHandler ChildPercentageChanged;
 
 		public Ingredient(string n, IngredientType t, IIngredientContainer parent)
 		{

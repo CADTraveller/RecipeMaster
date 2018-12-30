@@ -19,6 +19,9 @@ namespace RecipeMaster.Models
 
 		private double totalWeight;
 
+		public event EventHandler ChildWeightChanged;
+		public event EventHandler ChildPercentageChanged;
+
 		public Recipe(string name = "New Recipe")
 		{
 			this.name = name;
