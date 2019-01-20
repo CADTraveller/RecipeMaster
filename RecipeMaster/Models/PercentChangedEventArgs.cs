@@ -23,5 +23,11 @@ namespace RecipeMaster.Models
 			get => _newPercent;
 			set => _newPercent = value;
 		}
+
+		public PercentChangedEventArgs(double oldPercent, double newPercent)
+		{
+			OldPercent = oldPercent;
+			NewPercent = newPercent;
+		}
 	}
 }

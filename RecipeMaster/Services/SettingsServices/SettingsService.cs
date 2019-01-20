@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
@@ -72,6 +73,12 @@ namespace RecipeMaster.Services.SettingsServices
 				_helper.Write(nameof(IsFullScreen), value);
 				Views.Shell.HamburgerMenu.IsFullScreen = value;
 			}
+		}
+
+		public List<string> AccessTokens
+		{
+			get => _helper.Read<List<string>>(nameof(AccessTokens), new List<string>());
+			set => _helper.Write<List<string>>(nameof(AccessTokens), value);
 		}
 	}
 }

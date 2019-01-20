@@ -1,0 +1,22 @@
+﻿		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
+		{
+			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+			
+			List<string> typeFilters = new List<string>() {".rcpbx"};
+			QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, typeFilters);
+			
+			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
+			query.ApplyNewQueryOptions(options);
+
+			var files = await query.GetFilesAsync();
+			List<RecentRecipeBox> recentRecipeBoxes = new List<RecentRecipeBox>();
+			foreach (StorageFile file in files)
+			{
+				//if(file.FileType != ".rcpbx")
+				RecentRecipeBox rrb = new RecentRecipeBox(file.DisplayName);
+				Windows.Storage.FileProperties.BasicProperties fileProperties = await file.GetBasicPropertiesAsync();
+				rrb.LastOpened = fileProperties.DateModified.Date;
+				recentRecipeBoxes.Add(rrb);
+			}
+			return recentRecipeBoxes;
+		}

@@ -13,7 +13,7 @@ namespace RecipeMasterUnitTests
 		public static Recipe CreateRecipeHydration50()
 		{
 			Recipe recipe = new Recipe("Hydration 50");
-			Ingredient Flour = new Ingredient("Flour", IngredientType.Dry, recipe);
+			Ingredient Flour = new Ingredient("Flour", IngredientType.Dry);
 
 			return recipe;
 		}

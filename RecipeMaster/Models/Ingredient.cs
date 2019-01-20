@@ -67,8 +67,10 @@ namespace RecipeMaster.Models
 
 				//Parent.UpdateToNewChildPercent(this, value);
 				//Parent.UpdateChildrenWeightInEditMode();
+				double oldPercent = _percent;
 				Set(ref _percent, value);
-				UpdateIngredientWeights();
+				UpdateIngredientWeights();//__update children
+				PercentageChanged?.Invoke(this, new PercentChangedEventArgs(oldPercent, _percent));
 			}
 		}
 
@@ -148,9 +150,12 @@ namespace RecipeMaster.Models
 
 				}
 
+				double oldWeight = _weight;
 				//Parent.UpdateHydration();
 				Set(ref _weight, value);
 				// if (EntryModeActive) return;
+				WeightChanged?.Invoke(this, new WeightChangedEventArgs() { OldWeight = oldWeight, NewWeight = _weight });
+				HydrationChanged?.Invoke(this, new EventArgs());
 			}
 		}
 

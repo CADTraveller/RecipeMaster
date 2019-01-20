@@ -20,6 +20,8 @@ namespace RecipeMaster.Services
 
 		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
+		private static SettingsServices.SettingsService _settings = SettingsServices.SettingsService.Instance;
+
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
 			try
@@ -94,24 +96,15 @@ namespace RecipeMaster.Services
 		}
 
 		public static async Task<List<RecentRecipeBox>> ListKnownRecipeBoxes()
-		{
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			
-			List<string> typeFilters = new List<string>() {".rcpbx"};
-			QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, typeFilters);
-			
-			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
-			query.ApplyNewQueryOptions(options);
-
-			var files = await query.GetFilesAsync();
+		{			
 			List<RecentRecipeBox> recentRecipeBoxes = new List<RecentRecipeBox>();
-			foreach (StorageFile file in files)
+			var mru = StorageApplicationPermissions.MostRecentlyUsedList;
+			foreach (Windows.Storage.AccessCache.AccessListEntry entry in mru.Entries)
 			{
-				//if(file.FileType != ".rcpbx")
-				RecentRecipeBox rrb = new RecentRecipeBox(file.DisplayName);
-				Windows.Storage.FileProperties.BasicProperties fileProperties = await file.GetBasicPropertiesAsync();
-				rrb.LastOpened = fileProperties.DateModified.Date;
-				recentRecipeBoxes.Add(rrb);
+				string mruToken = entry.Token;
+				string mruMetadata = entry.Metadata;
+				//Windows.Storage.IStorageItem item = await mru.GetItemAsync(mruToken);
+				
 			}
 			return recentRecipeBoxes;
 		}
@@ -120,6 +113,7 @@ namespace RecipeMaster.Services
 
 		public static async Task<RecentRecipeBox> OpenRecipeBoxFromFileAsync(RecentRecipeBox rrb = null, bool needToRecordAccess = false)
 		{
+			// TODO: this needs to be revised to utilize MRU and metadata storage
 			string token = rrb?.Token;
 			StorageFile file = null;
 			RecipeBox rb;
@@ -135,7 +129,6 @@ namespace RecipeMaster.Services
 			else
 			{
 				file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
-				//file = await StorageFile.GetFileFromPathAsync(rrb.Path);
 			}
 
 			try
@@ -164,21 +157,23 @@ namespace RecipeMaster.Services
 		{
 			RecentRecipeBox rrb = await CreateRecentRecipeBoxAsync(rb);
 			rb.LastPath = file.Path;
-
+			string metaData = JsonConvert.SerializeObject(rb);
 			if (file != null)
 			{
 				// Add to FA without metadata
-				string faToken = StorageApplicationPermissions.FutureAccessList.Add(file);
-				rrb.Token = faToken;
-				rb.AccessToken = faToken;
+				//string faToken = StorageApplicationPermissions.FutureAccessList.Add(file);
+				string mruToken = StorageApplicationPermissions.MostRecentlyUsedList.Add(file, metaData);
+				//rrb.Token = faToken;
+				//rb.AccessToken = faToken;
+				//_settings.AccessTokens.Add(faToken);
 			}
 			
 			//__store a record of this access
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			string name = rrb.Name;
-			string contents = JsonConvert.SerializeObject(rrb);
-			StorageFile newRecord = await localFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
-			await FileIO.WriteTextAsync(newRecord, contents);
+			//StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+			//string name = rrb.Name;
+			//string contents = JsonConvert.SerializeObject(rrb);
+			//StorageFile newRecord = await localFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+			//await FileIO.WriteTextAsync(newRecord, contents);
 
 			//__store an instance of the rb if it doesn't already exist
 			BootStrapper.Current.SessionState[rb.Name] = rb;

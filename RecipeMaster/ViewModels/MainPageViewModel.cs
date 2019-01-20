@@ -170,7 +170,7 @@ namespace RecipeMaster.ViewModels
 		public async void ImportFileAsync()
 		{
 			//__allow user to pick file
-			RecentRecipeBox rrb= await FileIOService.OpenRecipeBoxFromFileAsync();
+			RecentRecipeBox rrb= await FileIOService.OpenRecipeBoxFromFileAsync(null, true);
 			
 			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 			RecentRecipeBoxes.Insert(0, rrb);
@@ -198,9 +198,10 @@ namespace RecipeMaster.ViewModels
 
 		private void updateDisplay()
 		{
-			RaisePropertyChanged("RecentRecipeBoxes");
-			RaisePropertyChanged("ShowNoHistory");
-			RaisePropertyChanged("ShowHistory");
+			//RaisePropertyChanged("RecentRecipeBoxes");
+			//RaisePropertyChanged("ShowNoHistory");
+			//RaisePropertyChanged("ShowHistory");
+			RaisePropertyChanged();
 		}
 
 		public async Task SaveFileAsync()
