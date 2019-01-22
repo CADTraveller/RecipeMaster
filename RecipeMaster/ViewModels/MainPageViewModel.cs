@@ -171,7 +171,7 @@ namespace RecipeMaster.ViewModels
 		{
 			//__allow user to pick file
 			RecentRecipeBox rrb= await FileIOService.OpenRecipeBoxFromFileAsync(null, true);
-			
+			if(rrb is null) return;//user cancelled or encountered some error
 			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 			RecentRecipeBoxes.Insert(0, rrb);
 

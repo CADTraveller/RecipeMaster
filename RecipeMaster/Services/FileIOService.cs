@@ -10,7 +10,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
-using Template10.Common
+using Template10.Common;
 
 namespace RecipeMaster.Services
 {

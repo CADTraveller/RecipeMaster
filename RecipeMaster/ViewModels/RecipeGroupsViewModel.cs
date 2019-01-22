@@ -146,6 +146,7 @@ namespace RecipeMaster.ViewModels
 				string groupName = groupSelector.SelectedGroupName;
 				SelectedRecipeGroup = CurrentRecipeGroups.FirstOrDefault(g => g.Name == groupName);
 			}
+			if(SelectedRecipeGroup.Recipes is null) SelectedRecipeGroup.Recipes = new ObservableCollection<Recipe>();
 
 			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
 			var result = await dialog.ShowAsync();

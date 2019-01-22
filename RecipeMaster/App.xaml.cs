@@ -51,7 +51,7 @@ namespace RecipeMaster
 
 		#endregion
 
-		public Dictionary<string, RecipeBox> OpenRecipeBoxes { get; set; }
+		//public Dictionary<string, RecipeBox> OpenRecipeBoxes { get; set; }
 
 
 		public override UIElement CreateRootElement(IActivatedEventArgs e)
