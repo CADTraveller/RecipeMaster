@@ -10,7 +10,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
-using Template10.Common;
+using Template10.Common
 
 namespace RecipeMaster.Services
 {
@@ -104,7 +104,9 @@ namespace RecipeMaster.Services
 				string mruToken = entry.Token;
 				string mruMetadata = entry.Metadata;
 				//Windows.Storage.IStorageItem item = await mru.GetItemAsync(mruToken);
-				
+
+				RecentRecipeBox rrb = JsonConvert.DeserializeObject<RecentRecipeBox>(mruMetadata);
+				recentRecipeBoxes.Add(rrb);
 			}
 			return recentRecipeBoxes;
 		}
@@ -199,7 +201,7 @@ namespace RecipeMaster.Services
 			var savePicker = new FileSavePicker();
 			string lastSavePath = rb.LastPath;
 			string accessToken = rb.AccessToken;
-			StorageFile targetFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(accessToken);
+			StorageFile targetFile = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(accessToken);
 			
 			//if (targetFile != null && !doSaveAs)
 			//{
@@ -219,9 +221,10 @@ namespace RecipeMaster.Services
 				targetFile = await savePicker.PickSaveFileAsync();
 			}
 
-			JsonSerializerSettings settings = new JsonSerializerSettings();
-			settings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
-			string rbJson = JsonConvert.SerializeObject(rb, settings);
+			//__remving the ReferenceLoopHandling option as Parent is being removed in favor of event based properties
+			//JsonSerializerSettings settings = new JsonSerializerSettings();
+			//settings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+			string rbJson = JsonConvert.SerializeObject(rb);
 			await FileIO.WriteTextAsync(targetFile, rbJson);
 		}
 
