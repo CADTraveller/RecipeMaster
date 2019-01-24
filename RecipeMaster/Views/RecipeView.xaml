@@ -83,7 +83,7 @@
 
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Total Weight"/>
-				<TextBox Text="{x:Bind vm.CurrentRecipe.TotalWeight, Mode=TwoWay}"
+				<TextBox Text="{x:Bind vm.CurrentRecipe.Weight, Mode=TwoWay}"
 				         VerticalAlignment="Center"
 				         Style="{StaticResource PrimaryTextBoxStyle}"/>
 				</StackPanel>

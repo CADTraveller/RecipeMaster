@@ -5,51 +5,68 @@ namespace RecipeMaster.Models
 {
     public class RecipeBox : ObservableObject
     {
-        private ObservableCollection<RecipeGroup> recipeGroups;
-        public ObservableCollection<RecipeGroup> RecipeGroups
-        {
+
+		#region Private Fields
+
+		private string description;
+		private string lastPath;
+		private string name;
+		private ObservableCollection<RecipeGroup> recipeGroups;
+
+		#endregion Private Fields
+
+
+		#region Public Constructors
+
+		public RecipeBox(string name = "RecipeBox")
+		{
+			recipeGroups = new ObservableCollection<RecipeGroup>();
+			recipeGroups.Add(new RecipeGroup("RecipeGroup"));
+			Name = name;
+		}
+
+		#endregion Public Constructors
+
+
+		#region Public Properties
+
+		public string AccessToken { get; set; }
+
+		public string Description
+		{
+			get { return description; }
+			set { Set(ref description, value); }
+		}
+
+		public string LastPath
+		{
+			get { return lastPath; }
+			set { Set(ref lastPath, value); }
+		}
+
+		// todo: Add ID Guid
+		public string Name
+		{
+			get { return name; }
+			set { Set(ref name, value); }
+		}
+
+		public ObservableCollection<RecipeGroup> RecipeGroups
+		{
             get { return recipeGroups; }
             set
             {
                 recipeGroups = value;
                 RaisePropertyChanged();
             }
-        }
+		}
 
-        private string lastPath;
+		#endregion Public Properties
 
-        public string LastPath
-        {
-            get { return lastPath; }
-            set { Set(ref lastPath, value); }
-        }
 
-	    public string AccessToken { get; set; }
+		#region Public Methods
 
-		// todo: Add ID Guid
-
-        private string name;
-        public string Name
-        {
-            get { return name; }
-            set { Set(ref name, value); }
-        }
-
-        private string description;
-        public string Description
-        {
-            get { return description; }
-            set { Set(ref description, value); }
-        }
-
-        public RecipeBox(string name = "RecipeBox")
-        {
-            recipeGroups = new ObservableCollection<RecipeGroup>();
-            recipeGroups.Add(new RecipeGroup("RecipeGroup"));
-            Name = name;
-        }
-
-	    public void ConnectParentsToChildren()
+		public void ConnectParentsToChildren()
 	    {
 		    foreach (RecipeGroup recipeGroup in RecipeGroups)
 		    {
@@ -58,7 +75,9 @@ namespace RecipeMaster.Models
 				    recipe.LinkAllChildEvents();
 			    }
 		    }
-	    }
+		}
 
-    }
+		#endregion Public Methods
+
+	}
 }

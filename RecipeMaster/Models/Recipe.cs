@@ -64,15 +64,15 @@ namespace RecipeMaster.Models
 		}
 
 		public string AccessToken { get; set; }
-		public double TotalWeight
-		{
-			get { return Math.Round(totalWeight); }
-			set
-			{
-				Set(ref totalWeight, value);
-				UpdateIngredientWeights();
-			}
-		}
+		//public double TotalWeight
+		//{
+		//	get { return Math.Round(totalWeight); }
+		//	set
+		//	{
+		//		Set(ref totalWeight, value);
+		//		UpdateIngredientWeights();
+		//	}
+		//}
 
 
 		public void AddStep(Step newStep)
@@ -105,29 +105,6 @@ namespace RecipeMaster.Models
 				i.SetTypeFromChildren();
 			}
 		}
-
-
-
-
-
-		public void UpdateHydration()//_this is a wrapper while the new IIngredientContainer approach is implimented
-		{
-			CalculateHydration();
-		}
-
-
-
-
-
-		public void UpdateIngredientWeights()
-		{
-			foreach (Ingredient item in Ingredients)
-			{
-				item.AdjustWeight(item.GetExactPercent() * totalWeight / 100);
-				item.UpdateIngredientWeights();
-			}
-		}
-
 
 	}
 }

@@ -22,6 +22,12 @@ namespace RecipeMaster.Services
 
 		private static SettingsServices.SettingsService _settings = SettingsServices.SettingsService.Instance;
 
+		internal static void ClearHistoryAsync()
+		{
+			var mruList = StorageApplicationPermissions.MostRecentlyUsedList;
+			mruList.Clear();
+		}
+
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
 			try
@@ -106,6 +112,7 @@ namespace RecipeMaster.Services
 				//Windows.Storage.IStorageItem item = await mru.GetItemAsync(mruToken);
 
 				RecentRecipeBox rrb = JsonConvert.DeserializeObject<RecentRecipeBox>(mruMetadata);
+				rrb.Token = mruToken;
 				recentRecipeBoxes.Add(rrb);
 			}
 			return recentRecipeBoxes;
@@ -130,7 +137,7 @@ namespace RecipeMaster.Services
 			}
 			else
 			{
-				file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
+				file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token);
 			}
 
 			try
@@ -138,6 +145,10 @@ namespace RecipeMaster.Services
 				string contents = await FileIO.ReadTextAsync(file);
 				rb = JsonConvert.DeserializeObject<RecipeBox>(contents);
 				rb.ConnectParentsToChildren();
+
+				//__store an instance of the rb if it doesn't already exist
+				BootStrapper.Current.SessionState[rb.Name] = rb;
+
 			}
 			catch (Exception e)
 			{
@@ -165,43 +176,34 @@ namespace RecipeMaster.Services
 				// Add to FA without metadata
 				//string faToken = StorageApplicationPermissions.FutureAccessList.Add(file);
 				string mruToken = StorageApplicationPermissions.MostRecentlyUsedList.Add(file, metaData);
-				//rrb.Token = faToken;
-				//rb.AccessToken = faToken;
+				rrb.Token = mruToken;
+				rb.AccessToken = mruToken;
 				//_settings.AccessTokens.Add(faToken);
 			}
-			
-			//__store a record of this access
-			//StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			//string name = rrb.Name;
-			//string contents = JsonConvert.SerializeObject(rrb);
-			//StorageFile newRecord = await localFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
-			//await FileIO.WriteTextAsync(newRecord, contents);
-
-			//__store an instance of the rb if it doesn't already exist
-			BootStrapper.Current.SessionState[rb.Name] = rb;
 
 			return rrb;
 		}
 
-		public static async Task RemoveRecentRecipeBoxAsync(RecentRecipeBox rrb)
-		{
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
-			var files = await query.GetFilesAsync();
 
-			StorageFile fileToDelete = files.FirstOrDefault(f => f.Name == rrb.Name);
-			if (fileToDelete != null)
-			{
-				await fileToDelete.DeleteAsync();
-			}
-		}
 
 		public static async Task SaveRecipeBoxAsync(RecipeBox rb, bool doSaveAs = false)
 		{
 			var savePicker = new FileSavePicker();
 			string lastSavePath = rb.LastPath;
 			string accessToken = rb.AccessToken;
-			StorageFile targetFile = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(accessToken);
+
+			//__check to see if access token is valid
+			var currentlyKnownRecipies = await ListKnownRecipeBoxes();
+			bool haveAccessRecord = currentlyKnownRecipies.Any(rrb => rrb.Name == rb.Name && rrb.Token == rb.AccessToken);
+			StorageFile targetFile = null;
+			if (haveAccessRecord && ! doSaveAs)
+			{
+				targetFile = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(accessToken);
+			}
+			else
+			{
+				doSaveAs = true;
+			}
 			
 			//if (targetFile != null && !doSaveAs)
 			//{
@@ -219,6 +221,14 @@ namespace RecipeMaster.Services
 				// Default file name if the user does not type one in or select a file to replace
 				savePicker.SuggestedFileName = rb.Name;
 				targetFile = await savePicker.PickSaveFileAsync();
+				await RecordRecentRecipeBoxAsync(rb, targetFile);
+
+				//__store access to this RecipeBox for current session
+				if (!BootStrapper.Current.SessionState.ContainsKey(rb.Name))
+				{
+					BootStrapper.Current.SessionState[rb.Name] = rb;
+				}
+
 			}
 
 			//__remving the ReferenceLoopHandling option as Parent is being removed in favor of event based properties
@@ -228,15 +238,6 @@ namespace RecipeMaster.Services
 			await FileIO.WriteTextAsync(targetFile, rbJson);
 		}
 
-		public static async Task ClearHistoryAsync()
-		{
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			Windows.Storage.Search.StorageFileQueryResult query = localFolder.CreateFileQuery();
-			var files = await query.GetFilesAsync();
-			foreach (StorageFile storageFile in files)
-			{
-				storageFile.DeleteAsync();
-			}
-		}
+
 	}
 }

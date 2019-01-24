@@ -22,6 +22,7 @@ namespace RecipeMaster.ViewModels
 		public RecipeGroupsViewModel()
 		{
 			Messenger.Default.Register<RecipeBoxSelectedMessage>(this, (message) => ReceiveMessage(message));
+			activeRecipeBox = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] as RecipeBox;
 		}
 
 		#region Properties
@@ -125,6 +126,7 @@ namespace RecipeMaster.ViewModels
 
 			RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
 			CurrentRecipeGroups.Add(newGroup);
+			RaisePropertyChanged(nameof(CurrentRecipeGroups));
 		}
 
 		public void GoToRecipeDetail()

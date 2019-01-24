@@ -1,4 +1,6 @@
 ﻿//using RecipeMaster.Mvvm;
+using GalaSoft.MvvmLight.Messaging;
+using RecipeMaster.Helpers;
 using RecipeMaster.Models;
 using RecipeMaster.Services;
 using System.Collections.Generic;
@@ -155,7 +157,7 @@ namespace RecipeMaster.ViewModels
 			BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] = recipeBoxName;
 
 			NavigationService.Navigate(typeof(Views.RecipeGroupsView));
-
+			//Messenger.Default.Send(new RecipeBoxSelectedMessage(recipeBoxName));
 		}
 
 		public void GotoSettings() =>
@@ -174,6 +176,7 @@ namespace RecipeMaster.ViewModels
 			if(rrb is null) return;//user cancelled or encountered some error
 			if (RecentRecipeBoxes == null) RecentRecipeBoxes = new ObservableCollection<RecentRecipeBox>();
 			RecentRecipeBoxes.Insert(0, rrb);
+			RaisePropertyChanged(nameof(RecentRecipeBoxes));
 
 			SelectedRecentRecipeBox = rrb;
 			updateDisplay();
@@ -218,6 +221,7 @@ namespace RecipeMaster.ViewModels
 			//__record this file or move it to top of recents list
 			RecentRecipeBox rrb = await FileIOService.CreateRecentRecipeBoxAsync(currentRecipeBox);
 			RecentRecipeBoxes.Insert(0, rrb);
+			RaisePropertyChanged(nameof(RecentRecipeBoxes));
 
 			//__set as selected
 			SelectedRecentRecipeBox = rrb;

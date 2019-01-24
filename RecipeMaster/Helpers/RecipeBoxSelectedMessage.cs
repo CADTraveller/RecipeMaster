@@ -10,5 +10,10 @@ namespace RecipeMaster.Helpers
     class RecipeBoxSelectedMessage
     {
         public RecipeBox SelectedRecipeBox;
+
+		RecipeBoxSelectedMessage(RecipeBox rb)
+		{
+			SelectedRecipeBox = rb;
+		}
     }
 }

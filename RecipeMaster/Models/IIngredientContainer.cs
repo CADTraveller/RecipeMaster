@@ -38,6 +38,8 @@ namespace RecipeMaster.Models
 
 		void LinkAllChildEvents();
 
+		//void ParentWeightChangedInEditMode(double newParentWeight);
+
 		event EventHandler<WeightChangedEventArgs> WeightChanged;
 
 		event EventHandler<PercentChangedEventArgs> PercentageChanged;
