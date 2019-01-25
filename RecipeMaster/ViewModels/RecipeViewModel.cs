@@ -97,13 +97,14 @@ namespace RecipeMaster.ViewModels
 
 		public async Task NewChildIngredientAsync()
 		{
+			if (SelectedIngredient is null) return;
 			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 			var result = await dialog.ShowAsync();
 
-			IIngredientContainer parent = SelectedIngredient ?? CurrentRecipe as IIngredientContainer;
-
+			
 			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex);
-			parent.Ingredients.Add(newIngredient);
+			SelectedIngredient.Ingredients.Add(newIngredient);
+			SelectedIngredient.LinkChildEvents(newIngredient);
 		}
 
 		public async Task NewIngredientAsync()

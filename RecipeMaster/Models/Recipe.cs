@@ -90,21 +90,6 @@ namespace RecipeMaster.Models
 
 
 
-		public void CalculateHydration()
-		{
-			double dryWeight = ingredients.Sum(i => i.getDryWeight());
-			double wetWeight = ingredients.Sum(i => i.getWetWeight());
-			// if (Math.Abs(wetWeight) < 1) Hydration = 0;
-			if (dryWeight > 0) Hydration = Math.Round(wetWeight / dryWeight * 100, 1);
-			else if (wetWeight > 0) Hydration = 100;
-			else Hydration = 0;
-
-			//__Calculate Hydration is also called when type is changed, so update those as well
-			foreach (Ingredient i in Ingredients)
-			{
-				i.SetTypeFromChildren();
-			}
-		}
 
 	}
 }
