@@ -36,15 +36,6 @@ namespace RecipeMaster.Models
             Name = name;
         }
 
-        private string recipeCount ;
-        public string RecipeCount
-        {
-            get
-            {
-                return "(" + recipes?.Count + ") Recipies";
-            }
-            set { Set(ref recipeCount, value); }
-        }
 
     }
 }

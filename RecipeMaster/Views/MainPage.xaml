@@ -87,8 +87,7 @@
 				  SelectedItem="{x:Bind ViewModel.SelectedRecentRecipeBox, Mode=TwoWay}"
 				  SelectionMode="Single"
 				ItemsSource="{x:Bind ViewModel.RecentRecipeBoxes, Mode=OneWay}"
-				  RelativePanel.Below="pageHeader"
-				  Visibility="{x:Bind ViewModel.ShowHistory, Mode=OneWay}">
+				  RelativePanel.Below="pageHeader">
 			<GridView.ItemTemplate>
 				<DataTemplate x:DataType="model:RecentRecipeBox">
 					<Grid Width="100" Height="100">

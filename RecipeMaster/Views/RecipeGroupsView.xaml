@@ -71,18 +71,7 @@
             </controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
 
-        <!--  content  -->
-        <!--<ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
-                      RelativePanel.AlignLeftWithPanel="True"
-                      RelativePanel.AlignRightWithPanel="True"
-                      RelativePanel.Below="pageHeader"
-                      VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You passed:" />
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Value, Mode=OneWay, FallbackValue=DesigntimeValue}" />
-            </StackPanel>
-        </ScrollViewer>-->
-
+ 
         <Grid Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
@@ -96,35 +85,35 @@
                 <RowDefinition Height="36" />
                 <RowDefinition />
             </Grid.RowDefinitions>
+	        <ListView ItemsSource="{x:Bind vm.CurrentRecipeGroups, Mode=TwoWay}"
+	                  SelectedItem="{x:Bind vm.SelectedRecipeGroup, Mode=TwoWay}"
+	                  Name="RecipeGroupsList"
+	                  Grid.Row="1">
+		        <ListView.ItemTemplate>
+			        <DataTemplate x:DataType="model:RecipeGroup">
+				        <TextBox Text="{x:Bind Name, Mode=TwoWay}" />
+			        </DataTemplate>
+		        </ListView.ItemTemplate>
+	        </ListView>
 
-            <ListView ItemsSource="{x:Bind vm.CurrentRecipeGroups, Mode=TwoWay}"
-					  SelectedItem="{x:Bind vm.SelectedRecipeGroup, Mode=TwoWay}"
-					  Name="RecipeGroupsList"
-					  Grid.Row="1">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="model:RecipeGroup">
-                        <TextBox Text="{x:Bind Name, Mode=TwoWay}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+	        <ListView ItemsSource="{x:Bind vm.SelectedRecipeGroup.Recipes, Mode=TwoWay}"
+	                  SelectedItem="{x:Bind vm.SelectedRecipe, Mode=TwoWay}"
 
-            <ListView ItemsSource="{x:Bind vm.SelectedRecipeGroup.Recipes, Mode=TwoWay}"
-					  SelectedItem="{x:Bind vm.SelectedRecipe, Mode=TwoWay}"
+	                  Grid.Column="1" Grid.Row="1">
+		        <ListView.ItemTemplate>
+			        <DataTemplate x:DataType="model:Recipe">
+				        <StackPanel Orientation="Horizontal">
+					        <TextBlock Text="{x:Bind Name, Mode=TwoWay}"
+					                   Style="{StaticResource ListSubTitleStyle}" />
+					        <TextBlock Text=":  "
+					                   Style="{StaticResource ListSubTitleStyle}" />
+					        <TextBlock Text="{x:Bind Description, Mode=TwoWay}"
+					                   Style="{StaticResource ListSubTitleStyle}" />
+				        </StackPanel>
+			        </DataTemplate>
+		        </ListView.ItemTemplate>
+	        </ListView>
 
-					  Grid.Column="1" Grid.Row="1">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Recipe">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{x:Bind Name, Mode=TwoWay}"
-									   Style="{StaticResource ListSubTitleStyle}" />
-                            <TextBlock Text=":  "
-									   Style="{StaticResource ListSubTitleStyle}" />
-                            <TextBlock Text="{x:Bind Description, Mode=TwoWay}"
-									   Style="{StaticResource ListSubTitleStyle}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+		</Grid>
     </RelativePanel>
 </Page>
