@@ -73,7 +73,19 @@ namespace RecipeMaster.Models
 		public bool EntryModeActive
 		{
 			get { return _entryModeActive; }
-			set { Set(ref _entryModeActive, value); }
+			set
+			{
+				Set(ref _entryModeActive, value);
+				setChildIngredientsEntryMode(value);
+			}
+		}
+
+		private void setChildIngredientsEntryMode(bool entryModeActive)
+		{
+			foreach (Ingredient i in Ingredients)
+			{
+				i.EntryModeActive = entryModeActive;
+			}
 		}
 
 		public bool hasChildren
@@ -280,6 +292,7 @@ namespace RecipeMaster.Models
 					ingredient.AdjustPercent(newPercent);
 				}
 			}
+			UpdateChildrenWeightInEditMode(_weight);
 		}
 
 		public void DeleteChild(Ingredient child)

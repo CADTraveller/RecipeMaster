@@ -8,31 +8,33 @@ namespace RecipeMaster.Models
 {
 	public class Recipe : Ingredient
 	{
-		public bool EntryModeActive;
+
 		private string description;
 		private double hydration;
 		private string image = "Assets/Croissant.jpg";
 		private ObservableCollection<Ingredient> ingredients;
 		private string name;
-		private RecipeBox parentRecipeBox; //todo Use this to enable Save from detail views
+
 		private ObservableCollection<Step> steps = new ObservableCollection<Step>();
 
-		private double totalWeight;
+		private Guid _identifier;
 
-		public event EventHandler ChildWeightChanged;
-		public event EventHandler ChildPercentageChanged;
+		public Guid Identifier
+		{
+			get => _identifier;
+			set => _identifier = value;
+		}
 
 		public Recipe(string name = "New Recipe")
 		{
 			this.name = name;
 			description = "Please enter description";
-			totalWeight = 1000;
+			Weight = 1000;
 			//__build default Lists
 			steps = new ObservableCollection<Step>();
 			ingredients = new ObservableCollection<Ingredient>();
 		}
 
-		// todo: Add ID Guid
 		public string Description
 		{
 			get { return description; }
@@ -64,17 +66,7 @@ namespace RecipeMaster.Models
 		}
 
 		public string AccessToken { get; set; }
-		//public double TotalWeight
-		//{
-		//	get { return Math.Round(totalWeight); }
-		//	set
-		//	{
-		//		Set(ref totalWeight, value);
-		//		UpdateIngredientWeights();
-		//	}
-		//}
-
-
+		
 		public void AddStep(Step newStep)
 		{
 			int newOrder = newStep.Order;

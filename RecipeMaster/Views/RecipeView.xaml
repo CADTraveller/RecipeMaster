@@ -7,6 +7,7 @@
 	xmlns:viewModels="using:RecipeMaster.ViewModels"
 	xmlns:data="using:WinRTXamlToolkit.Controls.Data"
     xmlns:xamlTK="using:WinRTXamlToolkit.Controls"
+    
 	xmlns:model="using:RecipeMaster.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,19 +16,18 @@
         <viewModels:RecipeViewModel x:Name="vm"/>
     </Page.DataContext>
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
-                <ResourceDictionary Source="/Styles/Custom.xaml"/>
-                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+	<Page.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/Styles/Buttons.xaml"/>
+				<ResourceDictionary Source="/Styles/Custom.xaml"/>
+				<ResourceDictionary Source="/Styles/TextBlock.xaml"/>
 				<ResourceDictionary Source="/Styles/TextBox.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+		</ResourceDictionary>
 
-    </Page.Resources>
-
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	</Page.Resources>
+	<RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
@@ -92,7 +92,7 @@
 			<StackPanel Grid.Row="0"  Orientation="Horizontal"
 			            FlowDirection="RightToLeft">
 				<ToggleButton IsChecked="{x:Bind vm.EntryModeActive, Mode=TwoWay}">Entry Mode</ToggleButton>
-				<ToggleButton IsChecked="{x:Bind vm.EditModeActive, Mode=TwoWay}">Edit Mode</ToggleButton>
+				<ToggleButton IsChecked="{x:Bind vm.EditModeActive, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center">Edit Mode</ToggleButton>
 			</StackPanel>
             <xamlTK:TreeView ItemsSource="{x:Bind vm.Ingredients, Mode=TwoWay}"
 							 x:Name="IngredientsTreeView"
