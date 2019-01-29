@@ -41,16 +41,6 @@ namespace RecipeMaster.Models
 			set { Set(ref description, value); }
 		}
 
-		public double Hydration
-		{
-			get { return Math.Round(hydration, 1); }
-			set
-			{
-				if (value < 0) value = 0;
-				if (double.IsNaN(value)) value = 0;
-				Set(ref hydration, value);
-			}
-		}
 
 		public string Image
 		{

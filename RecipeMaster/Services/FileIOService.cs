@@ -16,17 +16,7 @@ namespace RecipeMaster.Services
 {
 	public static class FileIOService
 	{
-		//private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-
-
-		#region Private Fields
-
-		private static SettingsServices.SettingsService _settings = SettingsServices.SettingsService.Instance;
-		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-		#endregion Private Fields
-
-
+		
 		#region Internal Methods
 
 		internal static void ClearHistoryAsync()
@@ -248,7 +238,6 @@ namespace RecipeMaster.Services
 		}
 
 		#endregion Public Methods
-
 
 	}
 }

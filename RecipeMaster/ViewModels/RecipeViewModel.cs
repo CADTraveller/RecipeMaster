@@ -15,6 +15,8 @@ using Template10.Common;
 
 namespace RecipeMaster.ViewModels
 {
+	using Windows.UI.Xaml.Controls;
+
 	public class RecipeViewModel : ViewModelBase
 	{
 		private const string NarrowStateName = "NarrowState";
@@ -111,8 +113,10 @@ namespace RecipeMaster.ViewModels
 		{
 			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 			var result = await dialog.ShowAsync();
+			if(result == ContentDialogResult.Secondary) return;
 
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex);
+			var vm = dialog.DataContext as NewIngredientViewModel;
+			Ingredient newIngredient = new Ingredient(vm.Name, vm.ConvertedType);
 			CurrentRecipe.AddIngredient(newIngredient);
 			RaisePropertyChanged("Ingredients");
 		}

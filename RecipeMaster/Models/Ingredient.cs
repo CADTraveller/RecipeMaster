@@ -47,6 +47,7 @@ namespace RecipeMaster.Models
 			}
 		}
 
+
 		#endregion Private Methods
 
 
@@ -62,7 +63,8 @@ namespace RecipeMaster.Models
 
 		public Ingredient()
 		{
-			_ingredients = new ObservableCollection<Ingredient>();
+			Type = IngredientType.Complex;
+			Name = "No Name";
 		}
 
 		#endregion Public Constructors
@@ -86,8 +88,7 @@ namespace RecipeMaster.Models
 		}
 		public bool hasChildren
 		{
-			get { return _hasChildren; }
-			set { Set(ref _hasChildren, value); }
+			get => Convert.ToBoolean(_ingredients?.Any());
 		}
 
 		public double Hydration
@@ -206,23 +207,19 @@ namespace RecipeMaster.Models
 				if (_weight == value) return;
 				if (EntryModeActive)
 				{
-					//EntryModeWeightChanged();//__ignore percentages and set total as sum 
-					//__in Entry Mode child weights may have changed without updating percentages, do that now
 					UpdateChildrenWeightInEntryMode(value);
-
+					
 				}
 				else
 				{
-					//WeightChanged?.Invoke(this, value);//__adjust total by percentages while in Edit mode
-					//__in edit mode
 					UpdateChildrenWeightInEditMode(value);
 
 				}
 
 				double oldWeight = _weight;
-				//Parent.UpdateHydration();
+
 				Set(ref _weight, value);
-				// if (EntryModeActive) return;
+
 				WeightChanged?.Invoke(this, new WeightChangedEventArgs() { OldWeight = oldWeight, NewWeight = _weight });
 				HydrationChanged?.Invoke(this, new EventArgs());
 			}
@@ -250,7 +247,6 @@ namespace RecipeMaster.Models
 			BalancePercentages();
 			ShowChildren = true;
 			RaisePropertyChanged(nameof(Ingredients));
-			hasChildren = true;
 			LinkChildEvents(add);
 			return true;
 		}
@@ -436,16 +432,6 @@ namespace RecipeMaster.Models
 			HydrationChanged?.Invoke(this, EventArgs.Empty);
 		}
 
-		public void UpdateIngredientWeights(object senderObj, double newPercent)
-		{
-			if (_ingredients == null) return;
-			foreach (Ingredient ingredient in _ingredients)
-			{
-				if (ingredient.Equals(senderObj)) ingredient.AdjustWeight(newPercent * _weight / 100);
-				else ingredient.AdjustWeight(ingredient.GetExactPercent() * _weight / 100);
-			}
-		}
-
 		public void UpdateSelfToNewChildWeightInEntryMode()
 		{
 			Weight = Ingredients.Sum(i => i.GetExactWeight());
@@ -479,11 +465,21 @@ namespace RecipeMaster.Models
 			if (EditModeActive) UpdateToNewChildWeightInEditMode(ingredientContainer, args);
 			if (EntryModeActive)
 			{
+				setChildPercentagesFromWeight();
 				UpdateSelfToNewChildWeightInEntryMode();
 				UpdateHydration();
 			}
 
 			RaisePropertyChanged(nameof(Weight));
+		}
+
+		private void setChildPercentagesFromWeight()
+		{
+			double childWeightTotal = Ingredients.Sum(i => i.Weight);
+			foreach (Ingredient ingredient in Ingredients)
+			{
+				ingredient.AdjustPercent(ingredient.Weight/childWeightTotal);
+			}
 		}
 
 		public void UpdateToNewChildWeightInEditMode(object senderObject, WeightChangedEventArgs weightChangedArgs)
@@ -516,6 +512,11 @@ namespace RecipeMaster.Models
 		public event EventHandler TypeChanged;
 
 		public event EventHandler<WeightChangedEventArgs> WeightChanged;
+
+		/// <summary>
+		/// When EntryMode is turned off, percentages need to be updated to the entered weights
+		/// </summary>
+		public event EventHandler EntryModeExited;
 
 		#endregion Public Events
 
