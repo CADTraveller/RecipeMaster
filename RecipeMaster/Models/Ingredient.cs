@@ -21,9 +21,6 @@ namespace RecipeMaster.Models
 
 		#region Private Fields
 
-
-		#region Private Fields
-
 		private bool _entryModeActive;
 		bool _hasChildren = default(bool);
 		private double _hydration;
@@ -39,10 +36,18 @@ namespace RecipeMaster.Models
 
 		#endregion Private Fields
 
-		#endregion Private Fields
-
 
 		#region Private Methods
+
+		private void setChildIngredientsEntryMode(bool entryModeActive)
+		{
+			foreach (Ingredient i in Ingredients)
+			{
+				i.EntryModeActive = entryModeActive;
+			}
+		}
+
+		#endregion Private Methods
 
 
 		#region Public Constructors
@@ -79,15 +84,6 @@ namespace RecipeMaster.Models
 				setChildIngredientsEntryMode(value);
 			}
 		}
-
-		private void setChildIngredientsEntryMode(bool entryModeActive)
-		{
-			foreach (Ingredient i in Ingredients)
-			{
-				i.EntryModeActive = entryModeActive;
-			}
-		}
-
 		public bool hasChildren
 		{
 			get { return _hasChildren; }
@@ -347,18 +343,6 @@ namespace RecipeMaster.Models
 			ingredient.HydrationChanged += OnHydrationChanged;
 		}
 
-		#endregion Private Methods
-
-
-		#region Public Constructors
-		#endregion Public Constructors
-
-
-		#region Public Properties
-		#endregion Public Properties
-
-
-		#region Public Methods
 		public void OnHydrationChanged(object sender, EventArgs args)
 		{
 			double dryWeight = _ingredients.Sum(i => i.getDryWeight());
@@ -439,15 +423,11 @@ namespace RecipeMaster.Models
 		{
 			if (Ingredients != null && Ingredients?.Count > 0)
 			{
-				//__in Entry Mode, child weights may have changed, first update current _percent
-				double dCurrentTotalWeight = _ingredients.Sum(i => i._weight);
+				
 				foreach (Ingredient i in _ingredients)
 				{
-					i._percent = i._weight / dCurrentTotalWeight;
-					i._weight = newWeight * i._percent;
+					i.AdjustWeight(i._percent*_weight/100);
 				}
-
-				RaisePropertyChanged("Ingredients");
 			}
 		}
 
@@ -468,7 +448,8 @@ namespace RecipeMaster.Models
 
 		public void UpdateSelfToNewChildWeightInEntryMode()
 		{
-			_weight = Ingredients.Sum(i => i.GetExactWeight());
+			Weight = Ingredients.Sum(i => i.GetExactWeight());
+			
 			UpdateHydration();
 		}
 
@@ -525,11 +506,6 @@ namespace RecipeMaster.Models
 
 		#endregion Public Methods
 
-		#endregion Public Methods
-
-
-		#region Public Events
-
 
 		#region Public Events
 
@@ -540,8 +516,6 @@ namespace RecipeMaster.Models
 		public event EventHandler TypeChanged;
 
 		public event EventHandler<WeightChangedEventArgs> WeightChanged;
-
-		#endregion Public Events
 
 		#endregion Public Events
 

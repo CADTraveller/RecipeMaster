@@ -19,37 +19,59 @@ namespace RecipeMaster.ViewModels
 {
 	public class RecipeGroupsViewModel : ViewModelBase
 	{
-		public RecipeGroupsViewModel()
-		{
-			Messenger.Default.Register<RecipeBoxSelectedMessage>(this, (message) => ReceiveMessage(message));
-			activeRecipeBox = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] as RecipeBox;
-		}
 
-		#region Properties
+		#region Private Fields
 
 		private const string NarrowStateName = "NarrowState";
+
 		private const string WideStateName = "WideState";
 
 		private VisualState _currentState;
+
 		private RecipeBox activeRecipeBox;
+
+		private ObservableCollection<RecipeGroup> currentRecipeGroups;
+
+		private ObservableCollection<Recipe> currentRecipes;
 
 		private bool recipeBoxOpen;
 
-		public bool RecipeBoxOpen
-		{
-			get { return recipeBoxOpen; }
-			set { Set(ref recipeBoxOpen, value); }
-		}
-
 		private bool recipeGroupIsSelected;
 
-		public bool RecipeGroupIsSelected
+		private Recipe selectedRecipe;
+
+		private RecipeGroup selectedRecipeGroup;
+
+		#endregion Private Fields
+
+
+		#region Private Methods
+
+		//private object ReceiveMessage(RecipeBoxSelectedMessage item)
+		//{
+		//	activeRecipeBox = item.SelectedRecipeBox;
+		//	if (currentRecipeGroups == null) currentRecipeGroups = new ObservableCollection<RecipeGroup>();
+		//	// if (currentRecipes == null) currentRecipes = new ObservableCollection<Recipe>();
+		//	CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
+		//	RecipeBoxOpen = true;
+		//	return null;
+		//}
+
+		#endregion Private Methods
+
+
+		#region Public Constructors
+
+		public RecipeGroupsViewModel()
 		{
-			get { return recipeGroupIsSelected; }
-			set { Set(ref recipeGroupIsSelected, value); }
+			//Messenger.Default.Register<RecipeBoxSelectedMessage>(this, (message) => ReceiveMessage(message));
+			activeRecipeBox = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey] as RecipeBox;
 		}
 
-		private ObservableCollection<RecipeGroup> currentRecipeGroups;
+		#endregion Public Constructors
+
+
+		#region Public Properties
 
 		public ObservableCollection<RecipeGroup> CurrentRecipeGroups
 		{
@@ -65,32 +87,6 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		private RecipeGroup selectedRecipeGroup;
-
-		public RecipeGroup SelectedRecipeGroup
-		{
-			get { return selectedRecipeGroup; }
-			set
-			{
-				Set(ref selectedRecipeGroup, value);
-				BootStrapper.Current.SessionState[App.SelectedRecipeGroupKey] = SelectedRecipeGroup;//__this might not be required, we shall see
-			}
-		}
-
-		private Recipe selectedRecipe;
-
-		public Recipe SelectedRecipe
-		{
-			get { return selectedRecipe; }
-			set
-			{
-				Set(ref selectedRecipe, value);
-				BootStrapper.Current.SessionState[App.SelectedRecipeKey] = value;
-			}
-		}
-
-		private ObservableCollection<Recipe> currentRecipes;
-
 		public ObservableCollection<Recipe> CurrentRecipes
 		{
 			get
@@ -105,29 +101,36 @@ namespace RecipeMaster.ViewModels
 			}
 		}
 
-		#endregion Properties
 
-		#region Methods
-
-		private object ReceiveMessage(RecipeBoxSelectedMessage item)
+		public bool RecipeGroupIsSelected
 		{
-			activeRecipeBox = item.SelectedRecipeBox;
-			if (currentRecipeGroups == null) currentRecipeGroups = new ObservableCollection<RecipeGroup>();
-			// if (currentRecipes == null) currentRecipes = new ObservableCollection<Recipe>();
-			CurrentRecipeGroups = activeRecipeBox.RecipeGroups;
-			RecipeBoxOpen = true;
-			return null;
+			get { return recipeGroupIsSelected; }
+			set { Set(ref recipeGroupIsSelected, value); }
+		}
+		public Recipe SelectedRecipe
+		{
+			get { return selectedRecipe; }
+			set
+			{
+				Set(ref selectedRecipe, value);
+				BootStrapper.Current.SessionState[App.SelectedRecipeKey] = value;
+			}
 		}
 
-		public async Task NewRecipeGroupAsync()
+		public RecipeGroup SelectedRecipeGroup
 		{
-			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Group Name");
-			var result = await dialog.ShowAsync();
-
-			RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
-			CurrentRecipeGroups.Add(newGroup);
-			RaisePropertyChanged(nameof(CurrentRecipeGroups));
+			get { return selectedRecipeGroup; }
+			set
+			{
+				Set(ref selectedRecipeGroup, value);
+				BootStrapper.Current.SessionState[App.SelectedRecipeGroupKey] = SelectedRecipeGroup;
+			}
 		}
+
+		#endregion Public Properties
+
+
+		#region Public Methods
 
 		public void GoToRecipeDetail()
 		{
@@ -148,7 +151,7 @@ namespace RecipeMaster.ViewModels
 				string groupName = groupSelector.SelectedGroupName;
 				SelectedRecipeGroup = CurrentRecipeGroups.FirstOrDefault(g => g.Name == groupName);
 			}
-			if(SelectedRecipeGroup.Recipes is null) SelectedRecipeGroup.Recipes = new ObservableCollection<Recipe>();
+			if (SelectedRecipeGroup.Recipes is null) SelectedRecipeGroup.Recipes = new ObservableCollection<Recipe>();
 
 			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Recipe Name");
 			var result = await dialog.ShowAsync();
@@ -164,15 +167,15 @@ namespace RecipeMaster.ViewModels
 			GoToRecipeDetail();
 		}
 
-		public async Task SaveRecipeBoxAsync()
+		public async Task NewRecipeGroupAsync()
 		{
-			await FileIOService.SaveRecipeBoxAsync(activeRecipeBox);
+			NewNamedItemDialog dialog = new NewNamedItemDialog("Enter Group Name");
+			var result = await dialog.ShowAsync();
+
+			RecipeGroup newGroup = new RecipeGroup(dialog.TextEntry);
+			CurrentRecipeGroups.Add(newGroup);
+			RaisePropertyChanged(nameof(CurrentRecipeGroups));
 		}
-
-		#endregion Methods
-
-		#region Sample Code
-
 		public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
 		{
 			//Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
@@ -199,7 +202,12 @@ namespace RecipeMaster.ViewModels
 			return base.OnNavigatingFromAsync(args);
 		}
 
-		#endregion Sample Code
+		public async Task SaveRecipeBoxAsync()
+		{
+			await FileIOService.SaveRecipeBoxAsync(activeRecipeBox);
+		}
+
+		#endregion Public Methods
 	}
 }
 

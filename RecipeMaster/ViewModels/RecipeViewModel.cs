@@ -61,7 +61,7 @@ namespace RecipeMaster.ViewModels
 		public RecipeViewModel()
 		{
 			ingredients = new ObservableCollection<Ingredient>();
-			//CurrentRecipe = new Recipe();//__put a dummy in place to prevent errors
+
 		}
 		public Recipe CurrentRecipe
 
@@ -119,8 +119,6 @@ namespace RecipeMaster.ViewModels
 
 		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
 		{
-			string recipeBoxName = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey].ToString();
-			_activeRecipeBox = BootStrapper.Current.SessionState[recipeBoxName] as RecipeBox;
 			CurrentRecipe = BootStrapper.Current.SessionState[App.SelectedRecipeKey] as Recipe;
 
 			RaisePropertyChanged();
