@@ -86,7 +86,7 @@ namespace RecipeMaster.Models
 				setChildIngredientsEntryMode(value);
 			}
 		}
-		public bool hasChildren
+		public bool HasChildren
 		{
 			get => Convert.ToBoolean(_ingredients?.Any());
 		}
@@ -205,6 +205,9 @@ namespace RecipeMaster.Models
 			{
 				if (double.IsNaN(value)) return;
 				if (_weight == value) return;
+
+				//_in both modes, will update child weights using existing percentages
+
 				if (EntryModeActive)
 				{
 					UpdateChildrenWeightInEntryMode(value);
