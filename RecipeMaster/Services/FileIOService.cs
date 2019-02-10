@@ -16,17 +16,19 @@ namespace RecipeMaster.Services
 {
 	public static class FileIOService
 	{
-		//private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-
-		private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-		private static SettingsServices.SettingsService _settings = SettingsServices.SettingsService.Instance;
+		
+		#region Internal Methods
 
 		internal static void ClearHistoryAsync()
 		{
 			var mruList = StorageApplicationPermissions.MostRecentlyUsedList;
 			mruList.Clear();
 		}
+
+		#endregion Internal Methods
+
+
+		#region Public Methods
 
 		public static async Task<RecipeBox> CreateNewRecipeBoxAsync(string newName = "RecipeBox")
 		{
@@ -119,7 +121,6 @@ namespace RecipeMaster.Services
 		}
 
 
-
 		public static async Task<RecentRecipeBox> OpenRecipeBoxFromFileAsync(RecentRecipeBox rrb = null, bool needToRecordAccess = false)
 		{
 			// TODO: this needs to be revised to utilize MRU and metadata storage
@@ -184,8 +185,6 @@ namespace RecipeMaster.Services
 			return rrb;
 		}
 
-
-
 		public static async Task SaveRecipeBoxAsync(RecipeBox rb, bool doSaveAs = false)
 		{
 			var savePicker = new FileSavePicker();
@@ -238,6 +237,7 @@ namespace RecipeMaster.Services
 			await FileIO.WriteTextAsync(targetFile, rbJson);
 		}
 
+		#endregion Public Methods
 
 	}
 }

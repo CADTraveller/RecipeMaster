@@ -43,34 +43,6 @@ namespace RecipeMaster.ViewModels
 			set => Set(ref _Value, value);
 		}
 
-		private bool showRecentFiles;
-
-		public bool ShowRecentFiles
-		{
-			get { return showRecentFiles; }
-			set { Set(ref showRecentFiles, value); }
-		}
-
-		private bool showNoHistory;
-
-		public bool ShowNoHistory
-		{
-			get
-			{
-				if (recentRecipeBoxes == null) return true;
-				return recentRecipeBoxes.Count == 0;
-			}
-			//set { showNoHistory = value; }
-		}
-
-		public bool ShowHistory
-		{
-			get
-			{
-				if (recentRecipeBoxes == null) return false;
-				return recentRecipeBoxes.Count > 0;
-			}
-		}
 
 		private RecipeBox currentRecipeBox;
 

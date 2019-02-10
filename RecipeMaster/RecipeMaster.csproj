@@ -121,6 +121,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileIOService.cs" />
     <Compile Include="Archive\RecipeGroupsDetailViewModel.cs" />
+    <Compile Include="ViewModels\NewIngredientViewModel.cs" />
     <Compile Include="ViewModels\RecipeGroupsViewModel.cs" />
     <Compile Include="Archive\RecipesDetailViewModel.cs" />
     <Compile Include="ViewModels\RecipeViewModel.cs" />
@@ -133,6 +134,9 @@
     </Compile>
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NewIngredientDialog.xaml.cs">
+      <DependentUpon>NewIngredientDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RecipeGroupsView.xaml.cs">
       <DependentUpon>RecipeGroupsView.xaml</DependentUpon>
@@ -253,6 +257,10 @@
     <Page Include="Views\Busy.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NewIngredientDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RecipeGroupsView.xaml">
       <SubType>Designer</SubType>

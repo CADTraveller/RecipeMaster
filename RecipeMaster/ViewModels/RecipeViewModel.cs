@@ -15,6 +15,8 @@ using Template10.Common;
 
 namespace RecipeMaster.ViewModels
 {
+	using Windows.UI.Xaml.Controls;
+
 	public class RecipeViewModel : ViewModelBase
 	{
 		private const string NarrowStateName = "NarrowState";
@@ -61,7 +63,7 @@ namespace RecipeMaster.ViewModels
 		public RecipeViewModel()
 		{
 			ingredients = new ObservableCollection<Ingredient>();
-			//CurrentRecipe = new Recipe();//__put a dummy in place to prevent errors
+
 		}
 		public Recipe CurrentRecipe
 
@@ -111,16 +113,16 @@ namespace RecipeMaster.ViewModels
 		{
 			var dialog = new NewNamedItemDialog("Enter Ingredient Name");
 			var result = await dialog.ShowAsync();
+			if(result == ContentDialogResult.Secondary) return;
 
-			Ingredient newIngredient = new Ingredient(dialog.TextEntry, IngredientType.Complex);
+			var vm = dialog.DataContext as NewIngredientViewModel;
+			Ingredient newIngredient = new Ingredient(vm.Name, vm.ConvertedType);
 			CurrentRecipe.AddIngredient(newIngredient);
 			RaisePropertyChanged("Ingredients");
 		}
 
 		public override Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
 		{
-			string recipeBoxName = BootStrapper.Current.SessionState[App.ActiveRecipeBoxKey].ToString();
-			_activeRecipeBox = BootStrapper.Current.SessionState[recipeBoxName] as RecipeBox;
 			CurrentRecipe = BootStrapper.Current.SessionState[App.SelectedRecipeKey] as Recipe;
 
 			RaisePropertyChanged();
