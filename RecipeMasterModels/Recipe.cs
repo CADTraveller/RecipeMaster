@@ -3,8 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-
-namespace RecipeMaster.Models
+namespace RecipeMasterModels
 {
 	public class Recipe : Ingredient
 	{
